@@ -19,13 +19,13 @@ import com.vs.foosh.api.services.HttpResponseBuilder;
 import com.vs.foosh.api.services.LinkBuilder;
 
 @RestController
-public abstract class EnvironmentVariableController {
+public class EnvironmentVariableController {
 
     ///
     /// Environment Variables
     ///
 
-    @GetMapping("/vars")
+    @GetMapping("/api/vars")
     public ResponseEntity<Object> getVars() {
         Map<String, URI> linkBlock = new HashMap<>();
         linkBlock.put("self", LinkBuilder.getVariableListLink());
@@ -36,25 +36,25 @@ public abstract class EnvironmentVariableController {
                 HttpStatus.OK);
     }
 
-    @PostMapping("/vars")
+    @PostMapping("/api/vars")
     public ResponseEntity<Object> postVars() {
         // TODO: Allow creation of mulitple variables at once?
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    @PutMapping("/vars")
+    @PutMapping("/api/vars")
     public ResponseEntity<Object> putVars() {
         // TODO: Only on SINGLE variable level.
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    @PatchMapping("/vars")
+    @PatchMapping("/api/vars")
     public ResponseEntity<Object> patchVars() {
         // TODO: Only on SINGLE variable level.
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/vars")
+    @DeleteMapping("/api/vars")
     public ResponseEntity<Object> deleteVars() {
         EnvironmentVariableList.clearVariables();
 
@@ -72,31 +72,31 @@ public abstract class EnvironmentVariableController {
     /// Environment Variable
     ///
 
-    @GetMapping("/var/{id}")
+    @GetMapping("/api/var/{id}")
     public ResponseEntity<Object> getVar() {
         // TODO: Retrieve environment variable
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    @PostMapping("/var")
+    @PostMapping("/api/var")
     public ResponseEntity<Object> postVar() {
         // TODO: What exactly needs/can be included when creating new variable? 
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    @PutMapping("/var/{id}")
+    @PutMapping("/api/var/{id}")
     public ResponseEntity<Object> putVar() {
         // TODO: Allow replacement only when all fields are present (?)
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    @PatchMapping("/var/{id}")
+    @PatchMapping("/api/var/{id}")
     public ResponseEntity<Object> patchVar() {
         // TODO: What can be updated? Depends on POST.
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/var/{id}")
+    @DeleteMapping("/api/var/{id}")
     public ResponseEntity<Object> deleteVar() {
         // TODO: Delete variable.
         return new ResponseEntity<Object>(HttpStatus.OK);

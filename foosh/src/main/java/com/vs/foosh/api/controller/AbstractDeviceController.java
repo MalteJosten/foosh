@@ -37,7 +37,7 @@ public abstract class AbstractDeviceController {
     // Device Collection
     //
 
-    @GetMapping(value = "/devices", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/api/devices", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesGet() {
         Map<String, URI> linkBlock = new HashMap<>();
         linkBlock.put("self", LinkBuilder.getDeviceListLink());
@@ -49,7 +49,7 @@ public abstract class AbstractDeviceController {
     }
 
     // TODO: [BUG] After calling a second time, it gets weird. Look into it!
-    @PostMapping(value = "/devices", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/api/devices", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesPost(
             @RequestBody(required = false) SmartHomeCredentials credentials) {
         FetchDeviceResponse apiResponse;
@@ -73,20 +73,20 @@ public abstract class AbstractDeviceController {
                     linkBlock,
                     HttpStatus.OK);
         } catch (ResourceAccessException rAccessException) {
-            throw new SmartHomeAccessException(ApplicationConfig.getSmartHomeCredentials().getUri() + "/devices");
+            throw new SmartHomeAccessException(ApplicationConfig.getSmartHomeCredentials().getUri() + "/api/devices");
         } catch (IOException ioException) {
-            throw new SmartHomeIOException(ApplicationConfig.getSmartHomeCredentials().getUri() + "/devices");
+            throw new SmartHomeIOException(ApplicationConfig.getSmartHomeCredentials().getUri() + "/api/devices");
         }
     }
 
-    @PutMapping("/devices")
+    @PutMapping("/api/devices")
     public ResponseEntity<Object> devicesPut() {
         throw new HttpMappingNotAllowedException(
                 "You can only update the devices list with POST!",
                 Map.of("self", LinkBuilder.getDeviceListLink()));
     }
 
-    @PatchMapping("/devices")
+    @PatchMapping("/api/devices")
     public ResponseEntity<Object> devicesPatch(@RequestBody List<QueryNamePatchRequest> request) {
         if (patchBatchDeviceQueryName(request)) {
             Map<String, URI> linkBlock = new HashMap<>();
@@ -101,7 +101,7 @@ public abstract class AbstractDeviceController {
         }
     }
 
-    @DeleteMapping("/devices")
+    @DeleteMapping("/api/devices")
     public ResponseEntity<Object> devicesDelete() {
         DeviceList.clearDevices();
 
@@ -124,21 +124,21 @@ public abstract class AbstractDeviceController {
     // Device
     //
 
-    @GetMapping("/device/{id}")
+    @GetMapping("/api/device/{id}")
     public ResponseEntity<Object> deviceGet(@PathVariable("id") String id) {
         AbstractDevice device = DeviceList.getDevice(id);
 
         return new ResponseEntity<>(device, HttpStatus.OK);
     }
 
-    @PostMapping("/device/{id}")
+    @PostMapping("/api/device/{id}")
     public ResponseEntity<Object> devicePost(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
                 "You can only create/replace a device with either POST or PATCH on /devices !",
                 Map.of("devices", LinkBuilder.getDeviceListLink()));
     }
 
-    @PutMapping("/device/{id}")
+    @PutMapping("/api/device/{id}")
     public ResponseEntity<Object> devicePut(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
                 "You can only create/replace a device with either POST or PATCH on /devices !",
@@ -146,7 +146,7 @@ public abstract class AbstractDeviceController {
     }
 
     /// no empty string
-    @PatchMapping("/device/{id}")
+    @PatchMapping("/api/device/{id}")
     public ResponseEntity<Object> devicePatch(@PathVariable("id") String id, @RequestBody Map<String, String> requestBody) {
         String queryName = requestBody.get("queryName").toLowerCase();
         UUID uuid;
@@ -171,7 +171,7 @@ public abstract class AbstractDeviceController {
         }
     }
 
-    @DeleteMapping("/device/{id}")
+    @DeleteMapping("/api/device/{id}")
     public ResponseEntity<Object> deviceDelete(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
                 "You cannot delete an individual device. You can only delete the entire collection with DELETE on /devices !",
