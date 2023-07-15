@@ -148,7 +148,7 @@ public abstract class AbstractDeviceController {
     /// no empty string
     @PatchMapping("/device/{id}")
     public ResponseEntity<Object> devicePatch(@PathVariable("id") String id, @RequestBody Map<String, String> requestBody) {
-        String queryName = requestBody.get("queryName");
+        String queryName = requestBody.get("queryName").toLowerCase();
         UUID uuid;
 
         // Is the provided id a valid UUID?
@@ -179,7 +179,7 @@ public abstract class AbstractDeviceController {
     }
 
     private boolean patchDeviceQueryName(QueryNamePatchRequest request) {
-        String queryName = request.getQueryName();
+        String queryName = request.getQueryName().toLowerCase();
         UUID id = request.getId();
 
         // Does the field contain any letters, i.e., is it not empty?

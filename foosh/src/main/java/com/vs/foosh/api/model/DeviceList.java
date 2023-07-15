@@ -49,14 +49,14 @@ public class DeviceList {
     ///   (1) it's ID,
     ///   (2) it's queryName
     ///
-    public static AbstractDevice getDevice(String id) {
+    public static AbstractDevice getDevice(String identifier) {
         for (AbstractDevice device: getDevices()) {
-            if (device.id.toString().equals(id) || device.queryName.equals(id)) {
+            if (device.getId().toString().equals(identifier) || device.getQueryName().equals(identifier.toLowerCase())) {
                 return device;
             }
         }
 
-        throw new DeviceIdNotFoundException(id);
+        throw new DeviceIdNotFoundException(identifier);
     }
 
     public static boolean isAUniqueQueryName(String name, UUID id) {
@@ -81,7 +81,7 @@ public class DeviceList {
     /// appending incrementing numbers to deviceName.
     ///
     public static String findUniqueQueryName(QueryNamePatchRequest request) {
-        StringBuilder queryName = new StringBuilder(request.getQueryName());
+        StringBuilder queryName = new StringBuilder(request.getQueryName().toLowerCase());
         UUID id = request.getId();
 
         // Does the field contain any letters, i.e., is it not empty?

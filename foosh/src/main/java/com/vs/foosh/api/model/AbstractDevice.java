@@ -25,7 +25,7 @@ public abstract class AbstractDevice {
     }
 
     public void setQueryName(String name) {
-        this.queryName = name;
+        this.queryName = name.toLowerCase();
     }
 
     public String getDeviceName() {

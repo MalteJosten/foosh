@@ -8,7 +8,7 @@ public class QueryNamePatchRequest {
 
     public QueryNamePatchRequest(UUID id, String queryName) {
         this.id = id;
-        this.queryName = queryName;
+        this.queryName = queryName.toLowerCase();
     }
 
     public UUID getId() {

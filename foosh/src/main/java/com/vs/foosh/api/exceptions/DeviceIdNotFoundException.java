@@ -12,7 +12,7 @@ public class DeviceIdNotFoundException extends RuntimeException {
             UUID uniqueId = UUID.fromString(id);
             this.message = "Could not find device with id '" + uniqueId + "'!";
         } catch (IllegalArgumentException e) {
-            this.message = "Could not find device with queryName '" + id + "'!";
+            this.message = "Could not find device with queryName '" + id.toLowerCase() + "'!";
         }
     }
 
