@@ -81,7 +81,7 @@ public abstract class AbstractDeviceController {
 
     @PutMapping("/devices")
     public ResponseEntity<Object> devicesPut() {
-        throw new HttpMappingNotImplementedException(
+        throw new HttpMappingNotAllowedException(
                 "You can only update the devices list with POST!",
                 Map.of("self", LinkBuilder.getDeviceListLink()));
     }
@@ -133,14 +133,14 @@ public abstract class AbstractDeviceController {
 
     @PostMapping("/device/{id}")
     public ResponseEntity<Object> devicePost(@PathVariable("id") String id) {
-        throw new HttpMappingNotImplementedException(
+        throw new HttpMappingNotAllowedException(
                 "You can only create/replace a device with either POST or PATCH on /devices !",
                 Map.of("devices", LinkBuilder.getDeviceListLink()));
     }
 
     @PutMapping("/device/{id}")
     public ResponseEntity<Object> devicePut(@PathVariable("id") String id) {
-        throw new HttpMappingNotImplementedException(
+        throw new HttpMappingNotAllowedException(
                 "You can only create/replace a device with either POST or PATCH on /devices !",
                 Map.of("devices", LinkBuilder.getDeviceListLink()));
     }
@@ -173,7 +173,7 @@ public abstract class AbstractDeviceController {
 
     @DeleteMapping("/device/{id}")
     public ResponseEntity<Object> deviceDelete(@PathVariable("id") String id) {
-        throw new HttpMappingNotImplementedException(
+        throw new HttpMappingNotAllowedException(
                 "You cannot delete an individual device. You can only delete the entire collection with DELETE on /devices !",
                 Map.of("devices", LinkBuilder.getDeviceListLink()));
     }

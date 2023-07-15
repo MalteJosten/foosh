@@ -145,13 +145,13 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
                 HttpStatus.GATEWAY_TIMEOUT);
     }
 
-    @ExceptionHandler(HttpMappingNotImplementedException.class)
-    public ResponseEntity<Object> handleHttpMappingNotImplementedExeption(HttpMappingNotImplementedException exception,
+    @ExceptionHandler(HttpMappingNotAllowedException.class)
+    public ResponseEntity<Object> handleHttpMappingNotImplementedExeption(HttpMappingNotAllowedException exception,
             WebRequest request) {
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
                 exception.getReturnPath(),
-                HttpStatus.NOT_IMPLEMENTED);
+                HttpStatus.METHOD_NOT_ALLOWED);
     }
 
 }

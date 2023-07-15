@@ -3,15 +3,15 @@ package com.vs.foosh.api.exceptions;
 import java.net.URI;
 import java.util.Map;
 
-public class HttpMappingNotImplementedException extends RuntimeException {
+public class HttpMappingNotAllowedException extends RuntimeException {
     private String message;
     private Map<String, URI> returnPath;
 
-    public HttpMappingNotImplementedException(String message) {
+    public HttpMappingNotAllowedException(String message) {
         this.message = message;
     }
 
-    public HttpMappingNotImplementedException(String message, Map<String, URI> returnPath) {
+    public HttpMappingNotAllowedException(String message, Map<String, URI> returnPath) {
         this.message    = message;
         this.returnPath = returnPath;
     }
