@@ -146,7 +146,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(HttpMappingNotAllowedException.class)
-    public ResponseEntity<Object> handleHttpMappingNotImplementedExeption(HttpMappingNotAllowedException exception,
+    public ResponseEntity<Object> handleHttpMappingNotAllowedExeption(HttpMappingNotAllowedException exception,
             WebRequest request) {
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
