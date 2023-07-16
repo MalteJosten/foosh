@@ -123,6 +123,13 @@ public class LinkBuilder {
         return linkBlock;
     }
 
+    public static Map<String, URI> getRootLinkEntry() {
+        Map<String, URI> rootLink = new HashMap<>();
+        rootLink.put("root", buildPath(List.of("api")));
+
+        return rootLink;
+    }
+
     public static void setServerVariables(String pHost, int pPort) {
         host = pHost;
         port = pPort;

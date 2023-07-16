@@ -21,8 +21,12 @@ public class ApplicationConfig {
     private static int port;
 
     private static SmartHomeCredentials smartHomeCredentials;
-
+    
     @Bean
+    private static void setup() {
+        readInApplicationProperties();
+    }
+
     private static void readInApplicationProperties() {
         Properties config = new Properties();
         try (InputStream is = new FileInputStream(new File("src/main/resources/application.properties"))) {
