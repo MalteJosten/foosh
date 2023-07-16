@@ -36,7 +36,7 @@ public class LinkBuilder {
             .scheme("http")
             .host(host)
             .port(port)
-            .path("devices")
+            .path("devices/")
             .build();
 
         return uri.toUri();
@@ -71,7 +71,7 @@ public class LinkBuilder {
             .scheme("http")
             .host(host)
             .port(port)
-            .path("variables")
+            .path("vars/")
             .build();
 
         return uri.toUri();

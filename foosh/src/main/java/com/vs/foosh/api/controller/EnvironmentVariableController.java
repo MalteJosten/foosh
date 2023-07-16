@@ -25,7 +25,7 @@ public class EnvironmentVariableController {
     /// Environment Variables
     ///
 
-    @GetMapping("/api/vars")
+    @GetMapping("/api/vars/")
     public ResponseEntity<Object> getVars() {
         Map<String, URI> linkBlock = new HashMap<>();
         linkBlock.put("self", LinkBuilder.getVariableListLink());
@@ -36,25 +36,25 @@ public class EnvironmentVariableController {
                 HttpStatus.OK);
     }
 
-    @PostMapping("/api/vars")
+    @PostMapping("/api/vars/")
     public ResponseEntity<Object> postVars() {
         // TODO: Allow creation of mulitple variables at once?
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    @PutMapping("/api/vars")
+    @PutMapping("/api/vars/")
     public ResponseEntity<Object> putVars() {
         // TODO: Only on SINGLE variable level.
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    @PatchMapping("/api/vars")
+    @PatchMapping("/api/vars/")
     public ResponseEntity<Object> patchVars() {
         // TODO: Only on SINGLE variable level.
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/api/vars")
+    @DeleteMapping("/api/vars/")
     public ResponseEntity<Object> deleteVars() {
         EnvironmentVariableList.clearVariables();
 
