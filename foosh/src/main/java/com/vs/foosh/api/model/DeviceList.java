@@ -36,7 +36,7 @@ public class DeviceList {
         }
     }
 
-    public static List<AbstractDevice> getDevices() {
+    private static List<AbstractDevice> getDevices() {
         return getInstance();
     }
 

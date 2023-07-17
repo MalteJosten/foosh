@@ -45,7 +45,7 @@ public abstract class AbstractDeviceController {
         linkBlock.put("self", LinkBuilder.getDeviceListLink());
 
         return HttpResponseBuilder.buildResponse(
-                new AbstractMap.SimpleEntry<String, Object>("devices", DeviceList.getDevices()),
+                new AbstractMap.SimpleEntry<String, Object>("devices", DeviceList.getInstance()),
                 linkBlock,
                 HttpStatus.OK);
     }
@@ -53,7 +53,6 @@ public abstract class AbstractDeviceController {
     @PostMapping(value = "/api/devices/", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesPost(
             @RequestBody(required = false) SmartHomeCredentials credentials) {
-        FetchDeviceResponse apiResponse;
         if (DeviceList.getInstance() == null || !DeviceList.getInstance().isEmpty()) {
             Map<String, URI> linkBlock = new HashMap<>();
             linkBlock.put("self", LinkBuilder.getDeviceListLink());
@@ -64,11 +63,12 @@ public abstract class AbstractDeviceController {
                 HttpStatus.CONFLICT);
         }
 
-        try {
-            ReadSaveFileResult readResult = PersistentDeviceListService.hasSavedDeviceList();
-            if (readResult.getSuccess()) {
-                DeviceList.setDevices(readResult.getData());
-            } else {
+        FetchDeviceResponse apiResponse;
+        ReadSaveFileResult readResult = PersistentDeviceListService.hasSavedDeviceList();
+        if (readResult.getSuccess()) {
+            DeviceList.setDevices(readResult.getData());
+        } else {
+            try {
                 if (credentials == null) {
                     apiResponse = fetchDevicesFromSmartHomeAPI();
                 } else {
@@ -77,27 +77,45 @@ public abstract class AbstractDeviceController {
 
                 DeviceList.setDevices(apiResponse.getDevices());
                 PersistentDeviceListService.saveDeviceList();
+            } catch (ResourceAccessException rAccessException) {
+                throw new SmartHomeAccessException(ApplicationConfig.getSmartHomeCredentials().getUri() + "/api/devices/");
+            } catch (IOException ioException) {
+                throw new SmartHomeIOException(ApplicationConfig.getSmartHomeCredentials().getUri() + "/api/devices/");
             }
+        }
+
+        Map<String, URI> linkBlock = new HashMap<>();
+        linkBlock.put("self", LinkBuilder.getDeviceListLink());
+
+        return HttpResponseBuilder.buildResponse(
+                new AbstractMap.SimpleEntry<String, Object>("devices", DeviceList.getInstance()),
+                linkBlock,
+                HttpStatus.CREATED);
+    }
+
+    @PutMapping("/api/devices/")
+    public ResponseEntity<Object> devicesPut(
+            @RequestBody(required=false) SmartHomeCredentials credentials) {
+        List<AbstractDevice> old = DeviceList.getInstance();
+
+        if (!DeviceList.getInstance().isEmpty()) {
+            devicesDelete();
+        }
+
+        ResponseEntity<Object> postResult = devicesPost(credentials);
+        if (postResult.getStatusCode() == HttpStatus.CREATED) {
+            return postResult;
+        } else {
+            DeviceList.setDevices(old);
 
             Map<String, URI> linkBlock = new HashMap<>();
             linkBlock.put("self", LinkBuilder.getDeviceListLink());
 
             return HttpResponseBuilder.buildResponse(
-                    new AbstractMap.SimpleEntry<String, Object>("devices", DeviceList.getDevices()),
+                    new AbstractMap.SimpleEntry<String, Object>("devices", DeviceList.getInstance()),
                     linkBlock,
-                    HttpStatus.CREATED);
-        } catch (ResourceAccessException rAccessException) {
-            throw new SmartHomeAccessException(ApplicationConfig.getSmartHomeCredentials().getUri() + "/api/devices/");
-        } catch (IOException ioException) {
-            throw new SmartHomeIOException(ApplicationConfig.getSmartHomeCredentials().getUri() + "/api/devices/");
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
-
-    @PutMapping("/api/devices/")
-    public ResponseEntity<Object> devicesPut() {
-        throw new HttpMappingNotAllowedException(
-                "You can only update the devices list with POST!",
-                Map.of("self", LinkBuilder.getDeviceListLink()));
     }
 
     @PatchMapping("/api/devices/")
@@ -109,7 +127,7 @@ public abstract class AbstractDeviceController {
             linkBlock.put("self", LinkBuilder.getDeviceListLink());
 
             return HttpResponseBuilder.buildResponse(
-                    new AbstractMap.SimpleEntry<String, Object>("devices", DeviceList.getDevices()),
+                    new AbstractMap.SimpleEntry<String, Object>("devices", DeviceList.getInstance()),
                     linkBlock,
                     HttpStatus.OK);
         } else {
@@ -127,7 +145,7 @@ public abstract class AbstractDeviceController {
         linkBlock.put("self", LinkBuilder.getDeviceListLink());
 
         Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("devices", DeviceList.getDevices());
+        responseBody.put("devices", DeviceList.getInstance());
         responseBody.put("links", linkBlock);
 
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
