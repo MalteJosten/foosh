@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.vs.foosh.api.exceptions.SaveFileNotFoundException;
@@ -30,18 +29,14 @@ public class PersistentDeviceListService {
     public static ReadSaveFileResult hasSavedDeviceList() {
         ReadSaveFileResult result = new ReadSaveFileResult();
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ApplicationConfig.getSaveFilePath().toFile()))) {
-            List<Object> rawData = List.of(ois.readObject());
-            List<AbstractDevice> list = new ArrayList<>();
-
-            for (Object device: rawData) {
-                list.add((AbstractDevice) device);
-            }
-
+            List<AbstractDevice> list = (List<AbstractDevice>) ois.readObject();
             result.setData(list);
             result.setSuccess(true);
         } catch (IOException e) {
             result.setSuccess(false);
         } catch (ClassNotFoundException e) {
+            result.setSuccess(false);
+        } catch (ClassCastException e) {
             result.setSuccess(false);
         }
 
