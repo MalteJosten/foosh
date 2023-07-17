@@ -132,5 +132,8 @@ public class ApplicationConfig {
     public static Path getDeviceSavePath() {
         return Paths.get(SAVE_DIR_PATH.toString() + "/devices.json");
     }
-    
+
+    public static Path getDeleteDevicePath() {
+        return Paths.get(SAVE_DIR_PATH.toString() + "/devices.old");
+    }
 }

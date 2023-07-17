@@ -119,7 +119,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
     // TODO: Generalize so it also can be used for other entities.
     @ExceptionHandler(IdIsNoValidUUIDException.class)
-    public ResponseEntity<Object> handleIdIsnoValidUUIDException(IdIsNoValidUUIDException exception,
+    public ResponseEntity<Object> handleIdIsNoValidUUIDException(IdIsNoValidUUIDException exception,
             WebRequest request) {
         Map<String, URI> linkBlock = new HashMap<>();
         linkBlock.put("devices", LinkBuilder.getDeviceListLink());
@@ -164,6 +164,14 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(SavingToFileIOException.class)
     public ResponseEntity<Object> handleSavingToFileIOException(SavingToFileIOException exception,
+            WebRequest request) {
+        return HttpResponseBuilder.buildException(
+                exception.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(CouldNotDeleteCollectionException.class)
+    public ResponseEntity<Object> handleCouldNotDeleteCollection(CouldNotDeleteCollectionException exception,
             WebRequest request) {
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),

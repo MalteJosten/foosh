@@ -121,6 +121,8 @@ public abstract class AbstractDeviceController {
     public ResponseEntity<Object> devicesDelete() {
         DeviceList.clearDevices();
 
+        PersistentDeviceListService.deleteDeviceListSave();
+
         Map<String, URI> linkBlock = new HashMap<>();
         linkBlock.put("self", LinkBuilder.getDeviceListLink());
 

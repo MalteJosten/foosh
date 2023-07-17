@@ -1,13 +1,17 @@
 package com.vs.foosh.api.services;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
+import com.vs.foosh.api.exceptions.CouldNotDeleteCollectionException;
 import com.vs.foosh.api.exceptions.SaveFileNotFoundException;
 import com.vs.foosh.api.exceptions.SavingToFileIOException;
 import com.vs.foosh.api.model.AbstractDevice;
@@ -41,5 +45,14 @@ public class PersistentDeviceListService {
         }
 
         return result;
+    }
+
+    public static void deleteDeviceListSave() {
+        try {
+            Files.copy(ApplicationConfig.getDeviceSavePath(), ApplicationConfig.getDeleteDevicePath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.delete(ApplicationConfig.getDeviceSavePath());
+        } catch (IOException e) {
+            throw new CouldNotDeleteCollectionException();
+        }
     }
 }
