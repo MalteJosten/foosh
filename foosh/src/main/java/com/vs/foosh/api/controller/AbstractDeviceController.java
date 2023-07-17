@@ -103,6 +103,8 @@ public abstract class AbstractDeviceController {
     @PatchMapping("/api/devices/")
     public ResponseEntity<Object> devicesPatch(@RequestBody List<QueryNamePatchRequest> request) {
         if (patchBatchDeviceQueryName(request)) {
+            PersistentDeviceListService.saveDeviceList();
+
             Map<String, URI> linkBlock = new HashMap<>();
             linkBlock.put("self", LinkBuilder.getDeviceListLink());
 
@@ -181,6 +183,8 @@ public abstract class AbstractDeviceController {
         
         
         if (patchDeviceQueryName(new QueryNamePatchRequest(uuid, queryName))) {
+            PersistentDeviceListService.saveDeviceList();
+
             AbstractDevice device = DeviceList.getDevice(uuid.toString());
 
             return HttpResponseBuilder.buildResponse(device, device.getLinks(), HttpStatus.OK);
