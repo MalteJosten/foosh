@@ -22,7 +22,7 @@ public class ApplicationConfig {
     private static final String HOST = "localhost";
     private static final int DEFAULT_PORT = 8080;
     private static int port;
-    private static Path SAVE_FILE_PATH = Paths.get(System.getProperty("user.home") + "/foosh/save.json").toAbsolutePath();
+    private static Path SAVE_DIR_PATH = Paths.get(System.getProperty("user.home") + "/foosh").toAbsolutePath();
 
     private static SmartHomeCredentials smartHomeCredentials;
     
@@ -43,7 +43,7 @@ public class ApplicationConfig {
             String smartHomeCredentialPath = config.getProperty("smartHomeCredentialPath");
             setupSmartHomeCredentials(smartHomeCredentialPath);
 
-            setupSaveFile();
+            setupSaveDirectory();
 
         } catch (IOException e) {
             port = DEFAULT_PORT;
@@ -106,13 +106,15 @@ public class ApplicationConfig {
         }
     }
     
-    private static void setupSaveFile()  {
-        File saveFile = new File(Paths.get(System.getProperty("user.home") + "/foosh/save.json").toAbsolutePath().toString());
+    private static void setupSaveDirectory()  {
+        File saveDir = new File(Paths.get(System.getProperty("user.home")).toAbsolutePath().toString());
+        saveDir.mkdirs();
+
+        File saveFile = new File(Paths.get(System.getProperty("user.home") + "/save.json").toAbsolutePath().toString());
         try {
-            saveFile.getParentFile().mkdirs();
             saveFile.createNewFile();
         } catch (IOException e) {
-            System.err.println("[ERROR] Something went wrong while creating empty save file " + saveFile.getAbsolutePath());
+            System.err.println("[ERROR] Something went wrong while creating empty device save file " + saveFile.getAbsolutePath());
         }
     }
 
@@ -127,8 +129,8 @@ public class ApplicationConfig {
         return smartHomeCredentials;
     }
 
-    public static Path getSaveFilePath() {
-        return SAVE_FILE_PATH;
+    public static Path getDeviceSavePath() {
+        return Paths.get(SAVE_DIR_PATH.toString() + "/devices.json");
     }
     
 }

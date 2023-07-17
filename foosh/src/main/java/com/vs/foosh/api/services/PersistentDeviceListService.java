@@ -16,7 +16,7 @@ import com.vs.foosh.api.model.ReadSaveFileResult;
 
 public class PersistentDeviceListService {
     public static void saveDeviceList() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ApplicationConfig.getSaveFilePath().toFile()))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ApplicationConfig.getDeviceSavePath().toFile()))) {
             oos.writeObject(DeviceList.getInstance());
         } catch (FileNotFoundException e) {
             throw new SaveFileNotFoundException();
@@ -28,7 +28,7 @@ public class PersistentDeviceListService {
 
     public static ReadSaveFileResult hasSavedDeviceList() {
         ReadSaveFileResult result = new ReadSaveFileResult();
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ApplicationConfig.getSaveFilePath().toFile()))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ApplicationConfig.getDeviceSavePath().toFile()))) {
             List<AbstractDevice> list = (List<AbstractDevice>) ois.readObject();
             result.setData(list);
             result.setSuccess(true);
