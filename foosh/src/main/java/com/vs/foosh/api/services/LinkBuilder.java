@@ -36,6 +36,7 @@ public class LinkBuilder {
             .scheme("http")
             .host(host)
             .port(port)
+            .path("api/")
             .path("devices/")
             .build();
 
@@ -58,6 +59,7 @@ public class LinkBuilder {
             .scheme("http")
             .host(host)
             .port(port)
+            .path("api/")
             .path("device/")
             .path(id.toString())
             .build();
@@ -71,6 +73,7 @@ public class LinkBuilder {
             .scheme("http")
             .host(host)
             .port(port)
+            .path("api/")
             .path("vars/")
             .build();
 
@@ -83,6 +86,7 @@ public class LinkBuilder {
             .scheme("http")
             .host(host)
             .port(port)
+            .path("api/")
             .path("var/")
             .path(id.toString())
             .build();
@@ -106,6 +110,7 @@ public class LinkBuilder {
             .scheme("http")
             .host(host)
             .port(port)
+            .path("api/")
             .path("model/")
             .path(id.toString())
             .build();
