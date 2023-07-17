@@ -154,4 +154,19 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
                 HttpStatus.METHOD_NOT_ALLOWED);
     }
 
+    @ExceptionHandler(SaveFileNotFoundException.class)
+    public ResponseEntity<Object> handleSaveFileNotFoundException(SaveFileNotFoundException exception,
+            WebRequest request) {
+        return HttpResponseBuilder.buildException(
+                exception.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(SavingToFileIOException.class)
+    public ResponseEntity<Object> handleSavingToFileIOException(SavingToFileIOException exception,
+            WebRequest request) {
+        return HttpResponseBuilder.buildException(
+                exception.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

@@ -27,7 +27,9 @@ import com.vs.foosh.api.model.AbstractDevice;
 import com.vs.foosh.api.model.DeviceList;
 import com.vs.foosh.api.model.FetchDeviceResponse;
 import com.vs.foosh.api.model.QueryNamePatchRequest;
+import com.vs.foosh.api.model.ReadSaveFileResult;
 import com.vs.foosh.api.services.LinkBuilder;
+import com.vs.foosh.api.services.PersistentDeviceListService;
 import com.vs.foosh.api.services.ApplicationConfig;
 import com.vs.foosh.api.services.HttpResponseBuilder;
 
@@ -48,7 +50,6 @@ public abstract class AbstractDeviceController {
                 HttpStatus.OK);
     }
 
-    // TODO: [BUG] After calling a second time, it gets weird. Look into it!
     @PostMapping(value = "/api/devices/", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesPost(
             @RequestBody(required = false) SmartHomeCredentials credentials) {
@@ -64,13 +65,19 @@ public abstract class AbstractDeviceController {
         }
 
         try {
-            if (credentials == null) {
-                apiResponse = fetchDevicesFromSmartHomeAPI();
+            ReadSaveFileResult readResult = PersistentDeviceListService.hasSavedDeviceList();
+            if (readResult.getSuccess()) {
+                DeviceList.setDevices(readResult.getData());
             } else {
-                apiResponse = fetchDevicesFromSmartHomeAPI(credentials);
-            }
+                if (credentials == null) {
+                    apiResponse = fetchDevicesFromSmartHomeAPI();
+                } else {
+                    apiResponse = fetchDevicesFromSmartHomeAPI(credentials);
+                }
 
-            DeviceList.setDevices(apiResponse.getDevices());
+                DeviceList.setDevices(apiResponse.getDevices());
+                PersistentDeviceListService.saveDeviceList();
+            }
 
             Map<String, URI> linkBlock = new HashMap<>();
             linkBlock.put("self", LinkBuilder.getDeviceListLink());

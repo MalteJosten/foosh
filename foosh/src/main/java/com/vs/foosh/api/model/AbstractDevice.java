@@ -1,5 +1,6 @@
 package com.vs.foosh.api.model;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
@@ -7,9 +8,10 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import com.vs.foosh.api.services.LinkBuilder;
 
-public abstract class AbstractDevice {
+public abstract class AbstractDevice implements Serializable {
     protected UUID id;
     protected String queryName;
     protected String deviceName;

@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 
@@ -12,6 +13,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vs.foosh.api.model.DeviceList;
+import com.vs.foosh.api.model.ReadSaveFileResult;
 import com.vs.foosh.api.model.SmartHomeCredentials;
 
 @Configuration
@@ -19,12 +22,14 @@ public class ApplicationConfig {
     private static final String HOST = "localhost";
     private static final int DEFAULT_PORT = 8080;
     private static int port;
+    private static Path SAVE_FILE_PATH = Paths.get(System.getProperty("user.home") + "/foosh/save.json").toAbsolutePath();
 
     private static SmartHomeCredentials smartHomeCredentials;
     
     @Bean
     private static void setup() {
         readInApplicationProperties();
+        tryToLoadSaveFile();
     }
 
     private static void readInApplicationProperties() {
@@ -37,6 +42,8 @@ public class ApplicationConfig {
 
             String smartHomeCredentialPath = config.getProperty("smartHomeCredentialPath");
             setupSmartHomeCredentials(smartHomeCredentialPath);
+
+            setupSaveFile();
 
         } catch (IOException e) {
             port = DEFAULT_PORT;
@@ -98,9 +105,30 @@ public class ApplicationConfig {
             }
         }
     }
+    
+    private static void setupSaveFile()  {
+        File saveFile = new File(Paths.get(System.getProperty("user.home") + "/foosh/save.json").toAbsolutePath().toString());
+        try {
+            saveFile.getParentFile().mkdirs();
+            saveFile.createNewFile();
+        } catch (IOException e) {
+            System.err.println("[ERROR] Something went wrong while creating empty save file " + saveFile.getAbsolutePath());
+        }
+    }
+
+    private static void tryToLoadSaveFile() {
+        ReadSaveFileResult result = PersistentDeviceListService.hasSavedDeviceList();
+        if (result.getSuccess()) {
+            DeviceList.setDevices(result.getData());
+        }
+    }
 
     public static SmartHomeCredentials getSmartHomeCredentials() {
         return smartHomeCredentials;
+    }
+
+    public static Path getSaveFilePath() {
+        return SAVE_FILE_PATH;
     }
     
 }
