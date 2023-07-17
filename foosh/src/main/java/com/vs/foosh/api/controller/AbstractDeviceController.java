@@ -53,6 +53,15 @@ public abstract class AbstractDeviceController {
     public ResponseEntity<Object> devicesPost(
             @RequestBody(required = false) SmartHomeCredentials credentials) {
         FetchDeviceResponse apiResponse;
+        if (DeviceList.getInstance() == null || !DeviceList.getInstance().isEmpty()) {
+            Map<String, URI> linkBlock = new HashMap<>();
+            linkBlock.put("self", LinkBuilder.getDeviceListLink());
+
+            return HttpResponseBuilder.buildException(
+                "There are already registered devices! Please use PUT/PATCH on /devices/ to update the list.",
+                linkBlock, 
+                HttpStatus.CONFLICT);
+        }
 
         try {
             if (credentials == null) {
@@ -69,7 +78,7 @@ public abstract class AbstractDeviceController {
             return HttpResponseBuilder.buildResponse(
                     new AbstractMap.SimpleEntry<String, Object>("devices", DeviceList.getDevices()),
                     linkBlock,
-                    HttpStatus.OK);
+                    HttpStatus.CREATED);
         } catch (ResourceAccessException rAccessException) {
             throw new SmartHomeAccessException(ApplicationConfig.getSmartHomeCredentials().getUri() + "/api/devices/");
         } catch (IOException ioException) {
@@ -165,7 +174,9 @@ public abstract class AbstractDeviceController {
         
         
         if (patchDeviceQueryName(new QueryNamePatchRequest(uuid, queryName))) {
-            return new ResponseEntity<>(DeviceList.getDevice(uuid.toString()), HttpStatus.OK);
+            AbstractDevice device = DeviceList.getDevice(uuid.toString());
+
+            return HttpResponseBuilder.buildResponse(device, device.getLinks(), HttpStatus.OK);
         } else {
             return new ResponseEntity<Object>("Could not patch queryName for device '" + id + "' !'", HttpStatus.INTERNAL_SERVER_ERROR);
         }

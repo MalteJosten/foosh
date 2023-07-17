@@ -19,10 +19,8 @@ public class Device extends AbstractDevice {
 
         setQueryName(DeviceList.findUniqueQueryName(new QueryNamePatchRequest(this.id, this.description.getProperties().get("name").toString())));
 
-        this.links = new HashMap<>();
-        this.links.put("selfStatic", LinkBuilder.buildPath(List.of("device", this.id.toString())));
-        this.links.put("selfQuery",  LinkBuilder.buildPath(List.of("device", this.queryName)));
-        this.links.put("devices",    LinkBuilder.getDeviceListLink());
+        setLinks();
+
     }        
 
     public Device(JsonNode description, String queryName) {
@@ -31,6 +29,8 @@ public class Device extends AbstractDevice {
         setObjectFields();
 
         setQueryName(DeviceList.findUniqueQueryName(new QueryNamePatchRequest(this.id, queryName)));
+
+        setLinks();
 
         this.links = new HashMap<>();
         this.links.put("selfStatic", LinkBuilder.buildPath(List.of("device", this.id.toString())));

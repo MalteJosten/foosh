@@ -1,10 +1,13 @@
 package com.vs.foosh.api.model;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.vs.foosh.api.services.LinkBuilder;
 
 public abstract class AbstractDevice {
     protected UUID id;
@@ -27,6 +30,9 @@ public abstract class AbstractDevice {
 
     public void setQueryName(String name) {
         this.queryName = name.toLowerCase();
+        if (this.links != null) {
+            this.links.replace("selfQuery", LinkBuilder.buildPath(List.of("device", this.queryName)));
+        }
     }
 
     public String getDeviceName() {
@@ -48,6 +54,13 @@ public abstract class AbstractDevice {
     @JsonIgnore
     public Map<String, URI> getLinks() {
         return this.links;
+    }
+
+    public void setLinks() {
+        this.links = new HashMap<>();
+        this.links.put("selfStatic", LinkBuilder.buildPath(List.of("device", this.id.toString())));
+        this.links.put("selfQuery",  LinkBuilder.buildPath(List.of("device", this.queryName)));
+        this.links.put("devices",    LinkBuilder.getDeviceListLink());
     }
 
     @JsonIgnore
