@@ -1,5 +1,6 @@
 package com.vs.foosh.api.model;
 
+import java.net.URI;
 import java.util.Map;
 import java.util.UUID;
 
@@ -12,7 +13,7 @@ public abstract class AbstractDevice {
     protected String type;
     protected AbstractDeviceDescription description;
 
-    protected Map<String, String> links;
+    protected Map<String, URI> links;
 
     protected abstract void setObjectFields();
 
@@ -44,17 +45,18 @@ public abstract class AbstractDevice {
         this.description = description;
     }
 
-    public Map<String, String> getLinks() {
+    @JsonIgnore
+    public Map<String, URI> getLinks() {
         return this.links;
     }
 
     @JsonIgnore
-    public String getStaticLink() {
+    public URI getStaticLink() {
         return this.links.get("selfStatic");
     }
 
     @JsonIgnore
-    public String getQueryLink() {
+    public URI getQueryLink() {
         return this.links.get("selfQuery");
     }
 

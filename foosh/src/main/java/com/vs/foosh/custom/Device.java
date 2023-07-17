@@ -20,9 +20,9 @@ public class Device extends AbstractDevice {
         setQueryName(DeviceList.findUniqueQueryName(new QueryNamePatchRequest(this.id, this.description.getProperties().get("name").toString())));
 
         this.links = new HashMap<>();
-        this.links.put("selfStatic", LinkBuilder.buildPath(List.of("device", this.id.toString())).toString());
-        this.links.put("selfQuery",  LinkBuilder.buildPath(List.of("device", this.queryName)).toString());
-        this.links.put("devices",    LinkBuilder.getDeviceListLink().toString());
+        this.links.put("selfStatic", LinkBuilder.buildPath(List.of("device", this.id.toString())));
+        this.links.put("selfQuery",  LinkBuilder.buildPath(List.of("device", this.queryName)));
+        this.links.put("devices",    LinkBuilder.getDeviceListLink());
     }        
 
     public Device(JsonNode description, String queryName) {
@@ -33,9 +33,9 @@ public class Device extends AbstractDevice {
         setQueryName(DeviceList.findUniqueQueryName(new QueryNamePatchRequest(this.id, queryName)));
 
         this.links = new HashMap<>();
-        this.links.put("selfStatic", LinkBuilder.buildPath(List.of("device", this.id.toString())).toString());
-        this.links.put("selfQuery",  LinkBuilder.buildPath(List.of("device", this.queryName)).toString());
-        this.links.put("devices",    LinkBuilder.getDeviceListLink().toString());
+        this.links.put("selfStatic", LinkBuilder.buildPath(List.of("device", this.id.toString())));
+        this.links.put("selfQuery",  LinkBuilder.buildPath(List.of("device", this.queryName)));
+        this.links.put("devices",    LinkBuilder.getDeviceListLink());
     }
 
     @Override

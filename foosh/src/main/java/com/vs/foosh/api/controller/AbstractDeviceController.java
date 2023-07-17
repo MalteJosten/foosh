@@ -56,10 +56,8 @@ public abstract class AbstractDeviceController {
 
         try {
             if (credentials == null) {
-                System.out.println("null");
                 apiResponse = fetchDevicesFromSmartHomeAPI();
             } else {
-                System.out.println("non null");
                 apiResponse = fetchDevicesFromSmartHomeAPI(credentials);
             }
 
@@ -127,8 +125,10 @@ public abstract class AbstractDeviceController {
     @GetMapping("/api/device/{id}")
     public ResponseEntity<Object> deviceGet(@PathVariable("id") String id) {
         AbstractDevice device = DeviceList.getDevice(id);
+        Map<String, Object> deviceBlock = new HashMap<>();
+        deviceBlock.put("device", device);
 
-        return new ResponseEntity<>(device, HttpStatus.OK);
+        return HttpResponseBuilder.buildResponse(device, device.getLinks(), HttpStatus.OK);
     }
 
     @PostMapping("/api/device/{id}")
