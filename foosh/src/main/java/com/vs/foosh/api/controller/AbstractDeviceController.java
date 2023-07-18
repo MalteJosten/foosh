@@ -43,12 +43,9 @@ public abstract class AbstractDeviceController {
 
     @GetMapping(value = "devices/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesGet() {
-        Map<String, URI> linkBlock = new HashMap<>();
-        linkBlock.put("self", LinkBuilder.getDeviceListLink());
-
         return HttpResponseBuilder.buildResponse(
                 new AbstractMap.SimpleEntry<String, Object>("devices", DeviceList.getInstance()),
-                linkBlock,
+                DeviceList.getLinks("self"),
                 HttpStatus.OK);
     }
 
@@ -88,12 +85,9 @@ public abstract class AbstractDeviceController {
             }
         }
 
-        Map<String, URI> linkBlock = new HashMap<>();
-        linkBlock.put("self", LinkBuilder.getDeviceListLink());
-
         return HttpResponseBuilder.buildResponse(
                 new AbstractMap.SimpleEntry<String, Object>("devices", DeviceList.getInstance()),
-                linkBlock,
+                DeviceList.getLinks("self"),
                 HttpStatus.CREATED);
     }
 
@@ -112,12 +106,9 @@ public abstract class AbstractDeviceController {
         } else {
             DeviceList.setDevices(old);
 
-            Map<String, URI> linkBlock = new HashMap<>();
-            linkBlock.put("self", LinkBuilder.getDeviceListLink());
-
             return HttpResponseBuilder.buildResponse(
                     new AbstractMap.SimpleEntry<String, Object>("devices", DeviceList.getInstance()),
-                    linkBlock,
+                    DeviceList.getLinks("self"),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -127,12 +118,9 @@ public abstract class AbstractDeviceController {
         if (patchBatchDeviceQueryName(request)) {
             PersistentDeviceListService.saveDeviceList();
 
-            Map<String, URI> linkBlock = new HashMap<>();
-            linkBlock.put("self", LinkBuilder.getDeviceListLink());
-
             return HttpResponseBuilder.buildResponse(
                     new AbstractMap.SimpleEntry<String, Object>("devices", DeviceList.getInstance()),
-                    linkBlock,
+                    DeviceList.getLinks("self"),
                     HttpStatus.OK);
         } else {
             throw new BatchQueryNameException();

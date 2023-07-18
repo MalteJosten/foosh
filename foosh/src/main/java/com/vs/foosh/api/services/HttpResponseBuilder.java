@@ -29,10 +29,10 @@ public class HttpResponseBuilder {
         return new ResponseEntity<>(responseBody, status);
     }
 
-    public static ResponseEntity<Object> buildResponse(AbstractMap.Entry<String, Object> result, Map<String, URI> linkBlock, HttpStatus status) {
+    public static ResponseEntity<Object> buildResponse(AbstractMap.Entry<String, Object> result, List<LinkEntry> links, HttpStatus status) {
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put(result.getKey(), result.getValue());
-        responseBody.put("links", linkBlock);
+        responseBody.put("links", links);
 
         return new ResponseEntity<>(responseBody, status);
     }
