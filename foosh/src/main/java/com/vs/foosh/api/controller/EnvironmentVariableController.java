@@ -74,31 +74,31 @@ public class EnvironmentVariableController {
     /// Environment Variable
     ///
 
-    @GetMapping("var/{id}")
+    @GetMapping("vars/{id}")
     public ResponseEntity<Object> getVar() {
         // TODO: Retrieve environment variable
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    @PostMapping("var")
+    @PostMapping("vars")
     public ResponseEntity<Object> postVar() {
         // TODO: What exactly needs/can be included when creating new variable? 
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    @PutMapping("var/{id}")
+    @PutMapping("vars/{id}")
     public ResponseEntity<Object> putVar() {
         // TODO: Allow replacement only when all fields are present (?)
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    @PatchMapping("var/{id}")
+    @PatchMapping("vars/{id}")
     public ResponseEntity<Object> patchVar() {
         // TODO: What can be updated? Depends on POST.
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    @DeleteMapping("var/{id}")
+    @DeleteMapping("vars/{id}")
     public ResponseEntity<Object> deleteVar() {
         // TODO: Delete variable.
         return new ResponseEntity<Object>(HttpStatus.OK);
