@@ -162,7 +162,7 @@ public abstract class AbstractDeviceController {
     // Device
     //
 
-    @GetMapping("device/{id}")
+    @GetMapping("devices/{id}")
     public ResponseEntity<Object> deviceGet(@PathVariable("id") String id) {
         AbstractDevice device = DeviceList.getDevice(id);
         Map<String, Object> deviceBlock = new HashMap<>();
@@ -171,14 +171,14 @@ public abstract class AbstractDeviceController {
         return HttpResponseBuilder.buildResponse(device, device.getLinks(), HttpStatus.OK);
     }
 
-    @PostMapping("device/{id}")
+    @PostMapping("devices/{id}")
     public ResponseEntity<Object> devicePost(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
                 "You can only use POST and PUT on /devices/!",
                 Map.of("devices", LinkBuilder.getDeviceListLink()));
     }
 
-    @PutMapping("device/{id}")
+    @PutMapping("devices/{id}")
     public ResponseEntity<Object> devicePut(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
                 "You can only use POST and PUT on /devices/!",
@@ -186,7 +186,7 @@ public abstract class AbstractDeviceController {
     }
 
     /// no empty string
-    @PatchMapping("device/{id}")
+    @PatchMapping("devices/{id}")
     public ResponseEntity<Object> devicePatch(@PathVariable("id") String id, @RequestBody Map<String, String> requestBody) {
         String queryName = requestBody.get("queryName").toLowerCase();
         UUID uuid;
@@ -215,7 +215,7 @@ public abstract class AbstractDeviceController {
         }
     }
 
-    @DeleteMapping("device/{id}")
+    @DeleteMapping("devices/{id}")
     public ResponseEntity<Object> deviceDelete(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
                 "You cannot delete an individual device. You can only delete the entire collection with DELETE on /devices/ !",
