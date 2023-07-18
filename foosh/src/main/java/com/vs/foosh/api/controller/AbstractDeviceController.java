@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.ResourceAccessException;
 
 import java.io.IOException;
@@ -33,13 +34,14 @@ import com.vs.foosh.api.services.PersistentDeviceListService;
 import com.vs.foosh.api.services.ApplicationConfig;
 import com.vs.foosh.api.services.HttpResponseBuilder;
 
+@RequestMapping(value="/api/")
 public abstract class AbstractDeviceController {
 
     //
     // Device Collection
     //
 
-    @GetMapping(value = "/api/devices/", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "devices/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesGet() {
         Map<String, URI> linkBlock = new HashMap<>();
         linkBlock.put("self", LinkBuilder.getDeviceListLink());
@@ -50,7 +52,7 @@ public abstract class AbstractDeviceController {
                 HttpStatus.OK);
     }
 
-    @PostMapping(value = "/api/devices/", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "devices/", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesPost(
             @RequestBody(required = false) SmartHomeCredentials credentials) {
         if (DeviceList.getInstance() == null || !DeviceList.getInstance().isEmpty()) {
@@ -93,7 +95,7 @@ public abstract class AbstractDeviceController {
                 HttpStatus.CREATED);
     }
 
-    @PutMapping("/api/devices/")
+    @PutMapping("devices/")
     public ResponseEntity<Object> devicesPut(
             @RequestBody(required=false) SmartHomeCredentials credentials) {
         List<AbstractDevice> old = DeviceList.getInstance();
@@ -118,7 +120,7 @@ public abstract class AbstractDeviceController {
         }
     }
 
-    @PatchMapping("/api/devices/")
+    @PatchMapping("devices/")
     public ResponseEntity<Object> devicesPatch(@RequestBody List<QueryNamePatchRequest> request) {
         if (patchBatchDeviceQueryName(request)) {
             PersistentDeviceListService.saveDeviceList();
@@ -135,7 +137,7 @@ public abstract class AbstractDeviceController {
         }
     }
 
-    @DeleteMapping("/api/devices/")
+    @DeleteMapping("devices/")
     public ResponseEntity<Object> devicesDelete() {
         DeviceList.clearDevices();
 
@@ -160,7 +162,7 @@ public abstract class AbstractDeviceController {
     // Device
     //
 
-    @GetMapping("/api/device/{id}")
+    @GetMapping("device/{id}")
     public ResponseEntity<Object> deviceGet(@PathVariable("id") String id) {
         AbstractDevice device = DeviceList.getDevice(id);
         Map<String, Object> deviceBlock = new HashMap<>();
@@ -169,14 +171,14 @@ public abstract class AbstractDeviceController {
         return HttpResponseBuilder.buildResponse(device, device.getLinks(), HttpStatus.OK);
     }
 
-    @PostMapping("/api/device/{id}")
+    @PostMapping("device/{id}")
     public ResponseEntity<Object> devicePost(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
                 "You can only use POST and PUT on /devices/!",
                 Map.of("devices", LinkBuilder.getDeviceListLink()));
     }
 
-    @PutMapping("/api/device/{id}")
+    @PutMapping("device/{id}")
     public ResponseEntity<Object> devicePut(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
                 "You can only use POST and PUT on /devices/!",
@@ -184,7 +186,7 @@ public abstract class AbstractDeviceController {
     }
 
     /// no empty string
-    @PatchMapping("/api/device/{id}")
+    @PatchMapping("device/{id}")
     public ResponseEntity<Object> devicePatch(@PathVariable("id") String id, @RequestBody Map<String, String> requestBody) {
         String queryName = requestBody.get("queryName").toLowerCase();
         UUID uuid;
@@ -213,7 +215,7 @@ public abstract class AbstractDeviceController {
         }
     }
 
-    @DeleteMapping("/api/device/{id}")
+    @DeleteMapping("device/{id}")
     public ResponseEntity<Object> deviceDelete(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
                 "You cannot delete an individual device. You can only delete the entire collection with DELETE on /devices/ !",
