@@ -104,9 +104,9 @@ public class DeviceList {
 
     public static List<LinkEntry> getLinks(String label) {
         LinkEntry get    = new LinkEntry(label, LinkBuilder.getDeviceListLink(), HttpAction.GET, List.of());
-        LinkEntry post   = new LinkEntry(label, LinkBuilder.getDeviceListLink(), HttpAction.POST, List.of());
-        LinkEntry put    = new LinkEntry(label, LinkBuilder.getDeviceListLink(), HttpAction.PUT, List.of());
-        LinkEntry patch  = new LinkEntry(label, LinkBuilder.getDeviceListLink(), HttpAction.PATCH, List.of());
+        LinkEntry post   = new LinkEntry(label, LinkBuilder.getDeviceListLink(), HttpAction.POST, List.of("application/json"));
+        LinkEntry put    = new LinkEntry(label, LinkBuilder.getDeviceListLink(), HttpAction.PUT, List.of("application/json"));
+        LinkEntry patch  = new LinkEntry(label, LinkBuilder.getDeviceListLink(), HttpAction.PATCH, List.of("application/json"));
         LinkEntry delete = new LinkEntry(label, LinkBuilder.getDeviceListLink(), HttpAction.DELETE, List.of());
 
         if (getDevices().isEmpty() || getDevices().size() == 0) {
