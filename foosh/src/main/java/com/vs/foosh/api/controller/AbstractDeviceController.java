@@ -172,14 +172,14 @@ public abstract class AbstractDeviceController {
     @PostMapping("/api/device/{id}")
     public ResponseEntity<Object> devicePost(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
-                "You can only create/replace a device with either POST or PATCH on /devices/ !",
+                "You can only use POST and PUT on /devices/!",
                 Map.of("devices", LinkBuilder.getDeviceListLink()));
     }
 
     @PutMapping("/api/device/{id}")
     public ResponseEntity<Object> devicePut(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
-                "You can only create/replace a device with either POST or PATCH on /devices/ !",
+                "You can only use POST and PUT on /devices/!",
                 Map.of("devices", LinkBuilder.getDeviceListLink()));
     }
 
