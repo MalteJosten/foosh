@@ -2,9 +2,8 @@ package com.vs.foosh.api.model;
 
 import java.io.Serializable;
 import java.net.URI;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -18,7 +17,7 @@ public abstract class AbstractDevice implements Serializable {
     protected String type;
     protected AbstractDeviceDescription description;
 
-    protected Map<String, URI> links;
+    protected List<LinkEntry> links = new ArrayList<>();
 
     protected abstract void setObjectFields();
 
@@ -33,7 +32,7 @@ public abstract class AbstractDevice implements Serializable {
     public void setQueryName(String name) {
         this.queryName = name.toLowerCase();
         if (this.links != null) {
-            this.links.replace("selfQuery", LinkBuilder.buildPath(List.of("device", this.queryName)));
+            setLinks();
         }
     }
 
@@ -54,25 +53,51 @@ public abstract class AbstractDevice implements Serializable {
     }
 
     @JsonIgnore
-    public Map<String, URI> getLinks() {
+    public List<LinkEntry> getLinks() {
         return this.links;
     }
 
     public void setLinks() {
-        this.links = new HashMap<>();
-        this.links.put("selfStatic", LinkBuilder.buildPath(List.of("device", this.id.toString())));
-        this.links.put("selfQuery",  LinkBuilder.buildPath(List.of("device", this.queryName)));
-        this.links.put("devices",    LinkBuilder.getDeviceListLink());
+        List<LinkEntry> selfEntries = buildSelfEntries();
+
+        if (links == null || links.isEmpty()) {
+            links.clear();
+        }
+
+        links = selfEntries;
+        links.addAll(DeviceList.getLinks("devices"));
+    }
+
+    private List<LinkEntry> buildSelfEntries() {
+        LinkEntry selfGet   = new LinkEntry("selfStatic", LinkBuilder.buildPath(List.of("device", this.id.toString())), HttpAction.GET, List.of());
+        LinkEntry selfPatch = new LinkEntry("selfStatic", LinkBuilder.buildPath(List.of("device", this.id.toString())), HttpAction.PATCH, List.of("application/json"));
+
+        LinkEntry queryGet   = new LinkEntry("selfQuery",  LinkBuilder.buildPath(List.of("device", this.queryName)), HttpAction.GET, List.of());
+        LinkEntry queryPatch = new LinkEntry("selfQuery",  LinkBuilder.buildPath(List.of("device", this.queryName)), HttpAction.PATCH, List.of("application/json"));
+
+        return new ArrayList<>(List.of(selfGet, selfPatch, queryGet, queryPatch));
     }
 
     @JsonIgnore
     public URI getStaticLink() {
-        return this.links.get("selfStatic");
+        for (LinkEntry entry: links) {
+            if (entry.getRelation().equals("selfStatic")) {
+                return entry.getLink();
+            }
+        }
+
+        return  LinkBuilder.getRootLinkEntry().get("root");
     }
 
     @JsonIgnore
     public URI getQueryLink() {
-        return this.links.get("selfQuery");
+        for (LinkEntry entry: links) {
+            if (entry.getRelation().equals("selfQuery")) {
+                return entry.getLink();
+            }
+        }
+
+        return  LinkBuilder.getRootLinkEntry().get("root");
     }
 
     @Override

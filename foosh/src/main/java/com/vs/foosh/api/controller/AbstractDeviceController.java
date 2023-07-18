@@ -78,6 +78,8 @@ public abstract class AbstractDeviceController {
                 }
 
                 DeviceList.setDevices(apiResponse.getDevices());
+                DeviceList.updateDeviceLinks();
+
                 PersistentDeviceListService.saveDeviceList();
             } catch (ResourceAccessException rAccessException) {
                 throw new SmartHomeAccessException(ApplicationConfig.getSmartHomeCredentials().getUri() + "/api/devices/");

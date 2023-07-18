@@ -34,7 +34,7 @@ public class DeviceController extends AbstractDeviceController {
             }
         }
 
-        return new FetchDeviceResponse(true, devices);
+        return new FetchDeviceResponse(devices, true);
     }
 
     /// For this scenario, no authentication is needed.

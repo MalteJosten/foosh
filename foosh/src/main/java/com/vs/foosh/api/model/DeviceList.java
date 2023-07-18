@@ -7,6 +7,7 @@ import java.util.UUID;
 import com.vs.foosh.api.exceptions.CouldNotFindUniqueQueryNameException;
 import com.vs.foosh.api.exceptions.DeviceIdNotFoundException;
 import com.vs.foosh.api.exceptions.QueryNameIsNotUniqueException;
+import com.vs.foosh.api.services.LinkBuilder;
 
 public class DeviceList {
     private static List<AbstractDevice> devices;
@@ -99,6 +100,26 @@ public class DeviceList {
         }
 
         throw new CouldNotFindUniqueQueryNameException(id, UNIQUE_QUERY_NAME_TIMEOUT);
+    }
+
+    public static List<LinkEntry> getLinks(String label) {
+        LinkEntry get    = new LinkEntry(label, LinkBuilder.getDeviceListLink(), HttpAction.GET, List.of());
+        LinkEntry post   = new LinkEntry(label, LinkBuilder.getDeviceListLink(), HttpAction.POST, List.of());
+        LinkEntry put    = new LinkEntry(label, LinkBuilder.getDeviceListLink(), HttpAction.PUT, List.of());
+        LinkEntry patch  = new LinkEntry(label, LinkBuilder.getDeviceListLink(), HttpAction.PATCH, List.of());
+        LinkEntry delete = new LinkEntry(label, LinkBuilder.getDeviceListLink(), HttpAction.DELETE, List.of());
+
+        if (getDevices().isEmpty() || getDevices().size() == 0) {
+            return new ArrayList<>(List.of(get, put, post));
+        } else {
+            return new ArrayList<>(List.of(get, put, patch, delete));
+        }
+    }
+
+    public static void updateDeviceLinks() {
+        for (AbstractDevice device: getDevices()) {
+            device.setLinks();
+        }
     }
 
 }
