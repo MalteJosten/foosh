@@ -81,15 +81,23 @@ public class DeviceList {
     }
 
     public static boolean isAUniqueQueryName(String name, UUID id) {
-        for (AbstractDevice d: getInstance()) {
-            // Check whether the queryName 'name' is already used.
-            if (d.getQueryName().equals(name)) {
-                // If it's already used, check whether it's the same device.
-                if (d.getId() == id) {
-                    return true;
-                }
+        // Check whether the provided 'name' could be an UUID.
+        // queryNames in form of an UUID are disallowed.
+        try {
+            UUID uuid = UUID.fromString(name);
+            return false;
+        } catch (IllegalArgumentException e) {
+            for (AbstractDevice d: getInstance()) {
+                // Check whether the queryName 'name' is already used
+                if (d.getQueryName().equals(name)) {
+                    // If it's already used, check whether it's the same device.
+                    if (d.getId().equals(id)) {
+                        return true;
+                    }
 
-                return false;
+                    return false;
+                }
+            
             }
         }
         
