@@ -119,7 +119,7 @@ public class ApplicationConfig {
     }
 
     private static void tryToLoadSaveFile() {
-        ReadSaveFileResult result = PersistentDeviceListService.hasSavedDeviceList();
+        ReadSaveFileResult result = PersistentDataService.hasSavedDeviceList();
         if (result.getSuccess()) {
             DeviceList.setDevices(result.getData());
         }

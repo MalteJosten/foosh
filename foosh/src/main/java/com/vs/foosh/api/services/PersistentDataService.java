@@ -17,7 +17,7 @@ import com.vs.foosh.api.model.AbstractDevice;
 import com.vs.foosh.api.model.DeviceList;
 import com.vs.foosh.api.model.ReadSaveFileResult;
 
-public class PersistentDeviceListService {
+public class PersistentDataService {
     public static void saveDeviceList() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ApplicationConfig.getDeviceSavePath().toFile()))) {
             oos.writeObject(DeviceList.getInstance());

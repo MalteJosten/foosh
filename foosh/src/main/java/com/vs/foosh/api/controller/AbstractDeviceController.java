@@ -32,7 +32,7 @@ import com.vs.foosh.api.model.LinkEntry;
 import com.vs.foosh.api.model.QueryNamePatchRequest;
 import com.vs.foosh.api.model.ReadSaveFileResult;
 import com.vs.foosh.api.services.LinkBuilder;
-import com.vs.foosh.api.services.PersistentDeviceListService;
+import com.vs.foosh.api.services.PersistentDataService;
 import com.vs.foosh.api.services.ApplicationConfig;
 import com.vs.foosh.api.services.HttpResponseBuilder;
 
@@ -63,7 +63,7 @@ public abstract class AbstractDeviceController {
         }
 
         FetchDeviceResponse apiResponse;
-        ReadSaveFileResult readResult = PersistentDeviceListService.hasSavedDeviceList();
+        ReadSaveFileResult readResult = PersistentDataService.hasSavedDeviceList();
         if (readResult.getSuccess()) {
             DeviceList.setDevices(readResult.getData());
         } else {
@@ -77,7 +77,7 @@ public abstract class AbstractDeviceController {
                 DeviceList.setDevices(apiResponse.getDevices());
                 DeviceList.updateDeviceLinks();
 
-                PersistentDeviceListService.saveDeviceList();
+                PersistentDataService.saveDeviceList();
             } catch (ResourceAccessException rAccessException) {
                 throw new SmartHomeAccessException(ApplicationConfig.getSmartHomeCredentials().getUri() + "/api/devices/");
             } catch (IOException ioException) {
@@ -116,7 +116,7 @@ public abstract class AbstractDeviceController {
     @PatchMapping("devices/")
     public ResponseEntity<Object> devicesPatch(@RequestBody List<QueryNamePatchRequest> request) {
         if (patchBatchDeviceQueryName(request)) {
-            PersistentDeviceListService.saveDeviceList();
+            PersistentDataService.saveDeviceList();
 
             return HttpResponseBuilder.buildResponse(
                     new AbstractMap.SimpleEntry<String, Object>("devices", DeviceList.getDisplayListRepresentation()),
@@ -131,7 +131,7 @@ public abstract class AbstractDeviceController {
     public ResponseEntity<Object> devicesDelete() {
         DeviceList.clearDevices();
 
-        PersistentDeviceListService.deleteDeviceListSave();
+        PersistentDataService.deleteDeviceListSave();
 
         List<LinkEntry> links = DeviceList.getLinks("self");
 
@@ -210,7 +210,7 @@ public abstract class AbstractDeviceController {
         
         
         if (patchDeviceQueryName(new QueryNamePatchRequest(uuid, queryName))) {
-            PersistentDeviceListService.saveDeviceList();
+            PersistentDataService.saveDeviceList();
 
             // we need to get it one more time, since we changed its queryName
             device = DeviceList.getDevice(uuid.toString());
