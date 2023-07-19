@@ -194,7 +194,7 @@ public abstract class AbstractDeviceController {
         }
 
         // check whether there is a device with the given id
-        AbstractDevice device = DeviceList.getDevice(id);
+        DeviceList.checkIfIdIsPresent(id);
 
         // Is there a field called 'queryName'?
         if (requestBody.get("queryName") == null) {
@@ -212,8 +212,7 @@ public abstract class AbstractDeviceController {
         if (patchDeviceQueryName(new QueryNamePatchRequest(uuid, queryName))) {
             PersistentDataService.saveDeviceList();
 
-            // we need to get it one more time, since we changed its queryName
-            device = DeviceList.getDevice(uuid.toString());
+            AbstractDevice device = DeviceList.getDevice(uuid.toString());
 
             List<LinkEntry> links = new ArrayList<>();
             links.addAll(device.getSelfLinks());

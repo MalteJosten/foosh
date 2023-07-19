@@ -70,6 +70,16 @@ public class DeviceList {
         throw new DeviceIdNotFoundException(identifier);
     }
 
+    public static void checkIfIdIsPresent(String identifier) {
+        for (AbstractDevice device: getDevices()) {
+            if (device.getId().toString().equals(identifier) || device.getQueryName().equals(identifier.toLowerCase())) {
+                return;
+            }
+        }
+
+        throw new DeviceIdNotFoundException(identifier);
+    }
+
     public static boolean isAUniqueQueryName(String name, UUID id) {
         for (AbstractDevice d: getInstance()) {
             // Check whether the queryName 'name' is already used.
