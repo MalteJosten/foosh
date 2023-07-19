@@ -184,7 +184,6 @@ public abstract class AbstractDeviceController {
     /// no empty string
     @PatchMapping("devices/{id}")
     public ResponseEntity<Object> devicePatch(@PathVariable("id") String id, @RequestBody Map<String, String> requestBody) {
-        String queryName = requestBody.get("queryName").toLowerCase();
         UUID uuid;
 
         // Is the provided id a valid UUID?
@@ -193,6 +192,12 @@ public abstract class AbstractDeviceController {
         } catch (IllegalArgumentException e) {
             throw new IdIsNoValidUUIDException(id);
         }
+
+        if (requestBody.get("queryName") == null) {
+            throw new QueryNameIsNullException(uuid, requestBody);
+        }
+
+        String queryName = requestBody.get("queryName").toLowerCase();
 
         // Is a field called 'queryName'?
         if (queryName == null) {

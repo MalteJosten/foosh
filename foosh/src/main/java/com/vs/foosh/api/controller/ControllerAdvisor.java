@@ -1,7 +1,5 @@
 package com.vs.foosh.api.controller;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -12,8 +10,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.vs.foosh.api.exceptions.*;
 import com.vs.foosh.api.model.DeviceList;
 import com.vs.foosh.api.model.EnvironmentVariableList;
-import com.vs.foosh.api.model.LinkEntry;
 import com.vs.foosh.api.services.HttpResponseBuilder;
+import com.vs.foosh.api.services.LinkBuilder;
 
 @ControllerAdvice
 public class ControllerAdvisor extends ResponseEntityExceptionHandler {
@@ -23,55 +21,35 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
      */
 
     @ExceptionHandler(QueryNameIsNotUniqueException.class)
-    public ResponseEntity<Object> handleQueryNameIsNotUniqueException(QueryNameIsNotUniqueException exception,
-            WebRequest request) {
-
-        List<LinkEntry> links = DeviceList.getDevice(exception.getId().toString()).getSelfLinks();
-        links.addAll(DeviceList.getLinks("devices"));
-
+    public ResponseEntity<Object> handleQueryNameIsNotUniqueException(QueryNameIsNotUniqueException exception, WebRequest request) {
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
-                links,
+                LinkBuilder.getDeviceLinkWithDevices(exception.getId().toString()),
                 HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(QueryNameIsNullException.class)
-    public ResponseEntity<Object> handleQueryNameIsNullException(QueryNameIsNullException exception,
-            WebRequest request) {
-
-        List<LinkEntry> links = DeviceList.getDevice(exception.getId().toString()).getSelfLinks();
-        links.addAll(DeviceList.getLinks("devices"));
-
+    public ResponseEntity<Object> handleQueryNameIsNullException(QueryNameIsNullException exception, WebRequest request) {
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
-                links,
+                LinkBuilder.getDeviceLinkWithDevices(exception.getId().toString()),
                 HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(QueryNameIsEmptyException.class)
-    public ResponseEntity<Object> handleQueryNameIsEmptyException(QueryNameIsEmptyException exception,
-            WebRequest request) {
-
-        List<LinkEntry> links = DeviceList.getDevice(exception.getId().toString()).getSelfLinks();
-        links.addAll(DeviceList.getLinks("devices"));
-
-
+    public ResponseEntity<Object> handleQueryNameIsEmptyException(QueryNameIsEmptyException exception, WebRequest request) {
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
-                links,
+                LinkBuilder.getDeviceLinkWithDevices(exception.getId().toString()),
                 HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(CouldNotFindUniqueQueryNameException.class)
     public ResponseEntity<Object> handleCouldNotFindUniqueQueryNameException(
             CouldNotFindUniqueQueryNameException exception, WebRequest request) {
-
-        List<LinkEntry> links = DeviceList.getDevice(exception.getId().toString()).getSelfLinks();
-        links.addAll(DeviceList.getLinks("devices"));
-
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
-                links,
+                LinkBuilder.getDeviceLinkWithDevices(exception.getId().toString()),
                 HttpStatus.BAD_REQUEST);
     }
 

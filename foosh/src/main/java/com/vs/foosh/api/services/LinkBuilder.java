@@ -10,6 +10,7 @@ import java.util.UUID;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.vs.foosh.api.model.DeviceList;
 import com.vs.foosh.api.model.HttpAction;
 import com.vs.foosh.api.model.LinkEntry;
 
@@ -133,6 +134,16 @@ public class LinkBuilder {
 
     public static LinkEntry getRootLinkEntry() {
         return new LinkEntry("root", buildPath(List.of("api")), HttpAction.GET, List.of());
+    }
+
+    public static List<LinkEntry> getDeviceLinkWithDevices(String id) {
+        List<LinkEntry> links = new ArrayList<>();
+        List<LinkEntry> deviceSelfLinks = DeviceList.getDevice(id).getSelfLinks();
+        List<LinkEntry> devicesLinks    = DeviceList.getLinks("devices");
+        links.addAll(deviceSelfLinks);
+        links.addAll(devicesLinks);
+
+        return links;
     }
 
     public static void setServerVariables(String pHost, int pPort) {
