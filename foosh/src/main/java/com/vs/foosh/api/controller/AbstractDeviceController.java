@@ -45,7 +45,7 @@ public abstract class AbstractDeviceController {
     @GetMapping(value = "devices/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesGet() {
         return HttpResponseBuilder.buildResponse(
-                new AbstractMap.SimpleEntry<String, Object>("devices", DeviceList.getInstance()),
+                new AbstractMap.SimpleEntry<String, Object>("devices", DeviceList.getDisplayListRepresentation()),
                 DeviceList.getLinks("self"),
                 HttpStatus.OK);
     }
@@ -85,7 +85,7 @@ public abstract class AbstractDeviceController {
         }
 
         return HttpResponseBuilder.buildResponse(
-                new AbstractMap.SimpleEntry<String, Object>("devices", DeviceList.getInstance()),
+                new AbstractMap.SimpleEntry<String, Object>("devices", DeviceList.getDisplayListRepresentation()),
                 DeviceList.getLinks("self"),
                 HttpStatus.CREATED);
     }
@@ -106,7 +106,7 @@ public abstract class AbstractDeviceController {
             DeviceList.setDevices(old);
 
             return HttpResponseBuilder.buildResponse(
-                    new AbstractMap.SimpleEntry<String, Object>("devices", DeviceList.getInstance()),
+                    new AbstractMap.SimpleEntry<String, Object>("devices", DeviceList.getDisplayListRepresentation()),
                     DeviceList.getLinks("self"),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -118,7 +118,7 @@ public abstract class AbstractDeviceController {
             PersistentDeviceListService.saveDeviceList();
 
             return HttpResponseBuilder.buildResponse(
-                    new AbstractMap.SimpleEntry<String, Object>("devices", DeviceList.getInstance()),
+                    new AbstractMap.SimpleEntry<String, Object>("devices", DeviceList.getDisplayListRepresentation()),
                     DeviceList.getLinks("self"),
                     HttpStatus.OK);
         } else {
@@ -132,12 +132,11 @@ public abstract class AbstractDeviceController {
 
         PersistentDeviceListService.deleteDeviceListSave();
 
-        Map<String, URI> linkBlock = new HashMap<>();
-        linkBlock.put("self", LinkBuilder.getDeviceListLink());
+        List<LinkEntry> links = DeviceList.getLinks("self");
 
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("devices", DeviceList.getInstance());
-        responseBody.put("links", linkBlock);
+        responseBody.put("links", links);
 
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
@@ -154,10 +153,11 @@ public abstract class AbstractDeviceController {
     @GetMapping("devices/{id}")
     public ResponseEntity<Object> deviceGet(@PathVariable("id") String id) {
         AbstractDevice device = DeviceList.getDevice(id);
-        Map<String, Object> deviceBlock = new HashMap<>();
-        deviceBlock.put("device", device);
 
-        return HttpResponseBuilder.buildResponse(device, device.getLinks(), HttpStatus.OK);
+        List<LinkEntry> links = device.getSelfLinks();
+        links.addAll(device.getExtLinks());
+
+        return HttpResponseBuilder.buildResponse(device, links, HttpStatus.OK);
     }
 
     @PostMapping("devices/{id}")
@@ -198,7 +198,10 @@ public abstract class AbstractDeviceController {
 
             AbstractDevice device = DeviceList.getDevice(uuid.toString());
 
-            return HttpResponseBuilder.buildResponse(device, device.getLinks(), HttpStatus.OK);
+            List<LinkEntry> links = device.getSelfLinks();
+            links.addAll(device.getExtLinks());
+
+            return HttpResponseBuilder.buildResponse(device, links, HttpStatus.OK);
         } else {
             return new ResponseEntity<Object>("Could not patch queryName for device '" + id + "' !'", HttpStatus.INTERNAL_SERVER_ERROR);
         }

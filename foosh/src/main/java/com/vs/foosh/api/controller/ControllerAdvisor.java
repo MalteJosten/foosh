@@ -26,7 +26,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleQueryNameIsNotUniqueException(QueryNameIsNotUniqueException exception,
             WebRequest request) {
 
-        List<LinkEntry> links = DeviceList.getDevice(exception.getId().toString()).getLinks();
+        List<LinkEntry> links = DeviceList.getDevice(exception.getId().toString()).getSelfLinks();
         links.addAll(DeviceList.getLinks("devices"));
 
         return HttpResponseBuilder.buildException(
@@ -39,7 +39,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleQueryNameIsNullException(QueryNameIsNullException exception,
             WebRequest request) {
 
-        List<LinkEntry> links = DeviceList.getDevice(exception.getId().toString()).getLinks();
+        List<LinkEntry> links = DeviceList.getDevice(exception.getId().toString()).getSelfLinks();
         links.addAll(DeviceList.getLinks("devices"));
 
         return HttpResponseBuilder.buildException(
@@ -52,7 +52,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleQueryNameIsEmptyException(QueryNameIsEmptyException exception,
             WebRequest request) {
 
-        List<LinkEntry> links = DeviceList.getDevice(exception.getId().toString()).getLinks();
+        List<LinkEntry> links = DeviceList.getDevice(exception.getId().toString()).getSelfLinks();
         links.addAll(DeviceList.getLinks("devices"));
 
 
@@ -66,7 +66,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleCouldNotFindUniqueQueryNameException(
             CouldNotFindUniqueQueryNameException exception, WebRequest request) {
 
-        List<LinkEntry> links = DeviceList.getDevice(exception.getId().toString()).getLinks();
+        List<LinkEntry> links = DeviceList.getDevice(exception.getId().toString()).getSelfLinks();
         links.addAll(DeviceList.getLinks("devices"));
 
         return HttpResponseBuilder.buildException(

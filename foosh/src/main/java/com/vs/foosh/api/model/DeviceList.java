@@ -41,6 +41,16 @@ public class DeviceList {
         return getInstance();
     }
 
+    public static List<AbstractDeviceDisplayRepresentation> getDisplayListRepresentation() {
+        List<AbstractDeviceDisplayRepresentation> displayRepresentation = new ArrayList<>();
+
+        for(AbstractDevice device: getDevices()) {
+            displayRepresentation.add(new AbstractDeviceDisplayRepresentation(device, device.getSelfLinks()));
+        }
+
+        return displayRepresentation;
+    }
+
     public static void clearDevices() {
         getInstance().clear();
     }

@@ -17,7 +17,8 @@ public abstract class AbstractDevice implements Serializable {
     protected String type;
     protected AbstractDeviceDescription description;
 
-    protected List<LinkEntry> links = new ArrayList<>();
+    protected List<LinkEntry> links    = new ArrayList<>();
+    protected List<LinkEntry> extLinks = new ArrayList<>();
 
     protected abstract void setObjectFields();
 
@@ -53,20 +54,25 @@ public abstract class AbstractDevice implements Serializable {
     }
 
     @JsonIgnore
-    public List<LinkEntry> getLinks() {
+    public List<LinkEntry> getSelfLinks() {
         return this.links;
     }
 
-    public void setLinks() {
-        List<LinkEntry> selfEntries = buildSelfEntries();
+    @JsonIgnore
+    public List<LinkEntry> getExtLinks() {
+        return this.extLinks;
+    }
 
+    public void setLinks() {
         if (links == null || links.isEmpty()) {
             links.clear();
+            extLinks.clear();
         }
 
-        links = selfEntries;
-        links.addAll(DeviceList.getLinks("devices"));
+        links = buildSelfEntries();
+        extLinks = DeviceList.getLinks("devices");
     }
+
 
     private List<LinkEntry> buildSelfEntries() {
         LinkEntry selfGet   = new LinkEntry("selfStatic", LinkBuilder.buildPath(List.of("device", this.id.toString())), HttpAction.GET, List.of());
