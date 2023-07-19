@@ -12,9 +12,9 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.vs.foosh.api.controller.AbstractDeviceController;
-import com.vs.foosh.api.model.AbstractDevice;
-import com.vs.foosh.api.model.SmartHomeCredentials;
-import com.vs.foosh.api.model.FetchDeviceResponse;
+import com.vs.foosh.api.model.device.AbstractDevice;
+import com.vs.foosh.api.model.device.FetchDeviceResponse;
+import com.vs.foosh.api.model.web.SmartHomeCredentials;
 import com.vs.foosh.api.services.ApplicationConfig;
 
 @RestController

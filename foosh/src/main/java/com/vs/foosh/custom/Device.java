@@ -3,9 +3,9 @@ package com.vs.foosh.custom;
 import java.util.UUID;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.vs.foosh.api.model.AbstractDevice;
-import com.vs.foosh.api.model.DeviceList;
-import com.vs.foosh.api.model.QueryNamePatchRequest;
+import com.vs.foosh.api.model.device.AbstractDevice;
+import com.vs.foosh.api.model.device.DeviceList;
+import com.vs.foosh.api.model.device.QueryNamePatchRequest;
 
 public class Device extends AbstractDevice {
 

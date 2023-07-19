@@ -8,8 +8,8 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.vs.foosh.api.model.HttpResponseObject;
-import com.vs.foosh.api.model.LinkEntry;
+import com.vs.foosh.api.model.web.HttpResponseObject;
+import com.vs.foosh.api.model.web.LinkEntry;
 
 public class HttpResponseBuilder {
     public static ResponseEntity<Object> buildResponse(HttpResponseObject object, List<LinkEntry> links, HttpStatus status) {

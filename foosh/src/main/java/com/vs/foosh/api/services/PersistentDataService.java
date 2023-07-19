@@ -10,12 +10,12 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 
-import com.vs.foosh.api.exceptions.CouldNotDeleteCollectionException;
-import com.vs.foosh.api.exceptions.SaveFileNotFoundException;
-import com.vs.foosh.api.exceptions.SavingToFileIOException;
-import com.vs.foosh.api.model.AbstractDevice;
-import com.vs.foosh.api.model.DeviceList;
-import com.vs.foosh.api.model.ReadSaveFileResult;
+import com.vs.foosh.api.exceptions.misc.CouldNotDeleteCollectionException;
+import com.vs.foosh.api.exceptions.misc.SaveFileNotFoundException;
+import com.vs.foosh.api.exceptions.misc.SavingToFileIOException;
+import com.vs.foosh.api.model.device.AbstractDevice;
+import com.vs.foosh.api.model.device.DeviceList;
+import com.vs.foosh.api.model.misc.ReadSaveFileResult;
 
 public class PersistentDataService {
     public static void saveDeviceList() {

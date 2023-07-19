@@ -7,9 +7,23 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.vs.foosh.api.exceptions.*;
-import com.vs.foosh.api.model.DeviceList;
-import com.vs.foosh.api.model.VariableList;
+import com.vs.foosh.api.exceptions.device.BatchQueryNameException;
+import com.vs.foosh.api.exceptions.device.CouldNotFindUniqueQueryNameException;
+import com.vs.foosh.api.exceptions.device.DeviceIdNotFoundException;
+import com.vs.foosh.api.exceptions.device.QueryNameIsEmptyException;
+import com.vs.foosh.api.exceptions.device.QueryNameIsNotUniqueException;
+import com.vs.foosh.api.exceptions.device.QueryNameIsNullException;
+import com.vs.foosh.api.exceptions.misc.CouldNotDeleteCollectionException;
+import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
+import com.vs.foosh.api.exceptions.misc.IdIsNoValidUUIDException;
+import com.vs.foosh.api.exceptions.misc.SaveFileNotFoundException;
+import com.vs.foosh.api.exceptions.misc.SavingToFileIOException;
+import com.vs.foosh.api.exceptions.smarthome.SmartHomeAccessException;
+import com.vs.foosh.api.exceptions.smarthome.SmartHomeIOException;
+import com.vs.foosh.api.exceptions.variable.VariableCreationException;
+import com.vs.foosh.api.exceptions.variable.VariableNotFoundException;
+import com.vs.foosh.api.model.device.DeviceList;
+import com.vs.foosh.api.model.variable.VariableList;
 import com.vs.foosh.api.services.HttpResponseBuilder;
 import com.vs.foosh.api.services.LinkBuilder;
 

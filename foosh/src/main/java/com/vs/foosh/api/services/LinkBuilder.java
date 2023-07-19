@@ -10,9 +10,9 @@ import java.util.UUID;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.vs.foosh.api.model.DeviceList;
-import com.vs.foosh.api.model.HttpAction;
-import com.vs.foosh.api.model.LinkEntry;
+import com.vs.foosh.api.model.device.DeviceList;
+import com.vs.foosh.api.model.web.HttpAction;
+import com.vs.foosh.api.model.web.LinkEntry;
 
 
 public class LinkBuilder {

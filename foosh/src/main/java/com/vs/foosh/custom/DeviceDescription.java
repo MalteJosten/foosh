@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.vs.foosh.api.model.AbstractDeviceDescription;
+import com.vs.foosh.api.model.device.AbstractDeviceDescription;
 
 public class DeviceDescription extends AbstractDeviceDescription {
     public DeviceDescription(Map<String, Object> props) {

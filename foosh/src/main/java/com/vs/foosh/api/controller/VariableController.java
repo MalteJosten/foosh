@@ -20,13 +20,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.vs.foosh.api.exceptions.DeviceIdNotFoundException;
-import com.vs.foosh.api.exceptions.VariableCreationException;
-import com.vs.foosh.api.model.DeviceList;
-import com.vs.foosh.api.model.LinkEntry;
-import com.vs.foosh.api.model.Variable;
-import com.vs.foosh.api.model.VariableList;
-import com.vs.foosh.api.model.VariablePostRequest;
+import com.vs.foosh.api.exceptions.device.DeviceIdNotFoundException;
+import com.vs.foosh.api.exceptions.variable.VariableCreationException;
+import com.vs.foosh.api.model.device.DeviceList;
+import com.vs.foosh.api.model.variable.Variable;
+import com.vs.foosh.api.model.variable.VariableList;
+import com.vs.foosh.api.model.variable.VariablePostRequest;
+import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.HttpResponseBuilder;
 import com.vs.foosh.api.services.LinkBuilder;
 

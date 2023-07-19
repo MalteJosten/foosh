@@ -13,9 +13,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vs.foosh.api.model.DeviceList;
-import com.vs.foosh.api.model.ReadSaveFileResult;
-import com.vs.foosh.api.model.SmartHomeCredentials;
+import com.vs.foosh.api.model.device.DeviceList;
+import com.vs.foosh.api.model.misc.ReadSaveFileResult;
+import com.vs.foosh.api.model.web.SmartHomeCredentials;
 
 @Configuration
 public class ApplicationConfig {
