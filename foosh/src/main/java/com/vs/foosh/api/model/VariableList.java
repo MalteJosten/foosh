@@ -6,18 +6,18 @@ import java.util.List;
 import com.vs.foosh.api.exceptions.EnvironmentalVariableNotFoundException;
 import com.vs.foosh.api.services.LinkBuilder;
 
-public class EnvironmentVariableList {
-    private static List<EnvironmentVariable> variables;
+public class VariableList {
+    private static List<Variable> variables;
     
-    public static List<EnvironmentVariable> getInstance() {
+    public static List<Variable> getInstance() {
         if (variables == null) {
-            variables = new ArrayList<EnvironmentVariable>();
+            variables = new ArrayList<Variable>();
         }
 
         return variables;
     }
 
-    public static void setVariables(List<EnvironmentVariable> variableList) {
+    public static void setVariables(List<Variable> variableList) {
         if (variables != null) {
             clearVariables();
         }
@@ -25,12 +25,12 @@ public class EnvironmentVariableList {
         getInstance().addAll(variableList);
     }
 
-    public void pushVariable(EnvironmentVariable variable) {
+    public void pushVariable(Variable variable) {
         // TODO: Pre-processing? Checks?
         getInstance().add(variable);
     }
 
-    public static List<EnvironmentVariable> getVariables() {
+    public static List<Variable> getVariables() {
         return getInstance();
     }
 
@@ -38,8 +38,8 @@ public class EnvironmentVariableList {
         getInstance().clear();
     }
 
-    public static EnvironmentVariable getVariable(String id) {
-        for (EnvironmentVariable variable: getVariables()) {
+    public static Variable getVariable(String id) {
+        for (Variable variable: getVariables()) {
             if (variable.getId().toString().equals(id)) {
                 return variable;
             }
@@ -53,11 +53,11 @@ public class EnvironmentVariableList {
     }
 
     public static List<LinkEntry> getLinks(String label) {
-        LinkEntry get    = new LinkEntry(label, LinkBuilder.getDeviceListLink(), HttpAction.GET, List.of());
-        LinkEntry post   = new LinkEntry(label, LinkBuilder.getDeviceListLink(), HttpAction.POST, List.of());
-        LinkEntry put    = new LinkEntry(label, LinkBuilder.getDeviceListLink(), HttpAction.PUT, List.of());
-        LinkEntry patch  = new LinkEntry(label, LinkBuilder.getDeviceListLink(), HttpAction.PATCH, List.of());
-        LinkEntry delete = new LinkEntry(label, LinkBuilder.getDeviceListLink(), HttpAction.DELETE, List.of());
+        LinkEntry get    = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.GET, List.of());
+        LinkEntry post   = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.POST, List.of("application/json"));
+        LinkEntry put    = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.PUT, List.of());
+        LinkEntry patch  = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.PATCH, List.of());
+        LinkEntry delete = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.DELETE, List.of());
 
         if (getVariables().isEmpty() || getVariables().size() == 0) {
             return new ArrayList<>(List.of(get, put, post));

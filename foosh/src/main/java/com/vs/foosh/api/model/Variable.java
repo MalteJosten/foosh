@@ -2,13 +2,11 @@ package com.vs.foosh.api.model;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import com.vs.foosh.api.services.LinkBuilder;
 
-// TODO: Add all necessary class/object fields
-public class EnvironmentVariable {
+public class Variable {
     private final UUID id;
     private String name;
     private List<UUID> models;
@@ -16,9 +14,9 @@ public class EnvironmentVariable {
 
     private List<URI> modelLinks;
     private List<URI> deviceLinks;
-    private Map<String, URI> links;
+    private List<LinkEntry> links;
 
-    public EnvironmentVariable(String name) {
+    public Variable(String name) {
         this.id = UUID.randomUUID();
         this.name = name;
     }
@@ -74,15 +72,14 @@ public class EnvironmentVariable {
         return this.deviceLinks;
     }
 
-    public Map<String, URI> getLinks() {
+    public List<LinkEntry> getLinks() {
         updateLinks();
 
         return links;
     }
 
     private void updateLinks() {
-        links.put("vars", LinkBuilder.getVariableListLink());
-        links.put("self", LinkBuilder.getVariableLink(this.id));
+        // TODO: Update links
     }
 
 }

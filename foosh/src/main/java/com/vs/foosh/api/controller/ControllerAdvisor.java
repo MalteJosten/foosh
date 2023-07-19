@@ -9,7 +9,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.vs.foosh.api.exceptions.*;
 import com.vs.foosh.api.model.DeviceList;
-import com.vs.foosh.api.model.EnvironmentVariableList;
+import com.vs.foosh.api.model.VariableList;
 import com.vs.foosh.api.services.HttpResponseBuilder;
 import com.vs.foosh.api.services.LinkBuilder;
 
@@ -82,7 +82,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
-                EnvironmentVariableList.getLinks("variables"),
+                VariableList.getLinks("variables"),
                 HttpStatus.NOT_FOUND);
     }
 

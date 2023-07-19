@@ -1,7 +1,9 @@
 package com.vs.foosh.api.controller;
 
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -14,13 +16,16 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.vs.foosh.api.model.EnvironmentVariableList;
+import com.vs.foosh.api.exceptions.HttpMappingNotAllowedException;
+import com.vs.foosh.api.model.VariableList;
+import com.vs.foosh.api.model.HttpAction;
+import com.vs.foosh.api.model.LinkEntry;
 import com.vs.foosh.api.services.HttpResponseBuilder;
 import com.vs.foosh.api.services.LinkBuilder;
 
 @RestController
 @RequestMapping(value="/api/")
-public class EnvironmentVariableController {
+public class VariableController {
 
     ///
     /// Environment Variables
@@ -29,15 +34,20 @@ public class EnvironmentVariableController {
     @GetMapping("vars/")
     public ResponseEntity<Object> getVars() {
         return HttpResponseBuilder.buildResponse(
-                new AbstractMap.SimpleEntry<String, Object>("variables", EnvironmentVariableList.getVariables()),
-                EnvironmentVariableList.getLinks("self"),
+                new AbstractMap.SimpleEntry<String, Object>("variables", VariableList.getVariables()),
+                VariableList.getLinks("self"),
                 HttpStatus.OK);
     }
 
     @PostMapping("vars/")
     public ResponseEntity<Object> postVars() {
         // TODO: Allow creation of mulitple variables at once?
-        return new ResponseEntity<Object>(HttpStatus.OK);
+        List<LinkEntry> links = new ArrayList<>();
+        links.add(new LinkEntry("devices", LinkBuilder.getDeviceListLink(), HttpAction.POST, List.of("application/json")));
+
+        throw new HttpMappingNotAllowedException(
+                "You cannot use POST on /vars/! Please use POST on /vars/{id} instead.",
+                links);
     }
 
     @PutMapping("vars/")
@@ -54,13 +64,13 @@ public class EnvironmentVariableController {
 
     @DeleteMapping("vars/")
     public ResponseEntity<Object> deleteVars() {
-        EnvironmentVariableList.clearVariables();
+        VariableList.clearVariables();
 
         Map<String, String> linkBlock = new HashMap<>();
         linkBlock.put("self", LinkBuilder.getVariableListLink().toString());
 
         Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("variables", EnvironmentVariableList.getVariables());
+        responseBody.put("variables", VariableList.getVariables());
         responseBody.put("links", linkBlock);
 
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
