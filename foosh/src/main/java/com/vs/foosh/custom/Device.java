@@ -15,8 +15,6 @@ public class Device extends AbstractDevice {
         setObjectFields();
 
         setQueryName(DeviceList.findUniqueQueryName(new QueryNamePatchRequest(this.id, this.description.getProperties().get("name").toString())));
-
-        setLinks();
     }        
 
     public Device(JsonNode description, String queryName) {
@@ -25,8 +23,6 @@ public class Device extends AbstractDevice {
         setObjectFields();
 
         setQueryName(DeviceList.findUniqueQueryName(new QueryNamePatchRequest(this.id, queryName)));
-
-        setLinks();
     }
 
     @Override

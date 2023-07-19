@@ -140,6 +140,7 @@ public class LinkBuilder {
         List<LinkEntry> links = new ArrayList<>();
         List<LinkEntry> deviceSelfLinks = DeviceList.getDevice(id).getSelfLinks();
         List<LinkEntry> devicesLinks    = DeviceList.getLinks("devices");
+
         links.addAll(deviceSelfLinks);
         links.addAll(devicesLinks);
 

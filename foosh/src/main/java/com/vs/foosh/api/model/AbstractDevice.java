@@ -64,7 +64,7 @@ public abstract class AbstractDevice implements Serializable {
     }
 
     public void setLinks() {
-        if (links == null || links.isEmpty()) {
+        if (!links.isEmpty()) {
             links.clear();
             extLinks.clear();
         }
@@ -108,7 +108,26 @@ public abstract class AbstractDevice implements Serializable {
 
     @Override
     public String toString() {
-        return "Device: " + id + "\nName: " + deviceName + "\nQuery-Name: " + queryName + "\nType: " + type
-                + "\nlinks: " + links.toString();
+        StringBuilder builder = new StringBuilder();
+        builder.append("Device: " + id + "\n");
+        builder.append("Name: " + deviceName + "\n");
+        builder.append("Query-Name: " + queryName + "\n");
+        builder.append("Type: " + type + "\n");
+        builder.append("SelfLinks:\n");
+        for(LinkEntry link: links) {
+            builder.append("\trelation:\t" + link.getRelation() + "\n");
+            builder.append("\tlink:\t\t"   + link.getLink() + "\n");
+            builder.append("\taction:\t\t" + link.getAction() + "\n");
+            builder.append("\ttypes:\t\t"  + link.getTypes() + "\n");
+        }
+        builder.append("ExtLinks:\n");
+        for(LinkEntry link: extLinks) {
+            builder.append("\trelation:\t" + link.getRelation() + "\n");
+            builder.append("\tlink:\t\t"   + link.getLink() + "\n");
+            builder.append("\taction:\t\t" + link.getAction() + "\n");
+            builder.append("\ttypes:\t\t"  + link.getTypes() + "\n");
+        }
+
+        return builder.toString();
     }
 }

@@ -155,7 +155,8 @@ public abstract class AbstractDeviceController {
     public ResponseEntity<Object> deviceGet(@PathVariable("id") String id) {
         AbstractDevice device = DeviceList.getDevice(id);
 
-        List<LinkEntry> links = device.getSelfLinks();
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(device.getSelfLinks());
         links.addAll(device.getExtLinks());
 
         return HttpResponseBuilder.buildResponse(device, links, HttpStatus.OK);
@@ -181,7 +182,6 @@ public abstract class AbstractDeviceController {
                 links);
     }
 
-    /// no empty string
     @PatchMapping("devices/{id}")
     public ResponseEntity<Object> devicePatch(@PathVariable("id") String id, @RequestBody Map<String, String> requestBody) {
         UUID uuid;
@@ -193,15 +193,20 @@ public abstract class AbstractDeviceController {
             throw new IdIsNoValidUUIDException(id);
         }
 
+        // check whether there is a device with the given id
+        AbstractDevice checkForAbstractDevice = DeviceList.getDevice(id);
+
+
+        // Is there a field called 'queryName'?
         if (requestBody.get("queryName") == null) {
             throw new QueryNameIsNullException(uuid, requestBody);
         }
 
         String queryName = requestBody.get("queryName").toLowerCase();
 
-        // Is a field called 'queryName'?
-        if (queryName == null) {
-            throw new QueryNameIsNullException(uuid, requestBody);
+        // Is this field non-empty?
+        if (queryName.isEmpty() || queryName.equals("")) {
+            throw new QueryNameIsEmptyException(new QueryNamePatchRequest(uuid, queryName));
         }
         
         
@@ -210,7 +215,8 @@ public abstract class AbstractDeviceController {
 
             AbstractDevice device = DeviceList.getDevice(uuid.toString());
 
-            List<LinkEntry> links = device.getSelfLinks();
+            List<LinkEntry> links = new ArrayList<>();
+            links.addAll(device.getSelfLinks());
             links.addAll(device.getExtLinks());
 
             return HttpResponseBuilder.buildResponse(device, links, HttpStatus.OK);
