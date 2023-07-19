@@ -41,7 +41,7 @@ public class VariableController {
     public ResponseEntity<Object> getVars() {
 
         return HttpResponseBuilder.buildResponse(
-                new AbstractMap.SimpleEntry<String, Object>("variables", VariableList.getVariables()),
+                new AbstractMap.SimpleEntry<String, Object>("variables", VariableList.getDisplayListRepresentation()),
                 VariableList.getLinks("self"),
                 HttpStatus.OK);
     }
@@ -90,11 +90,12 @@ public class VariableController {
         // TODO: Check if given modelId(s) are valid
         List<UUID> modelIds = new ArrayList<>();
 
-        System.out.println(deviceIds);
         VariableList.pushVariable(new Variable(name, deviceIds, modelIds));
 
+        VariableList.updateVariableLinks();
+
         return HttpResponseBuilder.buildResponse(
-                new AbstractMap.SimpleEntry<String, Object>("variables", VariableList.getVariables()),
+                new AbstractMap.SimpleEntry<String, Object>("variables", VariableList.getDisplayListRepresentation()),
                 VariableList.getLinks("self"),
                 HttpStatus.CREATED);
 

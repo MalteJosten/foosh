@@ -34,6 +34,16 @@ public class VariableList {
         return getInstance();
     }
 
+    public static List<VariableDisplayRepresentation> getDisplayListRepresentation() {
+        List<VariableDisplayRepresentation> displayRepresentation = new ArrayList<>();
+
+        for(Variable variable: getVariables()) {
+            displayRepresentation.add(new VariableDisplayRepresentation(variable, variable.getSelfLinks()));
+        }
+
+        return displayRepresentation;
+    }
+
     public static void clearVariables() {
         getInstance().clear();
     }
@@ -77,6 +87,12 @@ public class VariableList {
             return new ArrayList<>(List.of(get, put, post));
         } else {
             return new ArrayList<>(List.of(get, put, patch, delete));
+        }
+    }
+    
+    public static void updateVariableLinks() {
+        for(Variable variable: getVariables()) {
+            variable.updateLinks();
         }
     }
 }

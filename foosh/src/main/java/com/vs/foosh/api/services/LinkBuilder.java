@@ -47,15 +47,6 @@ public class LinkBuilder {
         return uri.toUri();
     }
 
-    public static List<URI> getDeviceBatchLink(List<UUID> deviceIDs) {
-        List<URI> uris = new ArrayList<>();
-
-        for(UUID deviceID: deviceIDs) {
-           uris.add(getDeviceLink(deviceID));
-        }
-
-        return uris;
-    }
 
     public static URI getDeviceLink(UUID id) {
         UriComponents uri = UriComponentsBuilder
@@ -96,16 +87,6 @@ public class LinkBuilder {
             .build();
 
         return uri.toUri();
-    }
-
-    public static List<URI> getModelBatchLink(List<UUID> modelIDs) {
-        List<URI> uris = new ArrayList<>();
-
-        for(UUID modelID: modelIDs) {
-           uris.add(getModelLink(modelID));
-        }
-
-        return uris;
     }
 
     public static URI getModelLink(UUID id) {
