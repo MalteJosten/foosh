@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import com.vs.foosh.api.services.LinkBuilder;
 
-public abstract class AbstractDevice implements Serializable {
+public abstract class AbstractDevice extends HttpResponseObject implements Serializable {
     protected UUID id;
     protected String queryName;
     protected String deviceName;

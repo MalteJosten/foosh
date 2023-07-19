@@ -93,7 +93,6 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
                 HttpStatus.BAD_REQUEST);
     }
     
-
     /**
      * Utility
      */

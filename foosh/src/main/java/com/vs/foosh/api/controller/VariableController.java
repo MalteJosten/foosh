@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vs.foosh.api.exceptions.DeviceIdNotFoundException;
 import com.vs.foosh.api.exceptions.VariableCreationException;
 import com.vs.foosh.api.model.DeviceList;
+import com.vs.foosh.api.model.LinkEntry;
 import com.vs.foosh.api.model.Variable;
 import com.vs.foosh.api.model.VariableList;
 import com.vs.foosh.api.model.VariablePostRequest;
@@ -47,9 +49,46 @@ public class VariableController {
     }
 
     @PostMapping(value = "vars/",
+            headers  = "batch=true",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> postVars(@RequestBody VariablePostRequest request) {
+    public ResponseEntity<Object> postMulitpleVar(@RequestBody List<VariablePostRequest> requests) {
+        System.out.println("multiple");
+        if (requests == null || requests.isEmpty()) {
+            throw new VariableCreationException("Cannot create variables! Please provide a collection 'variables.");
+        }
+
+        List<Variable> variables = new ArrayList<>();
+        for (VariablePostRequest subRequest: requests) {
+            variables.add(processPostRequest(subRequest));
+        }
+
+        VariableList.setVariables(variables);
+        VariableList.updateVariableLinks();
+
+        return HttpResponseBuilder.buildResponse(
+                new AbstractMap.SimpleEntry<String, Object>("variables", VariableList.getDisplayListRepresentation()),
+                VariableList.getLinks("self"),
+                HttpStatus.CREATED);
+    }
+
+    @PostMapping(value = "vars/",
+            headers  = "batch=false",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> postSingleVar(@RequestBody VariablePostRequest request) {
+        System.out.println("single");
+        VariableList.pushVariable(processPostRequest(request));
+        VariableList.updateVariableLinks();
+
+        return HttpResponseBuilder.buildResponse(
+                new AbstractMap.SimpleEntry<String, Object>("variables", VariableList.getDisplayListRepresentation()),
+                VariableList.getLinks("self"),
+                HttpStatus.CREATED);
+
+    }
+
+    private Variable processPostRequest(VariablePostRequest request) {
         // Name validation
         // Is there a field called 'name'?
         if (request.getName() == null) {
@@ -67,9 +106,9 @@ public class VariableController {
             throw new VariableCreationException("Cannot create variable! Variables must not be an UUID.");
         } catch (IllegalArgumentException e) { }
 
-        // TODO: Check for duplicates
+        // Check for duplicates
         if (!VariableList.isUniqueName(request.getName())) {
-            throw new VariableCreationException("Cannot create variable! The name is already taken.");
+            throw new VariableCreationException("Cannot create variable(s)! The name '" + request.getName() + "' is already taken.");
         }
 
         String name = request.getName().toLowerCase();
@@ -90,15 +129,7 @@ public class VariableController {
         // TODO: Check if given modelId(s) are valid
         List<UUID> modelIds = new ArrayList<>();
 
-        VariableList.pushVariable(new Variable(name, deviceIds, modelIds));
-
-        VariableList.updateVariableLinks();
-
-        return HttpResponseBuilder.buildResponse(
-                new AbstractMap.SimpleEntry<String, Object>("variables", VariableList.getDisplayListRepresentation()),
-                VariableList.getLinks("self"),
-                HttpStatus.CREATED);
-
+        return new Variable(name, deviceIds, modelIds);
     }
 
     @PutMapping(value = "vars/",
@@ -138,9 +169,16 @@ public class VariableController {
 
     @GetMapping(value = "vars/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getVar() {
-        // TODO: Retrieve environment variable
-        return new ResponseEntity<Object>(HttpStatus.OK);
+    public ResponseEntity<Object> getVar(@PathVariable("id") String id) {
+        Variable variable = VariableList.getVariable(id);
+
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(variable.getSelfLinks());
+        links.addAll(variable.getDeviceLinks());
+        links.addAll(variable.getModelLinks());
+        links.addAll(variable.getExtLinks());
+
+        return HttpResponseBuilder.buildResponse(variable, links, HttpStatus.OK);
     }
 
     @PostMapping(value = "vars",

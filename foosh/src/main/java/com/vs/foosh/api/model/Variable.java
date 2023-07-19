@@ -7,7 +7,7 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vs.foosh.api.services.LinkBuilder;
 
-public class Variable {
+public class Variable extends HttpResponseObject {
     private final UUID id;
     private String name;
     private List<UUID> models  = new ArrayList<>();
@@ -81,7 +81,12 @@ public class Variable {
 
     @JsonIgnore
     public List<LinkEntry> getSelfLinks() {
-        return links;
+        return this.links;
+    }
+
+    @JsonIgnore
+    public List<LinkEntry> getExtLinks() {
+        return this.extLinks;
     }
 
     public void updateLinks() {
@@ -89,14 +94,6 @@ public class Variable {
         updateDeviceLinks();
         updateModelLinks();
         updateExtLinks();
-        
-
-
-        // TODO: modelLinks
-
-        // TODO: Add modelLinks
-        // TODO: Add extLinks?
-
     }
     
     private void updateSelfLinks() {
@@ -115,7 +112,6 @@ public class Variable {
     }
 
     private void updateDeviceLinks() {
-        // TODO: Needs to be called after PUT or PATCH
         if (deviceLinks != null || !deviceLinks.isEmpty()) {
             deviceLinks.clear();
         }
@@ -131,7 +127,11 @@ public class Variable {
     }
 
     private void updateExtLinks() {
+        if (extLinks != null || !extLinks.isEmpty()) {
+            extLinks.clear();
+        }
 
+        extLinks.addAll(VariableList.getLinks("variables"));
     }
 
 }

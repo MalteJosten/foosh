@@ -50,7 +50,7 @@ public class VariableList {
 
     public static Variable getVariable(String id) {
         for (Variable variable: getVariables()) {
-            if (variable.getId().toString().equals(id)) {
+            if (variable.getId().toString().equals(id) || variable.getName().equals(id)) {
                 return variable;
             }
         }
