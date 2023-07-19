@@ -43,7 +43,8 @@ public abstract class AbstractDeviceController {
     // Device Collection
     //
 
-    @GetMapping(value = "devices/", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "devices/",
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesGet() {
         return HttpResponseBuilder.buildResponse(
                 new AbstractMap.SimpleEntry<String, Object>("devices", DeviceList.getDisplayListRepresentation()),
@@ -51,7 +52,9 @@ public abstract class AbstractDeviceController {
                 HttpStatus.OK);
     }
 
-    @PostMapping(value = "devices/", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "devices/",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesPost(
             @RequestBody(required = false) SmartHomeCredentials credentials) {
         if (DeviceList.getInstance() == null || !DeviceList.getInstance().isEmpty()) {
@@ -91,7 +94,9 @@ public abstract class AbstractDeviceController {
                 HttpStatus.CREATED);
     }
 
-    @PutMapping("devices/")
+    @PutMapping(value = "devices/",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesPut(
             @RequestBody(required=false) SmartHomeCredentials credentials) {
         List<AbstractDevice> old = DeviceList.getInstance();
@@ -113,7 +118,9 @@ public abstract class AbstractDeviceController {
         }
     }
 
-    @PatchMapping("devices/")
+    @PatchMapping(value = "devices/",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesPatch(@RequestBody List<QueryNamePatchRequest> request) {
         if (patchBatchDeviceQueryName(request)) {
             PersistentDataService.saveDeviceList();
@@ -127,7 +134,8 @@ public abstract class AbstractDeviceController {
         }
     }
 
-    @DeleteMapping("devices/")
+    @DeleteMapping(value = "devices/",
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesDelete() {
         DeviceList.clearDevices();
 
@@ -151,7 +159,8 @@ public abstract class AbstractDeviceController {
     // Device
     //
 
-    @GetMapping("devices/{id}")
+    @GetMapping(value = "devices/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deviceGet(@PathVariable("id") String id) {
         AbstractDevice device = DeviceList.getDevice(id);
 
@@ -162,7 +171,9 @@ public abstract class AbstractDeviceController {
         return HttpResponseBuilder.buildResponse(device, links, HttpStatus.OK);
     }
 
-    @PostMapping("devices/{id}")
+    @PostMapping(value = "devices/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicePost(@PathVariable("id") String id) {
         List<LinkEntry> links = new ArrayList<>();
         links.add(new LinkEntry("devices", LinkBuilder.getDeviceListLink(), HttpAction.POST, List.of("application/json")));
@@ -172,7 +183,9 @@ public abstract class AbstractDeviceController {
                 links);
     }
 
-    @PutMapping("devices/{id}")
+    @PutMapping(value = "devices/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicePut(@PathVariable("id") String id) {
         List<LinkEntry> links = new ArrayList<>();
         links.add(new LinkEntry("devices", LinkBuilder.getDeviceListLink(), HttpAction.PUT, List.of("application/json")));
@@ -182,7 +195,9 @@ public abstract class AbstractDeviceController {
                 links);
     }
 
-    @PatchMapping("devices/{id}")
+    @PatchMapping(value = "devices/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicePatch(@PathVariable("id") String id, @RequestBody Map<String, String> requestBody) {
         UUID uuid;
 
