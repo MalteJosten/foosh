@@ -8,13 +8,13 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.vs.foosh.api.model.AbstractDevice;
+import com.vs.foosh.api.model.HttpResponseObject;
 import com.vs.foosh.api.model.LinkEntry;
 
 public class HttpResponseBuilder {
-    public static ResponseEntity<Object> buildResponse(AbstractDevice device, List<LinkEntry> links, HttpStatus status) {
+    public static ResponseEntity<Object> buildResponse(HttpResponseObject object, List<LinkEntry> links, HttpStatus status) {
         Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("device", device);
+        responseBody.put(object.getClass().getSimpleName().toLowerCase(), object);
         responseBody.put("links", links);
 
         return new ResponseEntity<>(responseBody, status);
