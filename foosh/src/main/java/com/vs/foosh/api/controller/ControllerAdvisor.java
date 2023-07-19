@@ -143,7 +143,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
             WebRequest request) {
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
-                List.of(exception.getReturnPath()),
+                exception.getReturnPaths(),
                 HttpStatus.METHOD_NOT_ALLOWED);
     }
 

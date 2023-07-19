@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.ResourceAccessException;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +27,7 @@ import com.vs.foosh.api.exceptions.*;
 import com.vs.foosh.api.model.AbstractDevice;
 import com.vs.foosh.api.model.DeviceList;
 import com.vs.foosh.api.model.FetchDeviceResponse;
+import com.vs.foosh.api.model.HttpAction;
 import com.vs.foosh.api.model.LinkEntry;
 import com.vs.foosh.api.model.QueryNamePatchRequest;
 import com.vs.foosh.api.model.ReadSaveFileResult;
@@ -162,16 +163,22 @@ public abstract class AbstractDeviceController {
 
     @PostMapping("devices/{id}")
     public ResponseEntity<Object> devicePost(@PathVariable("id") String id) {
+        List<LinkEntry> links = new ArrayList<>();
+        links.add(new LinkEntry("devices", LinkBuilder.getDeviceListLink(), HttpAction.POST, List.of("application/json")));
+
         throw new HttpMappingNotAllowedException(
-                "You can only use POST and PUT on /devices/!",
-                new LinkEntry("devices", LinkBuilder.getDeviceListLink()));
+                "You cannot use POST on /devices/{id}! Please use POST on /devices/ instead.",
+                links);
     }
 
     @PutMapping("devices/{id}")
     public ResponseEntity<Object> devicePut(@PathVariable("id") String id) {
+        List<LinkEntry> links = new ArrayList<>();
+        links.add(new LinkEntry("devices", LinkBuilder.getDeviceListLink(), HttpAction.PUT, List.of("application/json")));
+
         throw new HttpMappingNotAllowedException(
-                "You can only use POST and PUT on /devices/!",
-                new LinkEntry("devices", LinkBuilder.getDeviceListLink()));
+                "You cannot use PUT on /devices/{id}! Please use PUT on /devices/ instead.",
+                links);
     }
 
     /// no empty string
@@ -209,9 +216,12 @@ public abstract class AbstractDeviceController {
 
     @DeleteMapping("devices/{id}")
     public ResponseEntity<Object> deviceDelete(@PathVariable("id") String id) {
+        List<LinkEntry> links = new ArrayList<>();
+        links.add(new LinkEntry("devices", LinkBuilder.getDeviceListLink(), HttpAction.DELETE, List.of()));
+
         throw new HttpMappingNotAllowedException(
                 "You cannot delete an individual device. You can only delete the entire collection with DELETE on /devices/ !",
-                new LinkEntry("devices", LinkBuilder.getDeviceListLink()));
+                links);
     }
 
     private boolean patchDeviceQueryName(QueryNamePatchRequest request) {
