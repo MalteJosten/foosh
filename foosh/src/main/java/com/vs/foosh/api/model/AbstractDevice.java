@@ -86,7 +86,7 @@ public abstract class AbstractDevice implements Serializable {
             }
         }
 
-        return  LinkBuilder.getRootLinkEntry().get("root");
+        return LinkBuilder.getRootLinkEntry().getLink();
     }
 
     @JsonIgnore
@@ -97,7 +97,7 @@ public abstract class AbstractDevice implements Serializable {
             }
         }
 
-        return  LinkBuilder.getRootLinkEntry().get("root");
+        return LinkBuilder.getRootLinkEntry().getLink();
     }
 
     @Override

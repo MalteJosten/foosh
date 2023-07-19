@@ -27,6 +27,7 @@ import com.vs.foosh.api.exceptions.*;
 import com.vs.foosh.api.model.AbstractDevice;
 import com.vs.foosh.api.model.DeviceList;
 import com.vs.foosh.api.model.FetchDeviceResponse;
+import com.vs.foosh.api.model.LinkEntry;
 import com.vs.foosh.api.model.QueryNamePatchRequest;
 import com.vs.foosh.api.model.ReadSaveFileResult;
 import com.vs.foosh.api.services.LinkBuilder;
@@ -53,12 +54,10 @@ public abstract class AbstractDeviceController {
     public ResponseEntity<Object> devicesPost(
             @RequestBody(required = false) SmartHomeCredentials credentials) {
         if (DeviceList.getInstance() == null || !DeviceList.getInstance().isEmpty()) {
-            Map<String, URI> linkBlock = new HashMap<>();
-            linkBlock.put("self", LinkBuilder.getDeviceListLink());
 
             return HttpResponseBuilder.buildException(
                 "There are already registered devices! Please use PUT/PATCH on /devices/ to update the list.",
-                linkBlock, 
+                DeviceList.getLinks("self"),
                 HttpStatus.CONFLICT);
         }
 
@@ -165,14 +164,14 @@ public abstract class AbstractDeviceController {
     public ResponseEntity<Object> devicePost(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
                 "You can only use POST and PUT on /devices/!",
-                Map.of("devices", LinkBuilder.getDeviceListLink()));
+                new LinkEntry("devices", LinkBuilder.getDeviceListLink()));
     }
 
     @PutMapping("devices/{id}")
     public ResponseEntity<Object> devicePut(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
                 "You can only use POST and PUT on /devices/!",
-                Map.of("devices", LinkBuilder.getDeviceListLink()));
+                new LinkEntry("devices", LinkBuilder.getDeviceListLink()));
     }
 
     /// no empty string
@@ -209,7 +208,7 @@ public abstract class AbstractDeviceController {
     public ResponseEntity<Object> deviceDelete(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
                 "You cannot delete an individual device. You can only delete the entire collection with DELETE on /devices/ !",
-                Map.of("devices", LinkBuilder.getDeviceListLink()));
+                new LinkEntry("devices", LinkBuilder.getDeviceListLink()));
     }
 
     private boolean patchDeviceQueryName(QueryNamePatchRequest request) {

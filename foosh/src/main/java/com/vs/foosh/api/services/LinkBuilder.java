@@ -10,6 +10,9 @@ import java.util.UUID;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.vs.foosh.api.model.HttpAction;
+import com.vs.foosh.api.model.LinkEntry;
+
 
 public class LinkBuilder {
     private static String host;
@@ -128,11 +131,8 @@ public class LinkBuilder {
         return linkBlock;
     }
 
-    public static Map<String, URI> getRootLinkEntry() {
-        Map<String, URI> rootLink = new HashMap<>();
-        rootLink.put("root", buildPath(List.of("api")));
-
-        return rootLink;
+    public static LinkEntry getRootLinkEntry() {
+        return new LinkEntry("root", buildPath(List.of("api")), HttpAction.GET, List.of());
     }
 
     public static void setServerVariables(String pHost, int pPort) {

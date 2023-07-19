@@ -1,17 +1,16 @@
 package com.vs.foosh.api.exceptions;
 
-import java.net.URI;
-import java.util.Map;
+import com.vs.foosh.api.model.LinkEntry;
 
 public class HttpMappingNotAllowedException extends RuntimeException {
     private String message;
-    private Map<String, URI> returnPath;
+    private LinkEntry returnPath;
 
     public HttpMappingNotAllowedException(String message) {
         this.message = message;
     }
 
-    public HttpMappingNotAllowedException(String message, Map<String, URI> returnPath) {
+    public HttpMappingNotAllowedException(String message, LinkEntry returnPath) {
         this.message    = message;
         this.returnPath = returnPath;
     }
@@ -20,7 +19,7 @@ public class HttpMappingNotAllowedException extends RuntimeException {
         return this.message;
     }
     
-    public Map<String, URI> getReturnPath()  {
+    public LinkEntry getReturnPath()  {
         return this.returnPath;
     }
 }
