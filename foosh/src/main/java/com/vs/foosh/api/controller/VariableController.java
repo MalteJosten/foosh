@@ -5,64 +5,119 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.vs.foosh.api.exceptions.HttpMappingNotAllowedException;
+import com.vs.foosh.api.exceptions.DeviceIdNotFoundException;
+import com.vs.foosh.api.exceptions.VariableCreationException;
+import com.vs.foosh.api.model.DeviceList;
+import com.vs.foosh.api.model.Variable;
 import com.vs.foosh.api.model.VariableList;
-import com.vs.foosh.api.model.HttpAction;
-import com.vs.foosh.api.model.LinkEntry;
+import com.vs.foosh.api.model.VariablePostRequest;
 import com.vs.foosh.api.services.HttpResponseBuilder;
 import com.vs.foosh.api.services.LinkBuilder;
 
 @RestController
-@RequestMapping(value="/api/")
+@RequestMapping(value = "/api/")
 public class VariableController {
 
     ///
     /// Environment Variables
     ///
 
-    @GetMapping("vars/")
+    @GetMapping(value = "vars/",
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getVars() {
+
         return HttpResponseBuilder.buildResponse(
                 new AbstractMap.SimpleEntry<String, Object>("variables", VariableList.getVariables()),
                 VariableList.getLinks("self"),
                 HttpStatus.OK);
     }
 
-    @PostMapping("vars/")
-    public ResponseEntity<Object> postVars() {
-        // TODO: Allow creation of mulitple variables at once?
-        List<LinkEntry> links = new ArrayList<>();
-        links.add(new LinkEntry("devices", LinkBuilder.getDeviceListLink(), HttpAction.POST, List.of("application/json")));
+    @PostMapping(value = "vars/",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> postVars(@RequestBody VariablePostRequest request) {
+        // Name validation
+        // Is there a field called 'name'?
+        if (request.getName() == null) {
+            throw new VariableCreationException("Cannot create variable without a name! Please provide a field 'name'.");
+        }
 
-        throw new HttpMappingNotAllowedException(
-                "You cannot use POST on /vars/! Please use POST on /vars/{id} instead.",
-                links);
+        // Is this field not empty?
+        if (request.getName().trim().isEmpty()) {
+            throw new VariableCreationException("Cannot create variable without a name! The field 'name' is empty.");
+        }
+
+        // Does this field contain an UUID?
+        try {
+            UUID.fromString(request.getName());
+            throw new VariableCreationException("Cannot create variable! Variables must not be an UUID.");
+        } catch (IllegalArgumentException e) { }
+
+        // TODO: Check for duplicates
+        if (!VariableList.isUniqueName(request.getName())) {
+            throw new VariableCreationException("Cannot create variable! The name is already taken.");
+        }
+
+        String name = request.getName().toLowerCase();
+
+        // Validate device IDs
+        List<UUID> deviceIds = new ArrayList<>();
+        if (request.getDevices() != null) {
+            for (UUID deviceId: request.getDevices()) {
+                try {
+                    DeviceList.checkIfIdIsPresent(deviceId.toString());
+                } catch (DeviceIdNotFoundException e) {
+                    throw new VariableCreationException("Cannot create variable! Could not find device with id " + deviceId + ".");
+                }
+            }
+            deviceIds.addAll(request.getDevices());
+        }
+
+        // TODO: Check if given modelId(s) are valid
+        List<UUID> modelIds = new ArrayList<>();
+
+        System.out.println(deviceIds);
+        VariableList.pushVariable(new Variable(name, deviceIds, modelIds));
+
+        return HttpResponseBuilder.buildResponse(
+                new AbstractMap.SimpleEntry<String, Object>("variables", VariableList.getVariables()),
+                VariableList.getLinks("self"),
+                HttpStatus.CREATED);
+
     }
 
-    @PutMapping("vars/")
+    @PutMapping(value = "vars/",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> putVars() {
         // TODO: Only on SINGLE variable level.
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    @PatchMapping("vars/")
+    @PatchMapping(value = "vars/",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> patchVars() {
         // TODO: Only on SINGLE variable level.
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    @DeleteMapping("vars/")
+    @DeleteMapping(value = "vars/",
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteVars() {
         VariableList.clearVariables();
 
@@ -80,31 +135,39 @@ public class VariableController {
     /// Environment Variable
     ///
 
-    @GetMapping("vars/{id}")
+    @GetMapping(value = "vars/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getVar() {
         // TODO: Retrieve environment variable
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    @PostMapping("vars")
+    @PostMapping(value = "vars",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> postVar() {
         // TODO: What exactly needs/can be included when creating new variable? 
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    @PutMapping("vars/{id}")
+    @PutMapping(value = "vars/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> putVar() {
         // TODO: Allow replacement only when all fields are present (?)
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    @PatchMapping("vars/{id}")
+    @PatchMapping(value = "vars/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> patchVar() {
         // TODO: What can be updated? Depends on POST.
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    @DeleteMapping("vars/{id}")
+    @DeleteMapping(value = "vars/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteVar() {
         // TODO: Delete variable.
         return new ResponseEntity<Object>(HttpStatus.OK);

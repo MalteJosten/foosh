@@ -84,7 +84,7 @@ public class DeviceList {
         // Check whether the provided 'name' could be an UUID.
         // queryNames in form of an UUID are disallowed.
         try {
-            UUID uuid = UUID.fromString(name);
+            UUID.fromString(name);
             return false;
         } catch (IllegalArgumentException e) {
             for (AbstractDevice d: getInstance()) {

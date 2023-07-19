@@ -1,9 +1,9 @@
 package com.vs.foosh.api.exceptions;
 
-public class EnvironmentalVariableNotFoundException extends RuntimeException {
+public class VariableNotFoundException extends RuntimeException {
     private String id;
 
-    public EnvironmentalVariableNotFoundException(String id) {
+    public VariableNotFoundException(String id) {
         super("Could not find environmental variable with id '" + id + "'!");
         this.id = id;
     }

@@ -3,7 +3,7 @@ package com.vs.foosh.api.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vs.foosh.api.exceptions.EnvironmentalVariableNotFoundException;
+import com.vs.foosh.api.exceptions.VariableNotFoundException;
 import com.vs.foosh.api.services.LinkBuilder;
 
 public class VariableList {
@@ -25,7 +25,7 @@ public class VariableList {
         getInstance().addAll(variableList);
     }
 
-    public void pushVariable(Variable variable) {
+    public static void pushVariable(Variable variable) {
         // TODO: Pre-processing? Checks?
         getInstance().add(variable);
     }
@@ -45,7 +45,21 @@ public class VariableList {
             }
         }
 
-        throw new EnvironmentalVariableNotFoundException(id);
+        throw new VariableNotFoundException(id);
+    }
+
+    public static boolean isUniqueName(String name) {
+        if (variables == null || variables.isEmpty()) {
+            return true;
+        } else {
+            for (Variable variable : variables) {
+                if (variable.getName().equals(name.toLowerCase())) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     public static void deleteVariable(String id) {
@@ -55,8 +69,8 @@ public class VariableList {
     public static List<LinkEntry> getLinks(String label) {
         LinkEntry get    = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.GET, List.of());
         LinkEntry post   = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.POST, List.of("application/json"));
-        LinkEntry put    = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.PUT, List.of());
-        LinkEntry patch  = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.PATCH, List.of());
+        LinkEntry put    = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.PUT, List.of("application/json"));
+        LinkEntry patch  = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.PATCH, List.of("application/json"));
         LinkEntry delete = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.DELETE, List.of());
 
         if (getVariables().isEmpty() || getVariables().size() == 0) {

@@ -63,8 +63,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(DeviceIdNotFoundException.class)
-    public ResponseEntity<Object> handleDeviceIdNotFoundException(DeviceIdNotFoundException exception,
-            WebRequest request) {
+    public ResponseEntity<Object> handleDeviceIdNotFoundException(DeviceIdNotFoundException exception, WebRequest request) {
 
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
@@ -76,15 +75,24 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
      * Environmental Variable(s)
      */
 
-    @ExceptionHandler(EnvironmentalVariableNotFoundException.class)
-    public ResponseEntity<Object> handleEnvironmentalVariableNotFoundException(
-            EnvironmentalVariableNotFoundException exception, WebRequest request) {
+    @ExceptionHandler(VariableNotFoundException.class)
+    public ResponseEntity<Object> handleVariableNotFoundException(VariableNotFoundException exception, WebRequest request) {
 
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
                 VariableList.getLinks("variables"),
                 HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(VariableCreationException.class)
+    public ResponseEntity<Object> handleVariableCreation(VariableCreationException exception, WebRequest request) {
+
+        return HttpResponseBuilder.buildException(
+                exception.getMessage(),
+                VariableList.getLinks("self"),
+                HttpStatus.BAD_REQUEST);
+    }
+    
 
     /**
      * Utility
