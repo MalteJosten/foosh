@@ -1,7 +1,10 @@
 package com.vs.foosh.api.controller;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -10,9 +13,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.vs.foosh.api.exceptions.device.BatchQueryNameException;
 import com.vs.foosh.api.exceptions.device.CouldNotFindUniqueQueryNameException;
 import com.vs.foosh.api.exceptions.device.DeviceIdNotFoundException;
-import com.vs.foosh.api.exceptions.device.QueryNameIsEmptyException;
-import com.vs.foosh.api.exceptions.device.QueryNameIsNotUniqueException;
-import com.vs.foosh.api.exceptions.device.QueryNameIsNullException;
 import com.vs.foosh.api.exceptions.misc.CouldNotDeleteCollectionException;
 import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
 import com.vs.foosh.api.exceptions.misc.IdIsNoValidUUIDException;
@@ -20,6 +20,9 @@ import com.vs.foosh.api.exceptions.misc.SaveFileNotFoundException;
 import com.vs.foosh.api.exceptions.misc.SavingToFileIOException;
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeAccessException;
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeIOException;
+import com.vs.foosh.api.exceptions.device.DeviceNameIsEmptyException;
+import com.vs.foosh.api.exceptions.device.DeviceNameIsNotUniqueException;
+import com.vs.foosh.api.exceptions.device.DeviceNameIsNullException;
 import com.vs.foosh.api.exceptions.variable.VariableCreationException;
 import com.vs.foosh.api.exceptions.variable.VariableNotFoundException;
 import com.vs.foosh.api.model.device.DeviceList;
@@ -34,24 +37,24 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
      * Device(s)
      */
 
-    @ExceptionHandler(QueryNameIsNotUniqueException.class)
-    public ResponseEntity<Object> handleQueryNameIsNotUniqueException(QueryNameIsNotUniqueException exception, WebRequest request) {
+    @ExceptionHandler(DeviceNameIsNotUniqueException.class)
+    public ResponseEntity<Object> handleQueryNameIsNotUniqueException(DeviceNameIsNotUniqueException exception, WebRequest request) {
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
                 LinkBuilder.getDeviceLinkWithDevices(exception.getId().toString()),
                 HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(QueryNameIsNullException.class)
-    public ResponseEntity<Object> handleQueryNameIsNullException(QueryNameIsNullException exception, WebRequest request) {
+    @ExceptionHandler(DeviceNameIsNullException.class)
+    public ResponseEntity<Object> handleQueryNameIsNullException(DeviceNameIsNullException exception, WebRequest request) {
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
                 LinkBuilder.getDeviceLinkWithDevices(exception.getId().toString()),
                 HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(QueryNameIsEmptyException.class)
-    public ResponseEntity<Object> handleQueryNameIsEmptyException(QueryNameIsEmptyException exception, WebRequest request) {
+    @ExceptionHandler(DeviceNameIsEmptyException.class)
+    public ResponseEntity<Object> handleQueryNameIsEmptyException(DeviceNameIsEmptyException exception, WebRequest request) {
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
                 LinkBuilder.getDeviceLinkWithDevices(exception.getId().toString()),
@@ -167,6 +170,14 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
             WebRequest request) {
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    // TODO
+    @Override
+    public ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        return HttpResponseBuilder.buildException(
+                ex.getMessage(),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
