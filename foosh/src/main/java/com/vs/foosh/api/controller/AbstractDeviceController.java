@@ -191,15 +191,11 @@ public abstract class AbstractDeviceController {
     }
 
     @PutMapping(value = "/{id}",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicePut(@PathVariable("id") String id) {
-        List<LinkEntry> links = new ArrayList<>();
-        links.add(new LinkEntry("devices", LinkBuilder.getDeviceListLink(), HttpAction.PUT, List.of("application/json")));
-
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /devices/{id}! Please use PUT on /devices/ instead.",
-                links);
+                "You cannot use PUT on /devices/{id}! Either use PATCH to update or DELETE and POST to replace a device.",
+                DeviceList.getDevice(id).getSelfLinks());
     }
 
     @PatchMapping(value = "/{id}",
