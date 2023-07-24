@@ -21,11 +21,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.vs.foosh.api.exceptions.device.DeviceIdNotFoundException;
+import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
 import com.vs.foosh.api.exceptions.variable.VariableCreationException;
 import com.vs.foosh.api.model.device.DeviceList;
 import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.variable.VariableList;
 import com.vs.foosh.api.model.variable.VariablePostRequest;
+import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.HttpResponseBuilder;
 import com.vs.foosh.api.services.LinkBuilder;
@@ -193,11 +195,11 @@ public class VariableController {
     }
 
     @PutMapping(value = "/{id}",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> putVar() {
-        // TODO: Allow replacement only when all fields are present (?)
-        return new ResponseEntity<Object>(HttpStatus.OK);
+    public ResponseEntity<Object> putVar(@PathVariable("id") String id) {
+        throw new HttpMappingNotAllowedException(
+                "You cannot use PUT on /variables/{id}! Either use PATCH to update or DELETE and POST to replace a variable.",
+                VariableList.getVariable(id).getSelfLinks());
     }
 
     @PatchMapping(value = "/{id}",
