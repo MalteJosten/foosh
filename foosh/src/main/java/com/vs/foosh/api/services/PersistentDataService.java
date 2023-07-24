@@ -29,8 +29,8 @@ public class PersistentDataService {
         }
     } 
 
-    public static ReadSaveFileResult hasSavedDeviceList() {
-        ReadSaveFileResult result = new ReadSaveFileResult();
+    public static ReadSaveFileResult<AbstractDevice> hasSavedDeviceList() {
+        ReadSaveFileResult<AbstractDevice> result = new ReadSaveFileResult<>();
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ApplicationConfig.getDeviceSavePath().toFile()))) {
             List<AbstractDevice> list = (List<AbstractDevice>) ois.readObject();
             result.setData(list);

@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vs.foosh.api.model.device.AbstractDevice;
 import com.vs.foosh.api.model.device.DeviceList;
 import com.vs.foosh.api.model.misc.ReadSaveFileResult;
 import com.vs.foosh.api.model.web.SmartHomeCredentials;
@@ -119,7 +120,7 @@ public class ApplicationConfig {
     }
 
     private static void tryToLoadSaveFile() {
-        ReadSaveFileResult result = PersistentDataService.hasSavedDeviceList();
+        ReadSaveFileResult<AbstractDevice> result = PersistentDataService.hasSavedDeviceList();
         if (result.getSuccess()) {
             DeviceList.setDevices(result.getData());
         }

@@ -2,19 +2,17 @@ package com.vs.foosh.api.model.misc;
 
 import java.util.List;
 
-import com.vs.foosh.api.model.device.AbstractDevice;
-
-public class ReadSaveFileResult {
-    private List<AbstractDevice> data;
+public class ReadSaveFileResult<T> {
+    private List<T> data;
     private boolean success;
 
     public ReadSaveFileResult() {}
 
-    public void setData(List<AbstractDevice> readResult) {
+    public void setData(List<T> readResult) {
         this.data = readResult;
     }
 
-    public List<AbstractDevice> getData() {
+    public List<T> getData() {
         return this.data;
     }
 
