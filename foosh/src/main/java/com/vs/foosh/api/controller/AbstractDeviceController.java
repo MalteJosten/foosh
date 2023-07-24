@@ -102,27 +102,12 @@ public abstract class AbstractDeviceController {
     }
 
     @PutMapping(value = "/",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesPut(
             @RequestBody(required=false) SmartHomeCredentials credentials) {
-        List<AbstractDevice> old = DeviceList.getInstance();
-
-        if (!DeviceList.getInstance().isEmpty()) {
-            devicesDelete();
-        }
-
-        ResponseEntity<Object> postResult = devicesPost(credentials);
-        if (postResult.getStatusCode() == HttpStatus.CREATED) {
-            return postResult;
-        } else {
-            DeviceList.setDevices(old);
-
-            return HttpResponseBuilder.buildResponse(
-                    new AbstractMap.SimpleEntry<String, Object>("devices", DeviceList.getDisplayListRepresentation()),
-                    DeviceList.getLinks("self"),
-                    HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        throw new HttpMappingNotAllowedException(
+                "You cannot use PUT on /devices/! Either use PATCH to update or DELETE and POST to replace the list of devices.",
+                DeviceList.getLinks("self"));
     }
 
     @PatchMapping(value = "/",
