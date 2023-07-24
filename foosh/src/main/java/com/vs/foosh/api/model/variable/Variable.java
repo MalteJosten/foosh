@@ -1,5 +1,6 @@
 package com.vs.foosh.api.model.variable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -11,7 +12,7 @@ import com.vs.foosh.api.model.web.HttpResponseObject;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilder;
 
-public class Variable extends HttpResponseObject {
+public class Variable extends HttpResponseObject implements Serializable {
     private final UUID id;
     private String name;
     private List<UUID> models  = new ArrayList<>();
@@ -28,7 +29,6 @@ public class Variable extends HttpResponseObject {
         this.models  = modelIds;
         this.devices = deviceIds;
     }
-
 
     public UUID getId() {
         return this.id;
@@ -51,7 +51,7 @@ public class Variable extends HttpResponseObject {
     }
     
     @JsonIgnore
-    public List<UUID> getModels() {
+    public List<UUID> getModelIds() {
         return this.models;
     }
 
@@ -59,6 +59,11 @@ public class Variable extends HttpResponseObject {
     public List<LinkEntry> getModelLinks() {
         return this.modelLinks;
     }
+
+    public List<LinkEntry> getModels() {
+        return this.modelLinks;
+    }
+
 
     public void setDevices(List<UUID> deviceIDs) {
         this.devices = deviceIDs;
@@ -74,12 +79,16 @@ public class Variable extends HttpResponseObject {
 
 
     @JsonIgnore
-    public List<UUID> getDevices() {
+    public List<UUID> getDeviceIds() {
         return this.devices;
     }
 
     @JsonIgnore
     public List<LinkEntry> getDeviceLinks() {
+        return this.deviceLinks;
+    }
+
+    public List<LinkEntry> getDevices() {
         return this.deviceLinks;
     }
 
@@ -121,8 +130,7 @@ public class Variable extends HttpResponseObject {
         }
 
         for (UUID deviceId: devices) {
-            System.out.println(deviceId);
-            deviceLinks.addAll(DeviceList.getDevice(deviceId.toString()).getSelfLinks());
+            deviceLinks.addAll(DeviceList.getDevice(deviceId.toString()).getSelfStaticLinks("device"));
         }
     }
 
@@ -136,6 +144,17 @@ public class Variable extends HttpResponseObject {
         }
 
         extLinks.addAll(VariableList.getLinks("variables"));
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("ID:\t " + id + "\n");
+        builder.append("Name:\t " + name + "\n");
+        builder.append("Devices: " + devices + "\n");
+        builder.append("Models:\t " + models + "\n");
+
+        return builder.toString();
     }
 
 }

@@ -61,6 +61,19 @@ public abstract class AbstractDevice extends HttpResponseObject implements Seria
     }
 
     @JsonIgnore
+    public List<LinkEntry> getSelfStaticLinks(String label) {
+        List<LinkEntry> links = new ArrayList<>();
+       
+        for(LinkEntry link: getSelfLinks()) {
+            if (link.getRelation().equals("selfStatic")) {
+                links.add(new LinkEntry(label, link.getLink(), link.getAction(), link.getTypes()));
+            }
+        }
+
+        return links;
+    }
+
+    @JsonIgnore
     public List<LinkEntry> getExtLinks() {
         return this.extLinks;
     }

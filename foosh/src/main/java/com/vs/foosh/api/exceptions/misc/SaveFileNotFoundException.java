@@ -1,7 +1,7 @@
 package com.vs.foosh.api.exceptions.misc;
 
 public class SaveFileNotFoundException extends RuntimeException {
-    public SaveFileNotFoundException() {
-        super("Could not find save file.");   
+    public SaveFileNotFoundException(String collection) {
+        super("Could not find save file for collection '" + collection + "'!");   
     }
 }

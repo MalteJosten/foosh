@@ -16,6 +16,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vs.foosh.api.model.device.AbstractDevice;
 import com.vs.foosh.api.model.device.DeviceList;
 import com.vs.foosh.api.model.misc.ReadSaveFileResult;
+import com.vs.foosh.api.model.variable.Variable;
+import com.vs.foosh.api.model.variable.VariableList;
 import com.vs.foosh.api.model.web.SmartHomeCredentials;
 
 @Configuration
@@ -30,7 +32,7 @@ public class ApplicationConfig {
     @Bean
     private static void setup() {
         readInApplicationProperties();
-        tryToLoadSaveFile();
+        tryToLoadSaveFiles();
     }
 
     private static void readInApplicationProperties() {
@@ -119,10 +121,15 @@ public class ApplicationConfig {
         }
     }
 
-    private static void tryToLoadSaveFile() {
-        ReadSaveFileResult<AbstractDevice> result = PersistentDataService.hasSavedDeviceList();
-        if (result.getSuccess()) {
-            DeviceList.setDevices(result.getData());
+    private static void tryToLoadSaveFiles() {
+        ReadSaveFileResult<AbstractDevice> devicesResult = PersistentDataService.hasSavedDeviceList();
+        if (devicesResult.getSuccess()) {
+            DeviceList.setDevices(devicesResult.getData());
+        }
+
+        ReadSaveFileResult<Variable> variablesResult = PersistentDataService.hasSavedVariableList();
+        if (variablesResult.getSuccess()) {
+            VariableList.setVariables(variablesResult.getData());
         }
     }
 
@@ -136,5 +143,13 @@ public class ApplicationConfig {
 
     public static Path getDeleteDevicePath() {
         return Paths.get(SAVE_DIR_PATH.toString() + "/devices.old");
+    }
+
+    public static Path getVariableSavePath() {
+        return Paths.get(SAVE_DIR_PATH.toString() + "/variables.json");
+    }
+
+    public static Path getDeleteVariablePath() {
+        return Paths.get(SAVE_DIR_PATH.toString() + "/variables.old");
     }
 }

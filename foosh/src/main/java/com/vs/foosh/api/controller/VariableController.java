@@ -29,6 +29,7 @@ import com.vs.foosh.api.model.variable.VariablePostRequest;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.HttpResponseBuilder;
 import com.vs.foosh.api.services.LinkBuilder;
+import com.vs.foosh.api.services.PersistentDataService;
 
 @RestController
 @RequestMapping(value = "/api/vars")
@@ -53,7 +54,6 @@ public class VariableController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> postMulitpleVar(@RequestBody List<VariablePostRequest> requests) {
-        System.out.println("multiple");
         if (requests == null || requests.isEmpty()) {
             throw new VariableCreationException("Cannot create variables! Please provide a collection 'variables.");
         }
@@ -66,6 +66,8 @@ public class VariableController {
         VariableList.setVariables(variables);
         VariableList.updateVariableLinks();
 
+        PersistentDataService.saveVariableList();
+
         return HttpResponseBuilder.buildResponse(
                 new AbstractMap.SimpleEntry<String, Object>("variables", VariableList.getDisplayListRepresentation()),
                 VariableList.getLinks("self"),
@@ -77,9 +79,10 @@ public class VariableController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> postSingleVar(@RequestBody VariablePostRequest request) {
-        System.out.println("single");
         VariableList.pushVariable(processPostRequest(request));
         VariableList.updateVariableLinks();
+
+        PersistentDataService.saveVariableList();
 
         return HttpResponseBuilder.buildResponse(
                 new AbstractMap.SimpleEntry<String, Object>("variables", VariableList.getDisplayListRepresentation()),
@@ -129,7 +132,7 @@ public class VariableController {
         // TODO: Check if given modelId(s) are valid
         List<UUID> modelIds = new ArrayList<>();
 
-        return new Variable(name, deviceIds, modelIds);
+        return new Variable(name, modelIds, deviceIds);
     }
 
     @PutMapping(value = "/",
