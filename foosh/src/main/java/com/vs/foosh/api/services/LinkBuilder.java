@@ -11,6 +11,8 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.vs.foosh.api.model.device.DeviceList;
+import com.vs.foosh.api.model.variable.Variable;
+import com.vs.foosh.api.model.variable.VariableList;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 
@@ -73,6 +75,16 @@ public class LinkBuilder {
             .build();
 
         return uri.toUri();
+    }
+
+    public static List<LinkEntry> getVariableLinkBlock (String id) {
+        Variable variable = VariableList.getVariable(id);
+
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(variable.getSelfLinks());
+        links.addAll(variable.getExtLinks());
+
+        return links;
     }
 
     public static URI getVariableLink(UUID id) {

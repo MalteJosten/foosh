@@ -22,12 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.vs.foosh.api.exceptions.device.DeviceIdNotFoundException;
 import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
+import com.vs.foosh.api.exceptions.misc.IdIsNoValidUUIDException;
 import com.vs.foosh.api.exceptions.variable.VariableCreationException;
+import com.vs.foosh.api.exceptions.variable.VariableNameIsEmptyException;
+import com.vs.foosh.api.exceptions.variable.VariableNameIsNullException;
 import com.vs.foosh.api.model.device.DeviceList;
 import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.variable.VariableList;
 import com.vs.foosh.api.model.variable.VariablePostRequest;
-import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.HttpResponseBuilder;
 import com.vs.foosh.api.services.LinkBuilder;
@@ -51,6 +53,7 @@ public class VariableController {
                 HttpStatus.OK);
     }
 
+    // TODO: Only allow definition of name
     @PostMapping(value = "/",
             headers  = "batch=true",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -76,6 +79,7 @@ public class VariableController {
                 HttpStatus.CREATED);
     }
 
+    // TODO: Only allow definition of name
     @PostMapping(value = "/",
             headers  = "batch=false",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -112,7 +116,7 @@ public class VariableController {
         } catch (IllegalArgumentException e) { }
 
         // Check for duplicates
-        if (!VariableList.isUniqueName(request.getName())) {
+        if (!VariableList.isUniqueName(request.getName(), null)) {
             throw new VariableCreationException("Cannot create variable(s)! The name '" + request.getName() + "' is already taken.");
         }
 
@@ -179,8 +183,6 @@ public class VariableController {
 
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(variable.getSelfLinks());
-        links.addAll(variable.getDeviceLinks());
-        links.addAll(variable.getModelLinks());
         links.addAll(variable.getExtLinks());
 
         return HttpResponseBuilder.buildResponse(variable, links, HttpStatus.OK);
@@ -205,9 +207,47 @@ public class VariableController {
     @PatchMapping(value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> patchVar() {
-        // TODO: What can be updated? Depends on POST.
-        return new ResponseEntity<Object>(HttpStatus.OK);
+    public ResponseEntity<Object> patchVar(@PathVariable("id") String id, @RequestBody Map<String, String> requestBody) {
+        if (patchVariableName(id, requestBody.get("name"))) {
+            PersistentDataService.saveVariableList();
+
+            Variable variable = VariableList.getVariable(id);
+
+            List<LinkEntry> links = new ArrayList<>();
+            links.addAll(variable.getSelfLinks());
+            links.addAll(variable.getExtLinks());
+
+            return HttpResponseBuilder.buildResponse(variable, links, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Object>("Could not patch name for variable '" + id + "' !'", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private boolean patchVariableName(String id, String name) {
+        UUID uuid;
+
+        // Is the provided id a valid UUID?
+        try {
+            uuid = UUID.fromString(id);
+        } catch (IllegalArgumentException e) {
+            throw new IdIsNoValidUUIDException(id);
+        }
+
+        if (name == null) {
+            throw new VariableNameIsNullException(uuid);
+        }
+
+        if (name.trim().isEmpty() || name.equals("")) {
+            throw new VariableNameIsEmptyException(uuid);
+        }
+
+        // check whether there is a variable with the given id
+        VariableList.checkIfIdIsPresent(id);
+        if (VariableList.isUniqueName(name, uuid)) {
+            VariableList.getVariable(id.toString()).setName(name);
+            return true;
+        }
+        return false;
     }
 
     @DeleteMapping(value = "/{id}",

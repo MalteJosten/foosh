@@ -1,10 +1,7 @@
 package com.vs.foosh.api.controller;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -23,7 +20,10 @@ import com.vs.foosh.api.exceptions.smarthome.SmartHomeIOException;
 import com.vs.foosh.api.exceptions.device.DeviceNameIsEmptyException;
 import com.vs.foosh.api.exceptions.device.DeviceNameIsNotUniqueException;
 import com.vs.foosh.api.exceptions.device.DeviceNameIsNullException;
+import com.vs.foosh.api.exceptions.variable.VariableNameMustNotBeAnUuidException;
 import com.vs.foosh.api.exceptions.variable.VariableCreationException;
+import com.vs.foosh.api.exceptions.variable.VariableNameIsEmptyException;
+import com.vs.foosh.api.exceptions.variable.VariableNameIsNullException;
 import com.vs.foosh.api.exceptions.variable.VariableNotFoundException;
 import com.vs.foosh.api.model.device.DeviceList;
 import com.vs.foosh.api.model.variable.VariableList;
@@ -89,7 +89,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     }
 
     /**
-     * Environmental Variable(s)
+     * Variable(s)
      */
 
     @ExceptionHandler(VariableNotFoundException.class)
@@ -109,7 +109,33 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
                 VariableList.getLinks("self"),
                 HttpStatus.BAD_REQUEST);
     }
-    
+
+    @ExceptionHandler(VariableNameIsNullException.class)
+    public ResponseEntity<Object> handleVariableNameIsNullException(VariableNameIsNullException exception, WebRequest request) {
+        return HttpResponseBuilder.buildException(
+                exception.getMessage(),
+                LinkBuilder.getDeviceLinkWithDevices(exception.getId().toString()),
+                HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(VariableNameIsEmptyException.class)
+    public ResponseEntity<Object> handleVariableNameIsEmptyException(VariableNameIsEmptyException exception, WebRequest request) {
+        return HttpResponseBuilder.buildException(
+                exception.getMessage(),
+                LinkBuilder.getVariableLinkBlock(exception.getId().toString()),
+                HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(VariableNameMustNotBeAnUuidException.class)
+    public ResponseEntity<Object> handleVariableNameMustNotBeAnUUidException(VariableNameMustNotBeAnUuidException exception,
+            WebRequest request) {
+
+        return HttpResponseBuilder.buildException(
+                exception.getMessage(),
+                LinkBuilder.getVariableLinkBlock(exception.getId().toString()),
+                HttpStatus.BAD_REQUEST);
+    }
+
     /**
      * Utility
      */
@@ -173,11 +199,5 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    // TODO
-    @Override
-    public ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        return HttpResponseBuilder.buildException(
-                ex.getMessage(),
-                HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    // TODO: Overwrite @RequestBody Exceptions
 }

@@ -34,6 +34,11 @@ public class Variable extends HttpResponseObject implements Serializable {
         return this.id;
     }
 
+    public void setName(String name) {
+        this.name = name;
+        updateLinks();
+    }
+
     public String getName() {
         return this.name;
     }

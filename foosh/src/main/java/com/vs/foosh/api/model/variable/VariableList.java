@@ -2,7 +2,9 @@ package com.vs.foosh.api.model.variable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+import com.vs.foosh.api.exceptions.variable.VariableNameMustNotBeAnUuidException;
 import com.vs.foosh.api.exceptions.variable.VariableNotFoundException;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
@@ -50,28 +52,48 @@ public class VariableList {
         getInstance().clear();
     }
 
-    public static Variable getVariable(String id) {
+    public static Variable getVariable(String identifier) {
         for (Variable variable: getVariables()) {
-            if (variable.getId().toString().equals(id) || variable.getName().equals(id)) {
+            if (variable.getId().toString().equals(identifier) || variable.getName().equals(identifier.toLowerCase())) {
                 return variable;
             }
         }
 
-        throw new VariableNotFoundException(id);
+        throw new VariableNotFoundException(identifier);
     }
 
-    public static boolean isUniqueName(String name) {
-        if (variables == null || variables.isEmpty()) {
-            return true;
-        } else {
-            for (Variable variable : variables) {
-                if (variable.getName().equals(name.toLowerCase())) {
+    public static boolean isUniqueName(String name, UUID id) {
+        // Check whether the provided 'name' could be an UUID.
+        // Names in form of an UUID are disallowed.
+        try {
+            UUID.fromString(name);
+            throw new VariableNameMustNotBeAnUuidException(id);
+        } catch (IllegalArgumentException e) {
+            for (Variable variable: getInstance()) {
+                // Check whether the name is already used
+                if (variable.getName().equals(name)) {
+                    // If it's already used, check whether it's the same variable.
+                    if (variable.getId().equals(id)) {
+                        return true;
+                    }
+
                     return false;
                 }
+            
+            }
+        }
+        
+        return true;
+    }
+
+    public static void checkIfIdIsPresent(String identifier) {
+        for (Variable variable: getVariables()) {
+            if (variable.getId().toString().equals(identifier) || variable.getName().equals(identifier.toLowerCase())) {
+                return;
             }
         }
 
-        return true;
+        throw new VariableNotFoundException(identifier);
     }
 
     public static void deleteVariable(String id) {
