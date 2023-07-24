@@ -2,13 +2,13 @@ package com.vs.foosh.api.exceptions.device;
 
 import java.util.UUID;
 
-import com.vs.foosh.api.model.device.QueryNamePatchRequest;
+import com.vs.foosh.api.model.device.DeviceNamePatchRequest;
 
 public class DeviceNameIsNotUniqueException extends RuntimeException {
-    private QueryNamePatchRequest request;
+    private DeviceNamePatchRequest request;
 
-    public DeviceNameIsNotUniqueException(QueryNamePatchRequest request) {
-        super("The query name '" + request.getQueryName() + "' is already used!");
+    public DeviceNameIsNotUniqueException(DeviceNamePatchRequest request) {
+        super("The name '" + request.getName() + "' is already used!");
         this.request = request;
     }
 

@@ -7,7 +7,7 @@ public class DeviceNameIsNullException extends RuntimeException {
     private UUID id;
    
     public DeviceNameIsNullException(UUID id, Map<String, String> requestBody) {
-        super("The provided request body " + requestBody.toString() + " does not contain a field named 'queryName'!");
+        super("The provided request body " + requestBody.toString() + " does not contain a field named 'name'!");
         this.id = id;
     }
 

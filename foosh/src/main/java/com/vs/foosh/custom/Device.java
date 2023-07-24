@@ -5,7 +5,7 @@ import java.util.UUID;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.vs.foosh.api.model.device.AbstractDevice;
 import com.vs.foosh.api.model.device.DeviceList;
-import com.vs.foosh.api.model.device.QueryNamePatchRequest;
+import com.vs.foosh.api.model.device.DeviceNamePatchRequest;
 
 public class Device extends AbstractDevice {
 
@@ -14,15 +14,15 @@ public class Device extends AbstractDevice {
         this.description = new DeviceDescription(description);
         setObjectFields();
 
-        setQueryName(DeviceList.findUniqueQueryName(new QueryNamePatchRequest(this.id, this.description.getProperties().get("name").toString())));
+        setName(DeviceList.findUniqueName(new DeviceNamePatchRequest(this.id, this.description.getProperties().get("name").toString())));
     }        
 
-    public Device(JsonNode description, String queryName) {
+    public Device(JsonNode description, String name) {
         this.id          = UUID.randomUUID();
         this.description = new DeviceDescription(description);
         setObjectFields();
 
-        setQueryName(DeviceList.findUniqueQueryName(new QueryNamePatchRequest(this.id, queryName)));
+        setName(DeviceList.findUniqueName(new DeviceNamePatchRequest(this.id, name)));
     }
 
     @Override

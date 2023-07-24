@@ -14,7 +14,7 @@ import com.vs.foosh.api.services.LinkBuilder;
 
 public abstract class AbstractDevice extends HttpResponseObject implements Serializable {
     protected UUID id;
-    protected String queryName;
+    protected String name;
     protected String deviceName;
     protected String type;
     protected AbstractDeviceDescription description;
@@ -28,12 +28,12 @@ public abstract class AbstractDevice extends HttpResponseObject implements Seria
         return this.id;
     }
 
-    public String getQueryName() {
-        return this.queryName;
+    public String getName() {
+        return this.name;
     }
 
-    public void setQueryName(String name) {
-        this.queryName = name.toLowerCase();
+    public void setName(String name) {
+        this.name = name.toLowerCase();
         if (this.links != null) {
             setLinks();
         }
@@ -93,8 +93,8 @@ public abstract class AbstractDevice extends HttpResponseObject implements Seria
         LinkEntry selfGet   = new LinkEntry("selfStatic", LinkBuilder.buildPath(List.of("device", this.id.toString())), HttpAction.GET, List.of());
         LinkEntry selfPatch = new LinkEntry("selfStatic", LinkBuilder.buildPath(List.of("device", this.id.toString())), HttpAction.PATCH, List.of("application/json"));
 
-        LinkEntry queryGet   = new LinkEntry("selfQuery",  LinkBuilder.buildPath(List.of("device", this.queryName)), HttpAction.GET, List.of());
-        LinkEntry queryPatch = new LinkEntry("selfQuery",  LinkBuilder.buildPath(List.of("device", this.queryName)), HttpAction.PATCH, List.of("application/json"));
+        LinkEntry queryGet   = new LinkEntry("selfQuery",  LinkBuilder.buildPath(List.of("device", this.name)), HttpAction.GET, List.of());
+        LinkEntry queryPatch = new LinkEntry("selfQuery",  LinkBuilder.buildPath(List.of("device", this.name)), HttpAction.PATCH, List.of("application/json"));
 
         return new ArrayList<>(List.of(selfGet, selfPatch, queryGet, queryPatch));
     }
@@ -125,8 +125,8 @@ public abstract class AbstractDevice extends HttpResponseObject implements Seria
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("Device: " + id + "\n");
-        builder.append("Name: " + deviceName + "\n");
-        builder.append("Query-Name: " + queryName + "\n");
+        builder.append("Device-Name: " + deviceName + "\n");
+        builder.append("Query-Name: " + name + "\n");
         builder.append("Type: " + type + "\n");
         builder.append("SelfLinks:\n");
         for(LinkEntry link: links) {

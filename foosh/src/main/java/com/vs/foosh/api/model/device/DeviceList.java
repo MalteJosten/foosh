@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.vs.foosh.api.exceptions.device.CouldNotFindUniqueQueryNameException;
+import com.vs.foosh.api.exceptions.device.CouldNotFindUniqueDeviceNameException;
 import com.vs.foosh.api.exceptions.device.DeviceIdNotFoundException;
 import com.vs.foosh.api.exceptions.device.DeviceNameIsNotUniqueException;
 import com.vs.foosh.api.model.web.HttpAction;
@@ -32,10 +32,10 @@ public class DeviceList {
     }
 
     public void pushDevice(AbstractDevice device) {
-        if (isAUniqueQueryName(device.getQueryName(), device.getId())) {
+        if (isUniqueName(device.getName(), device.getId())) {
             getInstance().add(device);
         } else {
-            throw new DeviceNameIsNotUniqueException(new QueryNamePatchRequest(device.getId(), device.getQueryName()));
+            throw new DeviceNameIsNotUniqueException(new DeviceNamePatchRequest(device.getId(), device.getName()));
         }
     }
 
@@ -60,11 +60,11 @@ public class DeviceList {
     ///
     /// Let the client search for a device by
     ///   (1) it's ID,
-    ///   (2) it's queryName
+    ///   (2) it's name
     ///
     public static AbstractDevice getDevice(String identifier) {
         for (AbstractDevice device: getDevices()) {
-            if (device.getId().toString().equals(identifier) || device.getQueryName().equals(identifier.toLowerCase())) {
+            if (device.getId().toString().equals(identifier) || device.getName().equals(identifier.toLowerCase())) {
                 return device;
             }
         }
@@ -74,7 +74,7 @@ public class DeviceList {
 
     public static void checkIfIdIsPresent(String identifier) {
         for (AbstractDevice device: getDevices()) {
-            if (device.getId().toString().equals(identifier) || device.getQueryName().equals(identifier.toLowerCase())) {
+            if (device.getId().toString().equals(identifier) || device.getName().equals(identifier.toLowerCase())) {
                 return;
             }
         }
@@ -82,22 +82,22 @@ public class DeviceList {
         throw new DeviceIdNotFoundException(identifier);
     }
 
-    public static boolean isAUniqueQueryName(String name, UUID id) {
+    public static boolean isUniqueName(String name, UUID id) {
         // Check whether the provided 'name' could be an UUID.
-        // queryNames in form of an UUID are disallowed.
+        // Names in form of an UUID are disallowed.
         try {
             UUID.fromString(name);
             return false;
         } catch (IllegalArgumentException e) {
             for (AbstractDevice d: getInstance()) {
-                // Check whether the queryName 'name' is already used
-                if (d.getQueryName().equals(name)) {
+                // Check whether the name is already used
+                if (d.getName().equals(name)) {
                     // If it's already used, check whether it's the same device.
                     if (d.getId().equals(id)) {
                         return true;
                     }
 
-                    throw new DeviceNameIsNotUniqueException(new QueryNamePatchRequest(id, name));
+                    throw new DeviceNameIsNotUniqueException(new DeviceNamePatchRequest(id, name));
                 }
             
             }
@@ -107,29 +107,29 @@ public class DeviceList {
     }
 
     ///
-    /// Check whether the given request contains an unique (new) queryName.
-    /// If the queryName is not unique, try and find another unique one by
+    /// Check whether the given request contains an unique (new) name.
+    /// If the name is not unique, try and find another unique one by
     /// appending incrementing numbers to deviceName.
     ///
-    public static String findUniqueQueryName(QueryNamePatchRequest request) {
-        StringBuilder queryName = new StringBuilder(request.getQueryName().toLowerCase());
+    public static String findUniqueName(DeviceNamePatchRequest request) {
+        StringBuilder name = new StringBuilder(request.getName().toLowerCase());
         UUID id = request.getId();
 
         // Does the field contain any letters, i.e., is it not empty?
-        if (queryName.toString().trim().isEmpty()) {
-            queryName.replace(0, queryName.length(), getDevice(id.toString()).getDeviceName());
+        if (name.toString().trim().isEmpty()) {
+            name.replace(0, name.length(), getDevice(id.toString()).getDeviceName());
         }
 
         for (int i = 0; i < UNIQUE_QUERY_NAME_TIMEOUT; i++) {
-            // Is the name provided by the field unique or the same as the current queryName?
-            if (isAUniqueQueryName(queryName.toString(), id)) {
-                return queryName.toString();
+            // Is the name provided by the field unique or the same as the current name?
+            if (isUniqueName(name.toString(), id)) {
+                return name.toString();
             } else {
-                queryName.replace(0, queryName.length(), getDevice(id.toString()).getDeviceName() + (i+1));
+                name.replace(0, name.length(), getDevice(id.toString()).getDeviceName() + (i+1));
             }
         }
 
-        throw new CouldNotFindUniqueQueryNameException(id, UNIQUE_QUERY_NAME_TIMEOUT);
+        throw new CouldNotFindUniqueDeviceNameException(id, UNIQUE_QUERY_NAME_TIMEOUT);
     }
 
     public static List<LinkEntry> getLinks(String label) {

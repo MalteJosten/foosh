@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.vs.foosh.api.exceptions.device.BatchQueryNameException;
-import com.vs.foosh.api.exceptions.device.CouldNotFindUniqueQueryNameException;
+import com.vs.foosh.api.exceptions.device.BatchDeviceNameException;
+import com.vs.foosh.api.exceptions.device.CouldNotFindUniqueDeviceNameException;
 import com.vs.foosh.api.exceptions.device.DeviceIdNotFoundException;
 import com.vs.foosh.api.exceptions.misc.CouldNotDeleteCollectionException;
 import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
@@ -40,7 +40,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
      */
 
     @ExceptionHandler(DeviceNameIsNotUniqueException.class)
-    public ResponseEntity<Object> handleQueryNameIsNotUniqueException(DeviceNameIsNotUniqueException exception, WebRequest request) {
+    public ResponseEntity<Object> handleDeviceNameIsNotUniqueException(DeviceNameIsNotUniqueException exception, WebRequest request) {
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
                 LinkBuilder.getDeviceLinkWithDevices(exception.getId().toString()),
@@ -48,7 +48,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(DeviceNameIsNullException.class)
-    public ResponseEntity<Object> handleQueryNameIsNullException(DeviceNameIsNullException exception, WebRequest request) {
+    public ResponseEntity<Object> handleDeviceNameIsNullException(DeviceNameIsNullException exception, WebRequest request) {
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
                 LinkBuilder.getDeviceLinkWithDevices(exception.getId().toString()),
@@ -56,24 +56,24 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(DeviceNameIsEmptyException.class)
-    public ResponseEntity<Object> handleQueryNameIsEmptyException(DeviceNameIsEmptyException exception, WebRequest request) {
+    public ResponseEntity<Object> handleDeviceNameIsEmptyException(DeviceNameIsEmptyException exception, WebRequest request) {
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
                 LinkBuilder.getDeviceLinkWithDevices(exception.getId().toString()),
                 HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(CouldNotFindUniqueQueryNameException.class)
-    public ResponseEntity<Object> handleCouldNotFindUniqueQueryNameException(
-            CouldNotFindUniqueQueryNameException exception, WebRequest request) {
+    @ExceptionHandler(CouldNotFindUniqueDeviceNameException.class)
+    public ResponseEntity<Object> handleCouldNotFindUniqueDeviceNameException(
+            CouldNotFindUniqueDeviceNameException exception, WebRequest request) {
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
                 LinkBuilder.getDeviceLinkWithDevices(exception.getId().toString()),
                 HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(BatchQueryNameException.class)
-    public ResponseEntity<Object> handleBatchQueryNameException(BatchQueryNameException exception, WebRequest request) {
+    @ExceptionHandler(BatchDeviceNameException.class)
+    public ResponseEntity<Object> handleBatchDeviceNameException(BatchDeviceNameException exception, WebRequest request) {
 
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),

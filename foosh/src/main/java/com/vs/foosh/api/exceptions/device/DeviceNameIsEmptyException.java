@@ -2,13 +2,13 @@ package com.vs.foosh.api.exceptions.device;
 
 import java.util.UUID;
 
-import com.vs.foosh.api.model.device.QueryNamePatchRequest;
+import com.vs.foosh.api.model.device.DeviceNamePatchRequest;
 
 public class DeviceNameIsEmptyException extends RuntimeException {
-    private QueryNamePatchRequest request;
+    private DeviceNamePatchRequest request;
 
-    public DeviceNameIsEmptyException(QueryNamePatchRequest request) {
-        super("The provided value for the field 'queryName' (" + request.getQueryName() + ") is empty!");
+    public DeviceNameIsEmptyException(DeviceNamePatchRequest request) {
+        super("The provided value for the field 'name' (" + request.getName() + ") is empty!");
         this.request = request;
     }
 

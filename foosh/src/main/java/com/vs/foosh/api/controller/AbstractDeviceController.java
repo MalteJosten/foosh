@@ -25,12 +25,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import com.vs.foosh.api.model.device.AbstractDevice;
 import com.vs.foosh.api.model.device.DeviceList;
 import com.vs.foosh.api.model.device.FetchDeviceResponse;
-import com.vs.foosh.api.model.device.QueryNamePatchRequest;
+import com.vs.foosh.api.model.device.DeviceNamePatchRequest;
 import com.vs.foosh.api.model.misc.ReadSaveFileResult;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.model.web.SmartHomeCredentials;
-import com.vs.foosh.api.exceptions.device.BatchQueryNameException;
+import com.vs.foosh.api.exceptions.device.BatchDeviceNameException;
 import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
 import com.vs.foosh.api.exceptions.misc.IdIsNoValidUUIDException;
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeAccessException;
@@ -113,8 +113,8 @@ public abstract class AbstractDeviceController {
     @PatchMapping(value = "/",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> devicesPatch(@RequestBody List<QueryNamePatchRequest> request) {
-        if (patchBatchDeviceQueryName(request)) {
+    public ResponseEntity<Object> devicesPatch(@RequestBody List<DeviceNamePatchRequest> request) {
+        if (patchBatchDeviceName(request)) {
             PersistentDataService.saveDeviceList();
 
             return HttpResponseBuilder.buildResponse(
@@ -122,7 +122,7 @@ public abstract class AbstractDeviceController {
                     DeviceList.getLinks("self"),
                     HttpStatus.OK);
         } else {
-            throw new BatchQueryNameException();
+            throw new BatchDeviceNameException();
         }
     }
 
@@ -199,20 +199,20 @@ public abstract class AbstractDeviceController {
         // check whether there is a device with the given id
         DeviceList.checkIfIdIsPresent(id);
 
-        // Is there a field called 'queryName'?
-        if (requestBody.get("queryName") == null) {
+        // Is there a field called 'name'?
+        if (requestBody.get("name") == null) {
             throw new DeviceNameIsNullException(uuid, requestBody);
         }
 
-        String queryName = requestBody.get("queryName").toLowerCase();
+        String name = requestBody.get("name").toLowerCase();
 
         // Is this field non-empty?
-        if (queryName.isEmpty() || queryName.equals("")) {
-            throw new DeviceNameIsEmptyException(new QueryNamePatchRequest(uuid, queryName));
+        if (name.isEmpty() || name.equals("")) {
+            throw new DeviceNameIsEmptyException(new DeviceNamePatchRequest(uuid, name));
         }
         
         
-        if (patchDeviceQueryName(new QueryNamePatchRequest(uuid, queryName))) {
+        if (patchDeviceName(new DeviceNamePatchRequest(uuid, name))) {
             PersistentDataService.saveDeviceList();
 
             AbstractDevice device = DeviceList.getDevice(uuid.toString());
@@ -223,7 +223,7 @@ public abstract class AbstractDeviceController {
 
             return HttpResponseBuilder.buildResponse(device, links, HttpStatus.OK);
         } else {
-            return new ResponseEntity<Object>("Could not patch queryName for device '" + id + "' !'", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<Object>("Could not patch name for device '" + id + "' !'", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -237,18 +237,18 @@ public abstract class AbstractDeviceController {
                 links);
     }
 
-    private boolean patchDeviceQueryName(QueryNamePatchRequest request) {
-        String queryName = request.getQueryName().toLowerCase();
+    private boolean patchDeviceName(DeviceNamePatchRequest request) {
+        String name = request.getName().toLowerCase();
         UUID id = request.getId();
 
         // Does the field contain any letters, i.e., is it not empty?
-        if (queryName.trim().isEmpty()) {
+        if (name.trim().isEmpty()) {
             throw new DeviceNameIsEmptyException(request);
         }
 
         // Is the name provided by the field unique?
-        if (DeviceList.isAUniqueQueryName(queryName, id)) {
-            DeviceList.getDevice(id.toString()).setQueryName(queryName);
+        if (DeviceList.isUniqueName(name, id)) {
+            DeviceList.getDevice(id.toString()).setName(name);
 
             return true;
         } else {
@@ -256,11 +256,11 @@ public abstract class AbstractDeviceController {
         }
     }
 
-    private boolean patchBatchDeviceQueryName(List<QueryNamePatchRequest> batchRequest) {
+    private boolean patchBatchDeviceName(List<DeviceNamePatchRequest> batchRequest) {
         List<AbstractDevice> oldDeviceList = DeviceList.getInstance();
 
-        for(QueryNamePatchRequest request: batchRequest) {
-            if (!patchDeviceQueryName(request)) {
+        for(DeviceNamePatchRequest request: batchRequest) {
+            if (!patchDeviceName(request)) {
                 DeviceList.clearDevices();
                 DeviceList.setDevices(oldDeviceList);
                 return false;
