@@ -31,13 +31,13 @@ import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.model.web.SmartHomeCredentials;
 import com.vs.foosh.api.exceptions.device.BatchQueryNameException;
-import com.vs.foosh.api.exceptions.device.QueryNameIsEmptyException;
-import com.vs.foosh.api.exceptions.device.QueryNameIsNotUniqueException;
-import com.vs.foosh.api.exceptions.device.QueryNameIsNullException;
 import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
 import com.vs.foosh.api.exceptions.misc.IdIsNoValidUUIDException;
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeAccessException;
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeIOException;
+import com.vs.foosh.api.exceptions.device.DeviceNameIsEmptyException;
+import com.vs.foosh.api.exceptions.device.DeviceNameIsNotUniqueException;
+import com.vs.foosh.api.exceptions.device.DeviceNameIsNullException;
 import com.vs.foosh.api.services.LinkBuilder;
 import com.vs.foosh.api.services.PersistentDataService;
 import com.vs.foosh.api.services.ApplicationConfig;
@@ -201,14 +201,14 @@ public abstract class AbstractDeviceController {
 
         // Is there a field called 'queryName'?
         if (requestBody.get("queryName") == null) {
-            throw new QueryNameIsNullException(uuid, requestBody);
+            throw new DeviceNameIsNullException(uuid, requestBody);
         }
 
         String queryName = requestBody.get("queryName").toLowerCase();
 
         // Is this field non-empty?
         if (queryName.isEmpty() || queryName.equals("")) {
-            throw new QueryNameIsEmptyException(new QueryNamePatchRequest(uuid, queryName));
+            throw new DeviceNameIsEmptyException(new QueryNamePatchRequest(uuid, queryName));
         }
         
         
@@ -243,7 +243,7 @@ public abstract class AbstractDeviceController {
 
         // Does the field contain any letters, i.e., is it not empty?
         if (queryName.trim().isEmpty()) {
-            throw new QueryNameIsEmptyException(request);
+            throw new DeviceNameIsEmptyException(request);
         }
 
         // Is the name provided by the field unique?
@@ -252,7 +252,7 @@ public abstract class AbstractDeviceController {
 
             return true;
         } else {
-            throw new QueryNameIsNotUniqueException(request);
+            throw new DeviceNameIsNotUniqueException(request);
         }
     }
 

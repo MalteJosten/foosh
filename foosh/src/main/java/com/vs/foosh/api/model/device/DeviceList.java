@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import com.vs.foosh.api.exceptions.device.CouldNotFindUniqueQueryNameException;
 import com.vs.foosh.api.exceptions.device.DeviceIdNotFoundException;
-import com.vs.foosh.api.exceptions.device.QueryNameIsNotUniqueException;
+import com.vs.foosh.api.exceptions.device.DeviceNameIsNotUniqueException;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilder;
@@ -35,7 +35,7 @@ public class DeviceList {
         if (isAUniqueQueryName(device.getQueryName(), device.getId())) {
             getInstance().add(device);
         } else {
-            throw new QueryNameIsNotUniqueException(new QueryNamePatchRequest(device.getId(), device.getQueryName()));
+            throw new DeviceNameIsNotUniqueException(new QueryNamePatchRequest(device.getId(), device.getQueryName()));
         }
     }
 
