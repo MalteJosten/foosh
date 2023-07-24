@@ -31,14 +31,14 @@ import com.vs.foosh.api.services.HttpResponseBuilder;
 import com.vs.foosh.api.services.LinkBuilder;
 
 @RestController
-@RequestMapping(value = "/api/")
+@RequestMapping(value = "/api/vars")
 public class VariableController {
 
     ///
     /// Environment Variables
     ///
 
-    @GetMapping(value = "vars/",
+    @GetMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getVars() {
 
@@ -48,7 +48,7 @@ public class VariableController {
                 HttpStatus.OK);
     }
 
-    @PostMapping(value = "vars/",
+    @PostMapping(value = "/",
             headers  = "batch=true",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -72,7 +72,7 @@ public class VariableController {
                 HttpStatus.CREATED);
     }
 
-    @PostMapping(value = "vars/",
+    @PostMapping(value = "/",
             headers  = "batch=false",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -132,7 +132,7 @@ public class VariableController {
         return new Variable(name, deviceIds, modelIds);
     }
 
-    @PutMapping(value = "vars/",
+    @PutMapping(value = "/",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> putVars() {
@@ -140,7 +140,7 @@ public class VariableController {
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    @PatchMapping(value = "vars/",
+    @PatchMapping(value = "/",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> patchVars() {
@@ -148,7 +148,7 @@ public class VariableController {
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "vars/",
+    @DeleteMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteVars() {
         VariableList.clearVariables();
@@ -167,7 +167,7 @@ public class VariableController {
     /// Environment Variable
     ///
 
-    @GetMapping(value = "vars/{id}",
+    @GetMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getVar(@PathVariable("id") String id) {
         Variable variable = VariableList.getVariable(id);
@@ -181,7 +181,7 @@ public class VariableController {
         return HttpResponseBuilder.buildResponse(variable, links, HttpStatus.OK);
     }
 
-    @PostMapping(value = "vars",
+    @PostMapping(value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> postVar() {
@@ -189,7 +189,7 @@ public class VariableController {
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    @PutMapping(value = "vars/{id}",
+    @PutMapping(value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> putVar() {
@@ -197,7 +197,7 @@ public class VariableController {
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    @PatchMapping(value = "vars/{id}",
+    @PatchMapping(value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> patchVar() {
@@ -205,7 +205,7 @@ public class VariableController {
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "vars/{id}",
+    @DeleteMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteVar() {
         // TODO: Delete variable.
