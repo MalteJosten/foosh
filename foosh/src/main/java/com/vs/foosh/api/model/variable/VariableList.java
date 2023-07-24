@@ -88,14 +88,13 @@ public class VariableList {
     public static List<LinkEntry> getLinks(String label) {
         LinkEntry get    = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.GET, List.of());
         LinkEntry post   = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.POST, List.of("application/json"));
-        LinkEntry put    = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.PUT, List.of("application/json"));
         LinkEntry patch  = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.PATCH, List.of("application/json"));
         LinkEntry delete = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.DELETE, List.of());
 
         if (getVariables().isEmpty() || getVariables().size() == 0) {
-            return new ArrayList<>(List.of(get, put, post));
+            return new ArrayList<>(List.of(get, post));
         } else {
-            return new ArrayList<>(List.of(get, put, patch, delete));
+            return new ArrayList<>(List.of(get, patch, delete));
         }
     }
     

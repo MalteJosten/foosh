@@ -138,11 +138,11 @@ public class VariableController {
     }
 
     @PutMapping(value = "/",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> putVars() {
-        // TODO: Only on SINGLE variable level.
-        return new ResponseEntity<Object>(HttpStatus.OK);
+        throw new HttpMappingNotAllowedException(
+                "You cannot use PUT on /variables/! Either use PATCH to update or DELETE and POST to replace the list of variables.",
+                VariableList.getLinks("self"));
     }
 
     @PatchMapping(value = "/",
