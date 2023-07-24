@@ -43,14 +43,14 @@ import com.vs.foosh.api.services.PersistentDataService;
 import com.vs.foosh.api.services.ApplicationConfig;
 import com.vs.foosh.api.services.HttpResponseBuilder;
 
-@RequestMapping(value="/api/")
+@RequestMapping(value="/api/devices")
 public abstract class AbstractDeviceController {
 
     //
     // Device Collection
     //
 
-    @GetMapping(value = "devices/",
+    @GetMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesGet() {
         return HttpResponseBuilder.buildResponse(
@@ -59,7 +59,7 @@ public abstract class AbstractDeviceController {
                 HttpStatus.OK);
     }
 
-    @PostMapping(value = "devices/",
+    @PostMapping(value = "/",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesPost(
@@ -101,7 +101,7 @@ public abstract class AbstractDeviceController {
                 HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "devices/",
+    @PutMapping(value = "/",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesPut(
@@ -125,7 +125,7 @@ public abstract class AbstractDeviceController {
         }
     }
 
-    @PatchMapping(value = "devices/",
+    @PatchMapping(value = "/",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesPatch(@RequestBody List<QueryNamePatchRequest> request) {
@@ -141,7 +141,7 @@ public abstract class AbstractDeviceController {
         }
     }
 
-    @DeleteMapping(value = "devices/",
+    @DeleteMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesDelete() {
         DeviceList.clearDevices();
@@ -166,7 +166,7 @@ public abstract class AbstractDeviceController {
     // Device
     //
 
-    @GetMapping(value = "devices/{id}",
+    @GetMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deviceGet(@PathVariable("id") String id) {
         AbstractDevice device = DeviceList.getDevice(id);
@@ -178,7 +178,7 @@ public abstract class AbstractDeviceController {
         return HttpResponseBuilder.buildResponse(device, links, HttpStatus.OK);
     }
 
-    @PostMapping(value = "devices/{id}",
+    @PostMapping(value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicePost(@PathVariable("id") String id) {
@@ -190,7 +190,7 @@ public abstract class AbstractDeviceController {
                 links);
     }
 
-    @PutMapping(value = "devices/{id}",
+    @PutMapping(value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicePut(@PathVariable("id") String id) {
@@ -202,7 +202,7 @@ public abstract class AbstractDeviceController {
                 links);
     }
 
-    @PatchMapping(value = "devices/{id}",
+    @PatchMapping(value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicePatch(@PathVariable("id") String id, @RequestBody Map<String, String> requestBody) {
@@ -246,7 +246,7 @@ public abstract class AbstractDeviceController {
         }
     }
 
-    @DeleteMapping("devices/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Object> deviceDelete(@PathVariable("id") String id) {
         List<LinkEntry> links = new ArrayList<>();
         links.add(new LinkEntry("devices", LinkBuilder.getDeviceListLink(), HttpAction.DELETE, List.of()));
