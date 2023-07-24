@@ -210,8 +210,14 @@ public class VariableController {
 
     @DeleteMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> deleteVar() {
-        // TODO: Delete variable.
-        return new ResponseEntity<Object>(HttpStatus.OK);
+    public ResponseEntity<Object> deleteVar(@PathVariable("id") String id) {
+        VariableList.deleteVariable(id);
+
+        PersistentDataService.saveVariableList();
+
+        return HttpResponseBuilder.buildResponse(
+                new AbstractMap.SimpleEntry<String, Object>("variables", VariableList.getDisplayListRepresentation()),
+                VariableList.getLinks("self"),
+                HttpStatus.OK);
     }
 }

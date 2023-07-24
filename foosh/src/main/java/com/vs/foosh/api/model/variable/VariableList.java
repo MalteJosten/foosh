@@ -75,7 +75,14 @@ public class VariableList {
     }
 
     public static void deleteVariable(String id) {
-        // TODO: Implement
+        for (Variable variable: getVariables()) {
+            if (variable.getId().toString().equals(id) || variable.getName().equals(id)) {
+                getVariables().remove(variable);
+                return;
+            }
+        }
+
+        throw new VariableNotFoundException(id);
     }
 
     public static List<LinkEntry> getLinks(String label) {
