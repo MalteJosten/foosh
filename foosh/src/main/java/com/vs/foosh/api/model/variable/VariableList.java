@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.vs.foosh.api.exceptions.variable.VariableNameIsNotUniqueException;
 import com.vs.foosh.api.exceptions.variable.VariableNameMustNotBeAnUuidException;
 import com.vs.foosh.api.exceptions.variable.VariableNotFoundException;
 import com.vs.foosh.api.model.web.HttpAction;
@@ -77,7 +78,7 @@ public class VariableList {
                         return true;
                     }
 
-                    return false;
+                    throw new VariableNameIsNotUniqueException(id, name);
                 }
             
             }

@@ -8,7 +8,7 @@ public class DeviceNameIsNotUniqueException extends RuntimeException {
     private QueryNamePatchRequest request;
 
     public DeviceNameIsNotUniqueException(QueryNamePatchRequest request) {
-        super("The query name '" + request.getQueryName() + "' is not unique!");
+        super("The query name '" + request.getQueryName() + "' is already used!");
         this.request = request;
     }
 

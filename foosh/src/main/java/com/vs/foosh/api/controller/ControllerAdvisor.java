@@ -21,8 +21,10 @@ import com.vs.foosh.api.exceptions.device.DeviceNameIsEmptyException;
 import com.vs.foosh.api.exceptions.device.DeviceNameIsNotUniqueException;
 import com.vs.foosh.api.exceptions.device.DeviceNameIsNullException;
 import com.vs.foosh.api.exceptions.variable.VariableNameMustNotBeAnUuidException;
+import com.vs.foosh.api.exceptions.variable.BatchVariableNameException;
 import com.vs.foosh.api.exceptions.variable.VariableCreationException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsEmptyException;
+import com.vs.foosh.api.exceptions.variable.VariableNameIsNotUniqueException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsNullException;
 import com.vs.foosh.api.exceptions.variable.VariableNotFoundException;
 import com.vs.foosh.api.model.device.DeviceList;
@@ -126,6 +128,14 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
                 HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(VariableNameIsNotUniqueException.class)
+    public ResponseEntity<Object> handleVariableNameIsNotUniqueException(VariableNameIsNotUniqueException exception, WebRequest request) {
+        return HttpResponseBuilder.buildException(
+                exception.getMessage(),
+                LinkBuilder.getVariableLinkBlock(exception.getId().toString()),
+                HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(VariableNameMustNotBeAnUuidException.class)
     public ResponseEntity<Object> handleVariableNameMustNotBeAnUUidException(VariableNameMustNotBeAnUuidException exception,
             WebRequest request) {
@@ -133,6 +143,15 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
                 LinkBuilder.getVariableLinkBlock(exception.getId().toString()),
+                HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BatchVariableNameException.class)
+    public ResponseEntity<Object> handleBatchVariableNameException(BatchVariableNameException exception, WebRequest request) {
+
+        return HttpResponseBuilder.buildException(
+                exception.getMessage(),
+                VariableList.getLinks("self"),
                 HttpStatus.BAD_REQUEST);
     }
 

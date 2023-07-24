@@ -97,7 +97,7 @@ public class DeviceList {
                         return true;
                     }
 
-                    return false;
+                    throw new DeviceNameIsNotUniqueException(new QueryNamePatchRequest(id, name));
                 }
             
             }

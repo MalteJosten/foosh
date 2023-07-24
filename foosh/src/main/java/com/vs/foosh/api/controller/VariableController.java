@@ -23,9 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vs.foosh.api.exceptions.device.DeviceIdNotFoundException;
 import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
 import com.vs.foosh.api.exceptions.misc.IdIsNoValidUUIDException;
+import com.vs.foosh.api.exceptions.variable.BatchVariableNameException;
 import com.vs.foosh.api.exceptions.variable.VariableCreationException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsEmptyException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsNullException;
+import com.vs.foosh.api.exceptions.variable.VariableNamePatchRequest;
 import com.vs.foosh.api.model.device.DeviceList;
 import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.variable.VariableList;
@@ -152,9 +154,17 @@ public class VariableController {
     @PatchMapping(value = "/",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> patchVars() {
-        // TODO: Only on SINGLE variable level.
-        return new ResponseEntity<Object>(HttpStatus.OK);
+    public ResponseEntity<Object> patchVars(@RequestBody List<VariableNamePatchRequest> request) {
+        if (patchBatchVariableName(request)) {
+            PersistentDataService.saveVariableList();
+
+            return HttpResponseBuilder.buildResponse(
+                    new AbstractMap.SimpleEntry<String, Object>("variables", VariableList.getDisplayListRepresentation()),
+                    VariableList.getLinks("self"),
+                    HttpStatus.OK);
+        } else {
+            throw new BatchVariableNameException();
+        }
     }
 
     @DeleteMapping(value = "/",
@@ -208,7 +218,7 @@ public class VariableController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> patchVar(@PathVariable("id") String id, @RequestBody Map<String, String> requestBody) {
-        if (patchVariableName(id, requestBody.get("name"))) {
+        if (patchVariableName(new VariableNamePatchRequest(id, requestBody.get("name")))) {
             PersistentDataService.saveVariableList();
 
             Variable variable = VariableList.getVariable(id);
@@ -223,33 +233,6 @@ public class VariableController {
         }
     }
 
-    private boolean patchVariableName(String id, String name) {
-        UUID uuid;
-
-        // Is the provided id a valid UUID?
-        try {
-            uuid = UUID.fromString(id);
-        } catch (IllegalArgumentException e) {
-            throw new IdIsNoValidUUIDException(id);
-        }
-
-        if (name == null) {
-            throw new VariableNameIsNullException(uuid);
-        }
-
-        if (name.trim().isEmpty() || name.equals("")) {
-            throw new VariableNameIsEmptyException(uuid);
-        }
-
-        // check whether there is a variable with the given id
-        VariableList.checkIfIdIsPresent(id);
-        if (VariableList.isUniqueName(name, uuid)) {
-            VariableList.getVariable(id.toString()).setName(name);
-            return true;
-        }
-        return false;
-    }
-
     @DeleteMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteVar(@PathVariable("id") String id) {
@@ -261,5 +244,47 @@ public class VariableController {
                 new AbstractMap.SimpleEntry<String, Object>("variables", VariableList.getDisplayListRepresentation()),
                 VariableList.getLinks("self"),
                 HttpStatus.OK);
+    }
+
+    private boolean patchVariableName(VariableNamePatchRequest request) {
+        UUID uuid;
+
+        // Is the provided id a valid UUID?
+        try {
+            uuid = UUID.fromString(request.getId());
+        } catch (IllegalArgumentException e) {
+            throw new IdIsNoValidUUIDException(request.getId());
+        }
+
+        if (request.getName() == null) {
+            throw new VariableNameIsNullException(uuid);
+        }
+
+        if (request.getName().trim().isEmpty() || request.getName().equals("")) {
+            throw new VariableNameIsEmptyException(uuid);
+        }
+
+        // check whether there is a variable with the given id
+        VariableList.checkIfIdIsPresent(request.getId());
+        if (VariableList.isUniqueName(request.getName(), uuid)) {
+            VariableList.getVariable(request.getId().toString()).setName(request.getName());
+            return true;
+        }
+        return false;
+    }
+
+    private boolean patchBatchVariableName(List<VariableNamePatchRequest> batchRequest) {
+        List<Variable> oldVariableList = VariableList.getInstance();
+
+        for(VariableNamePatchRequest request: batchRequest) {
+            if (!patchVariableName(request)) {
+                VariableList.clearVariables();
+                VariableList.setVariables(oldVariableList);
+                return false;
+            } 
+        }
+
+        return true;
+
     }
 }

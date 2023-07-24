@@ -6,7 +6,7 @@ public class VariableNameIsNotUniqueException extends RuntimeException {
     private UUID id;
 
     public VariableNameIsNotUniqueException(UUID id, String name) {
-        super("The name '" + name + "' is not unique!");
+        super("The name '" + name + "' is already used!");
         this.id = id;
     }
 
