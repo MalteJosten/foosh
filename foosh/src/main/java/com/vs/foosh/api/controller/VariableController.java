@@ -3,6 +3,7 @@ package com.vs.foosh.api.controller;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -27,9 +28,12 @@ import com.vs.foosh.api.exceptions.variable.VariableCreationException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsEmptyException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsNullException;
 import com.vs.foosh.api.exceptions.variable.VariableNamePatchRequest;
+import com.vs.foosh.api.model.device.DeviceList;
 import com.vs.foosh.api.model.variable.Variable;
+import com.vs.foosh.api.model.variable.VariableDevicesPostRequest;
 import com.vs.foosh.api.model.variable.VariableList;
 import com.vs.foosh.api.model.variable.VariablePostRequest;
+import com.vs.foosh.api.model.web.HttpResponseObject;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.HttpResponseBuilder;
 import com.vs.foosh.api.services.LinkBuilder;
@@ -127,7 +131,7 @@ public class VariableController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> putVars() {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /variables/! Either use PATCH to update or DELETE and POST to replace the list of variables.",
+                "You cannot use PUT on /variables/! Either use PATCH to update or DELETE and POST to replace the list of variables.", //TODO change /variables
                 VariableList.getLinks("self"));
     }
 
@@ -190,7 +194,7 @@ public class VariableController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> putVar(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /variables/{id}! Either use PATCH to update or DELETE and POST to replace a variable.",
+                "You cannot use PUT on /variables/{id}! Either use PATCH to update or DELETE and POST to replace a variable.", //TODO change /variables
                 VariableList.getVariable(id).getSelfLinks());
     }
 
@@ -272,6 +276,73 @@ public class VariableController {
     /// Devices
     ///
 
+    @GetMapping(value = "/{id}/devices/",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getVarDevices(@PathVariable("id") String id) {
+        Variable variable = VariableList.getVariable(id);
+        List<HttpResponseObject> devices = new ArrayList<>();
+
+        for (UUID deviceId: variable.getDeviceIds()) {
+            devices.add(DeviceList.getDevice(deviceId.toString()));
+        }
+
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(variable.getSelfLinks());
+        links.addAll(variable.getDeviceLinks());
+
+        return HttpResponseBuilder.buildResponse(devices, "devices", links, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/{id}/devices/",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> postVarDevices(@PathVariable("id") String id, @RequestBody VariableDevicesPostRequest request) {
+        // TODO: Remove duplicates and check whether IDs exist
+        // Remove duplicates
+        List<UUID> deviceIds = new ArrayList<>(new HashSet<>(request.getDevices()));
+
+        Variable variable = VariableList.getVariable(id);
+
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(variable.getSelfLinks());
+        links.addAll(variable.getDeviceLinks());
+
+        return HttpResponseBuilder.buildResponse(variable, links, HttpStatus.CREATED);
+
+    }
+
+    @PutMapping(value = "/{id}/devices/",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> putVarDevices(@PathVariable("id") String id) {
+        Variable variable = VariableList.getVariable(id);
+
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(variable.getSelfLinks());
+        links.addAll(variable.getDeviceLinks());
+
+        throw new HttpMappingNotAllowedException(
+                "You cannot use PUT on /vars/{id}/devices/! Either use PATCH to update or DELETE and POST to replace the list of associated devices.",
+                links);
+    }
+    
+    // TODO
+    @PatchMapping(value = "/{id}/devices/",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> patchVarDevices(@PathVariable("id") String id) {
+        throw new HttpMappingNotAllowedException(
+                "You cannot use PUT on /vars/{id}/devices/! Either use PATCH to update or DELETE and POST to replace the list of associated devices.",
+                VariableList.getVariable(id).getSelfLinks());
+    }
+    
+    // TODO
+    @DeleteMapping(value = "/{id}/devices/",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> deletVarDevices(@PathVariable("id") String id) {
+        throw new HttpMappingNotAllowedException(
+                "You cannot use PUT on /vars/{id}/devices/! Either use PATCH to update or DELETE and POST to replace the list of associated devices.",
+                VariableList.getVariable(id).getSelfLinks());
+    }
 
     ///
     /// Models
