@@ -164,7 +164,6 @@ public abstract class AbstractDeviceController {
     }
 
     @PostMapping(value = "/{id}",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicePost(@PathVariable("id") String id) {
         List<LinkEntry> links = new ArrayList<>();
