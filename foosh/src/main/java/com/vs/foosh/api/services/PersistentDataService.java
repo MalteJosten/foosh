@@ -31,6 +31,7 @@ public class PersistentDataService {
         }
     } 
 
+    @SuppressWarnings("unchecked")
     public static ReadSaveFileResult<AbstractDevice> hasSavedDeviceList() {
         ReadSaveFileResult<AbstractDevice> result = new ReadSaveFileResult<>();
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ApplicationConfig.getDeviceSavePath().toFile()))) {
@@ -68,6 +69,7 @@ public class PersistentDataService {
         }
     } 
 
+    @SuppressWarnings("unchecked")
     public static ReadSaveFileResult<Variable> hasSavedVariableList() {
         ReadSaveFileResult<Variable> result = new ReadSaveFileResult<>();
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ApplicationConfig.getVariableSavePath().toFile()))) {
