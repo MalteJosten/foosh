@@ -1,7 +1,5 @@
 package com.vs.foosh.custom;
 
-import java.util.UUID;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.vs.foosh.api.model.device.AbstractDevice;
 import com.vs.foosh.api.model.device.DeviceList;
@@ -10,7 +8,8 @@ import com.vs.foosh.api.model.device.DeviceNamePatchRequest;
 public class Device extends AbstractDevice {
 
     public Device(JsonNode description) {
-        this.id          = UUID.randomUUID();
+        super();
+
         this.description = new DeviceDescription(description);
         setObjectFields();
 
@@ -18,7 +17,8 @@ public class Device extends AbstractDevice {
     }        
 
     public Device(JsonNode description, String name) {
-        this.id          = UUID.randomUUID();
+        super();
+
         this.description = new DeviceDescription(description);
         setObjectFields();
 

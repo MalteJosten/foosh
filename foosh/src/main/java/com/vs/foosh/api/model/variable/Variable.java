@@ -7,14 +7,12 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vs.foosh.api.model.device.DeviceList;
+import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.HttpAction;
-import com.vs.foosh.api.model.web.HttpResponseObject;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilder;
 
-public class Variable extends HttpResponseObject implements Serializable {
-    private final UUID id;
-    private String name;
+public class Variable extends Thing implements Serializable {
     private List<UUID> models  = new ArrayList<>();
     private List<UUID> devices = new ArrayList<>();
 
@@ -24,23 +22,15 @@ public class Variable extends HttpResponseObject implements Serializable {
     private List<LinkEntry> extLinks    = new ArrayList<>();
 
     public Variable(String name, List<UUID> modelIds, List<UUID> deviceIds) {
-        this.id      = UUID.randomUUID();
-        this.name    = name;
+        super(name);
+
         this.models  = modelIds;
         this.devices = deviceIds;
-    }
-
-    public UUID getId() {
-        return this.id;
     }
 
     public void setName(String name) {
         this.name = name;
         updateLinks();
-    }
-
-    public String getName() {
-        return this.name;
     }
 
     public void setModels(List<UUID> modelIDs) {

@@ -4,17 +4,14 @@ import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.HttpAction;
-import com.vs.foosh.api.model.web.HttpResponseObject;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilder;
 
-public abstract class AbstractDevice extends HttpResponseObject implements Serializable {
-    protected UUID id;
-    protected String name;
+public abstract class AbstractDevice extends Thing implements Serializable {
     protected String deviceName;
     protected String type;
     protected AbstractDeviceDescription description;
@@ -24,12 +21,8 @@ public abstract class AbstractDevice extends HttpResponseObject implements Seria
 
     protected abstract void setObjectFields();
 
-    public UUID getId() {
-        return this.id;
-    }
-
-    public String getName() {
-        return this.name;
+    public AbstractDevice() {
+        super();
     }
 
     public void setName(String name) {
