@@ -1,6 +1,5 @@
 package com.vs.foosh.api.model.variable;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -12,7 +11,7 @@ import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilder;
 
-public class Variable extends Thing implements Serializable {
+public class Variable extends Thing {
     private List<UUID> models  = new ArrayList<>();
     private List<UUID> devices = new ArrayList<>();
 

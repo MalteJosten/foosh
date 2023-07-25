@@ -1,8 +1,9 @@
 package com.vs.foosh.api.model.misc;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class Thing {
+public class Thing implements Serializable {
     protected final UUID id;
     protected String name;
 

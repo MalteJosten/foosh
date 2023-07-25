@@ -8,7 +8,7 @@ import com.vs.foosh.api.model.device.DeviceNamePatchRequest;
 public class Device extends AbstractDevice {
 
     public Device(JsonNode description) {
-        super();
+        super("none");
 
         this.description = new DeviceDescription(description);
         setObjectFields();
@@ -17,7 +17,7 @@ public class Device extends AbstractDevice {
     }        
 
     public Device(JsonNode description, String name) {
-        super();
+        super("none");
 
         this.description = new DeviceDescription(description);
         setObjectFields();

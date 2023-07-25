@@ -1,6 +1,5 @@
 package com.vs.foosh.api.model.device;
 
-import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +10,7 @@ import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilder;
 
-public abstract class AbstractDevice extends Thing implements Serializable {
+public abstract class AbstractDevice extends Thing {
     protected String deviceName;
     protected String type;
     protected AbstractDeviceDescription description;
@@ -21,8 +20,8 @@ public abstract class AbstractDevice extends Thing implements Serializable {
 
     protected abstract void setObjectFields();
 
-    public AbstractDevice() {
-        super();
+    public AbstractDevice(String name) {
+        super(name);
     }
 
     public void setName(String name) {
