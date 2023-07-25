@@ -31,7 +31,6 @@ public class VariableList {
     }
 
     public static void pushVariable(Variable variable) {
-        // TODO: Pre-processing? Checks?
         getInstance().add(variable);
     }
 
@@ -64,9 +63,9 @@ public class VariableList {
     }
 
     public static boolean isUniqueName(String name, UUID id) {
-        // Check whether the provided 'name' could be an UUID.
-        // Names in form of an UUID are disallowed.
         try {
+            // Check whether the provided 'name' could be an UUID.
+            // Names in form of an UUID are disallowed.
             UUID.fromString(name);
             throw new VariableNameMustNotBeAnUuidException(id);
         } catch (IllegalArgumentException e) {
