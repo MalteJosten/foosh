@@ -29,11 +29,11 @@ import com.vs.foosh.api.exceptions.variable.VariableNameIsEmptyException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsNullException;
 import com.vs.foosh.api.exceptions.variable.VariableNamePatchRequest;
 import com.vs.foosh.api.model.device.DeviceList;
+import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.variable.VariableDevicesPostRequest;
 import com.vs.foosh.api.model.variable.VariableList;
 import com.vs.foosh.api.model.variable.VariablePostRequest;
-import com.vs.foosh.api.model.web.HttpResponseObject;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.HttpResponseBuilder;
 import com.vs.foosh.api.services.LinkBuilder;
@@ -280,7 +280,7 @@ public class VariableController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getVarDevices(@PathVariable("id") String id) {
         Variable variable = VariableList.getVariable(id);
-        List<HttpResponseObject> devices = new ArrayList<>();
+        List<Thing> devices = new ArrayList<>();
 
         for (UUID deviceId: variable.getDeviceIds()) {
             devices.add(DeviceList.getDevice(deviceId.toString()));
@@ -300,6 +300,8 @@ public class VariableController {
         // TODO: Remove duplicates and check whether IDs exist
         // Remove duplicates
         List<UUID> deviceIds = new ArrayList<>(new HashSet<>(request.getDevices()));
+
+
 
         Variable variable = VariableList.getVariable(id);
 

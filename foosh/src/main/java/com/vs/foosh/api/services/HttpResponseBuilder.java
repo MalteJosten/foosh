@@ -8,11 +8,11 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.vs.foosh.api.model.web.HttpResponseObject;
+import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.LinkEntry;
 
 public class HttpResponseBuilder {
-    public static ResponseEntity<Object> buildResponse(HttpResponseObject object, List<LinkEntry> links, HttpStatus status) {
+    public static ResponseEntity<Object> buildResponse(Thing object, List<LinkEntry> links, HttpStatus status) {
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put(object.getClass().getSimpleName().toLowerCase(), object);
         responseBody.put("links", links);
@@ -20,7 +20,7 @@ public class HttpResponseBuilder {
         return new ResponseEntity<>(responseBody, status);
     }
 
-    public static ResponseEntity<Object> buildResponse(List<HttpResponseObject> collection, String collectionLabel, List<LinkEntry> links, HttpStatus status) {
+    public static ResponseEntity<Object> buildResponse(List<Thing> collection, String collectionLabel, List<LinkEntry> links, HttpStatus status) {
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put(collectionLabel.toLowerCase(), collection);
         responseBody.put("links", links);
