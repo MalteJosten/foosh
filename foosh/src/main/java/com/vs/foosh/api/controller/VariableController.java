@@ -25,6 +25,7 @@ import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
 import com.vs.foosh.api.exceptions.misc.IdIsNoValidUUIDException;
 import com.vs.foosh.api.exceptions.variable.BatchVariableNameException;
 import com.vs.foosh.api.exceptions.variable.VariableCreationException;
+import com.vs.foosh.api.exceptions.variable.VariableDevicePostException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsEmptyException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsNullException;
 import com.vs.foosh.api.exceptions.variable.VariableNamePatchRequest;
@@ -36,6 +37,7 @@ import com.vs.foosh.api.model.variable.VariableList;
 import com.vs.foosh.api.model.variable.VariablePostRequest;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.HttpResponseBuilder;
+import com.vs.foosh.api.services.IdService;
 import com.vs.foosh.api.services.LinkBuilder;
 import com.vs.foosh.api.services.PersistentDataService;
 
@@ -297,17 +299,29 @@ public class VariableController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> postVarDevices(@PathVariable("id") String id, @RequestBody VariableDevicesPostRequest request) {
-        // TODO: Remove duplicates and check whether IDs exist
         // Remove duplicates
         List<UUID> deviceIds = new ArrayList<>(new HashSet<>(request.getDevices()));
 
-
+        for (UUID deviceId: deviceIds) {
+            if(!IdService.isUuidInList(deviceId, DeviceList.getInstance())) {
+                throw new VariableDevicePostException(
+                    id,
+                    deviceId,
+                    "Could not find a device with ID '" + deviceId + "'. Aborting.",
+                    HttpStatus.BAD_REQUEST
+                );
+            }
+        }
 
         Variable variable = VariableList.getVariable(id);
 
+        // TODO: Register observer at each device
+        variable.setDevices(deviceIds);
+
+        PersistentDataService.saveVariableList();
+
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(variable.getSelfLinks());
-        links.addAll(variable.getDeviceLinks());
 
         return HttpResponseBuilder.buildResponse(variable, links, HttpStatus.CREATED);
 

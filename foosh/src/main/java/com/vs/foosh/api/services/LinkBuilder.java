@@ -28,10 +28,15 @@ public class LinkBuilder {
             .host(host)
             .port(port);
 
-        paths.forEach(path -> {
-            uriBuilder
-                .path(path + '/');
-        });
+        for (int i = 0; i < paths.size(); i++) {
+            StringBuilder toAppend = new StringBuilder(paths.get(i));
+
+            if (i != (paths.size() - 1)) {
+                toAppend.append('/');
+            }
+
+            uriBuilder.path(toAppend.toString());
+        }
 
         return uriBuilder.build().toUri();
     }

@@ -28,6 +28,7 @@ import com.vs.foosh.api.exceptions.smarthome.SmartHomeAccessException;
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeIOException;
 import com.vs.foosh.api.exceptions.variable.BatchVariableNameException;
 import com.vs.foosh.api.exceptions.variable.VariableCreationException;
+import com.vs.foosh.api.exceptions.variable.VariableDevicePostException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsEmptyException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsNotUniqueException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsNullException;
@@ -168,6 +169,14 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
                 exception.getMessage(),
                 VariableList.getLinks("self"),
                 HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(VariableDevicePostException.class)
+    public ResponseEntity<Object> handleVariableDevicePostException(VariableDevicePostException exception, WebRequest request) {
+        return HttpResponseBuilder.buildException(
+                exception.getMessage(),
+                VariableList.getVariable(exception.getVariableId().toString()).getDeviceLinks(),
+                exception.getStatus());
     }
 
     /**
