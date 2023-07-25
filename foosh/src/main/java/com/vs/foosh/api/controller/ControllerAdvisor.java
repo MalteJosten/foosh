@@ -1,5 +1,8 @@
 package com.vs.foosh.api.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -29,6 +32,7 @@ import com.vs.foosh.api.exceptions.variable.VariableNameIsNullException;
 import com.vs.foosh.api.exceptions.variable.VariableNotFoundException;
 import com.vs.foosh.api.model.device.DeviceList;
 import com.vs.foosh.api.model.variable.VariableList;
+import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.HttpResponseBuilder;
 import com.vs.foosh.api.services.LinkBuilder;
 
@@ -130,9 +134,17 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(VariableNameIsNotUniqueException.class)
     public ResponseEntity<Object> handleVariableNameIsNotUniqueException(VariableNameIsNotUniqueException exception, WebRequest request) {
+        List<LinkEntry> links = new ArrayList<>();
+
+        if (exception.getId() == null) {
+                links = VariableList.getLinks("variables");
+        } else {
+                links = LinkBuilder.getVariableLinkBlock(exception.getId().toString());
+        }
+
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
-                LinkBuilder.getVariableLinkBlock(exception.getId().toString()),
+                links,
                 HttpStatus.CONFLICT);
     }
 

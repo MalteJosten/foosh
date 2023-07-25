@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.vs.foosh.api.exceptions.device.DeviceIdNotFoundException;
 import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
 import com.vs.foosh.api.exceptions.misc.IdIsNoValidUUIDException;
 import com.vs.foosh.api.exceptions.variable.BatchVariableNameException;
@@ -28,7 +27,6 @@ import com.vs.foosh.api.exceptions.variable.VariableCreationException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsEmptyException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsNullException;
 import com.vs.foosh.api.exceptions.variable.VariableNamePatchRequest;
-import com.vs.foosh.api.model.device.DeviceList;
 import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.variable.VariableList;
 import com.vs.foosh.api.model.variable.VariablePostRequest;
@@ -42,7 +40,7 @@ import com.vs.foosh.api.services.PersistentDataService;
 public class VariableController {
 
     ///
-    /// Environment Variables
+    /// Variable Collection
     ///
 
     @GetMapping(value = "/",
@@ -55,14 +53,13 @@ public class VariableController {
                 HttpStatus.OK);
     }
 
-    // TODO: Only allow definition of name
     @PostMapping(value = "/",
             headers  = "batch=true",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> postMulitpleVar(@RequestBody List<VariablePostRequest> requests) {
         if (requests == null || requests.isEmpty()) {
-            throw new VariableCreationException("Cannot create variables! Please provide a collection 'variables.");
+            throw new VariableCreationException("Cannot create variables! Please provide a collection of variable names.");
         }
 
         List<Variable> variables = new ArrayList<>();
@@ -81,7 +78,6 @@ public class VariableController {
                 HttpStatus.CREATED);
     }
 
-    // TODO: Only allow definition of name
     @PostMapping(value = "/",
             headers  = "batch=false",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -124,23 +120,7 @@ public class VariableController {
 
         String name = request.getName().toLowerCase();
 
-        // Validate device IDs
-        List<UUID> deviceIds = new ArrayList<>();
-        if (request.getDevices() != null) {
-            for (UUID deviceId: request.getDevices()) {
-                try {
-                    DeviceList.checkIfIdIsPresent(deviceId.toString());
-                } catch (DeviceIdNotFoundException e) {
-                    throw new VariableCreationException("Cannot create variable! Could not find device with id " + deviceId + ".");
-                }
-            }
-            deviceIds.addAll(request.getDevices());
-        }
-
-        // TODO: Check if given modelId(s) are valid
-        List<UUID> modelIds = new ArrayList<>();
-
-        return new Variable(name, modelIds, deviceIds);
+        return new Variable(name, new ArrayList<>(), new ArrayList<>());
     }
 
     @PutMapping(value = "/",
@@ -183,7 +163,7 @@ public class VariableController {
     }
 
     ///
-    /// Environment Variable
+    /// Variable
     ///
 
     @GetMapping(value = "/{id}",
@@ -202,7 +182,7 @@ public class VariableController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> postVar() {
-        // TODO: What exactly needs/can be included when creating new variable? 
+        // TODO: Start prediction.
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
@@ -287,4 +267,13 @@ public class VariableController {
         return true;
 
     }
+
+    ///
+    /// Devices
+    ///
+
+
+    ///
+    /// Models
+    ///
 }
