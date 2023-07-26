@@ -10,7 +10,6 @@ import java.util.UUID;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.vs.foosh.api.model.device.AbstractDeviceList;
 import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.variable.VariableList;
 import com.vs.foosh.api.model.web.HttpAction;
@@ -136,8 +135,8 @@ public class LinkBuilder {
 
     public static List<LinkEntry> getDeviceLinkWithDevices(String id) {
         List<LinkEntry> links = new ArrayList<>();
-        List<LinkEntry> deviceSelfLinks = AbstractDeviceList.getDeviceById(id).getSelfLinks();
-        List<LinkEntry> devicesLinks    = AbstractDeviceList.getLinks("devices");
+        List<LinkEntry> deviceSelfLinks = ListService.getAbstractDeviceList().getDeviceById(id).getSelfLinks();
+        List<LinkEntry> devicesLinks    = ListService.getAbstractDeviceList().getLinks("devices");
 
         links.addAll(deviceSelfLinks);
         links.addAll(devicesLinks);

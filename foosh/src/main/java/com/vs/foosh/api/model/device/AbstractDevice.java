@@ -10,6 +10,7 @@ import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilder;
+import com.vs.foosh.api.services.ListService;
 
 public abstract class AbstractDevice extends Thing {
     protected String deviceName;
@@ -80,7 +81,7 @@ public abstract class AbstractDevice extends Thing {
         }
 
         links = buildSelfEntries();
-        extLinks = AbstractDeviceList.getLinks("devices");
+        extLinks = ListService.getAbstractDeviceList().getLinks("devices");
     }
 
 

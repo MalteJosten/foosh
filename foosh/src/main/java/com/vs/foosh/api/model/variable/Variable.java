@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.vs.foosh.api.model.device.AbstractDeviceList;
 import com.vs.foosh.api.model.enums.ListModification;
 import com.vs.foosh.api.model.misc.IThingListObserver;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilder;
+import com.vs.foosh.api.services.ListService;
 
 public class Variable extends Thing implements IThingListObserver {
     private List<UUID> models  = new ArrayList<>();
@@ -126,7 +126,7 @@ public class Variable extends Thing implements IThingListObserver {
         }
 
         for (UUID deviceId: devices) {
-            deviceLinks.addAll(AbstractDeviceList.getDeviceById(deviceId.toString()).getSelfStaticLinks("device"));
+            deviceLinks.addAll(ListService.getAbstractDeviceList().getDeviceById(deviceId.toString()).getSelfStaticLinks("device"));
         }
     }
 

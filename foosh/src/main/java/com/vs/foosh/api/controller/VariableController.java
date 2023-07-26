@@ -29,7 +29,6 @@ import com.vs.foosh.api.exceptions.variable.VariableDevicePostException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsEmptyException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsNullException;
 import com.vs.foosh.api.exceptions.variable.VariableNamePatchRequest;
-import com.vs.foosh.api.model.device.AbstractDeviceList;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.variable.VariableDevicesPostRequest;
@@ -39,6 +38,7 @@ import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.HttpResponseBuilder;
 import com.vs.foosh.api.services.IdService;
 import com.vs.foosh.api.services.LinkBuilder;
+import com.vs.foosh.api.services.ListService;
 import com.vs.foosh.api.services.PersistentDataService;
 
 @RestController
@@ -285,7 +285,7 @@ public class VariableController {
         List<Thing> devices = new ArrayList<>();
 
         for (UUID deviceId: variable.getDeviceIds()) {
-            devices.add(AbstractDeviceList.getDeviceById(deviceId.toString()));
+            devices.add(ListService.getAbstractDeviceList().getDeviceById(deviceId.toString()));
         }
 
         List<LinkEntry> links = new ArrayList<>();
@@ -303,7 +303,7 @@ public class VariableController {
         List<UUID> deviceIds = new ArrayList<>(new HashSet<>(request.getDevices()));
 
         for (UUID deviceId: deviceIds) {
-            if(!IdService.isUuidInList(deviceId, AbstractDeviceList.getInstance())) {
+            if(!IdService.isUuidInList(deviceId, ListService.getAbstractDeviceList().getDevices())) {
                 throw new VariableDevicePostException(
                     id,
                     deviceId,
