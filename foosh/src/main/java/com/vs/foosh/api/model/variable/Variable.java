@@ -156,20 +156,17 @@ public class Variable extends Thing implements IThingListObserver {
     }
 
     public void register() {
-        System.out.println("Attaching to AbstractDeviceList");
         ListService.getAbstractDeviceList().attach(this);
     }
 
     // TODO: Needs to be called after DELETE vars/{id} and DELETE vars/{id}/devices
     public void unregister() {
-        System.out.println("Detaching form AbstractDeviceList");
         ListService.getAbstractDeviceList().detach(this);
     }
 
     @Override
     public void update(ListModification modification) {
         if (modification == ListModification.DELETION) {
-            System.out.println("Deleting device links");
             devices.clear();
         }
 

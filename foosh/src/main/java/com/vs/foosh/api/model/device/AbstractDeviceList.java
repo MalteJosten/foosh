@@ -183,7 +183,6 @@ public class AbstractDeviceList implements IThingListSubject, Serializable {
     @Override
     public void notifyObservers(ListModification modification) {
         for(IThingListObserver observer: observers) {
-            System.out.println("Notifying " + observer.getClass().getSimpleName() + ".");
             observer.update(modification);
         }
 
