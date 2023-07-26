@@ -108,12 +108,12 @@ public class Variable extends Thing implements IThingListObserver {
     }
     
     private void updateSelfLinks() {
-        LinkEntry getId    = new LinkEntry("selfStatic", LinkBuilder.getVariableLink(this.id), HttpAction.GET, List.of());
-        LinkEntry patchId  = new LinkEntry("selfStatic", LinkBuilder.getVariableLink(this.id), HttpAction.PATCH, List.of("application/json"));
-        LinkEntry deleteId = new LinkEntry("selfStatic", LinkBuilder.getVariableLink(this.id), HttpAction.DELETE, List.of());
+        LinkEntry getId    = new LinkEntry("selfStatic", LinkBuilder.getVariableLink(this.id.toString()), HttpAction.GET, List.of());
+        LinkEntry patchId  = new LinkEntry("selfStatic", LinkBuilder.getVariableLink(this.id.toString()), HttpAction.PATCH, List.of("application/json"));
+        LinkEntry deleteId = new LinkEntry("selfStatic", LinkBuilder.getVariableLink(this.id.toString()), HttpAction.DELETE, List.of());
 
-        LinkEntry getName    = new LinkEntry("selfName", LinkBuilder.buildPath(List.of("variable", this.name)), HttpAction.GET, List.of());
-        LinkEntry deleteName = new LinkEntry("selfName", LinkBuilder.buildPath(List.of("variable", this.name)), HttpAction.DELETE, List.of());
+        LinkEntry getName    = new LinkEntry("selfName", LinkBuilder.getVariableLink(this.name), HttpAction.GET, List.of());
+        LinkEntry deleteName = new LinkEntry("selfName", LinkBuilder.getVariableLink(this.name), HttpAction.DELETE, List.of());
 
         if (links != null || !links.isEmpty()) {
             links.clear();

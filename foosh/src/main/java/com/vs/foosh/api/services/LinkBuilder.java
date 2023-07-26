@@ -14,7 +14,6 @@ import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 
-// TODO: Fix device link generation (/device/ to /api/devices/)
 public class LinkBuilder {
     private static String host;
     private static int port;
@@ -53,7 +52,7 @@ public class LinkBuilder {
     }
 
 
-    public static URI getDeviceLink(UUID id) {
+    public static URI getDeviceLink(String identifier) {
         UriComponents uri = UriComponentsBuilder
             .newInstance()
             .scheme("http")
@@ -61,7 +60,7 @@ public class LinkBuilder {
             .port(port)
             .path("api/")
             .path("devices/")
-            .path(id.toString())
+            .path(identifier)
             .build();
 
         return uri.toUri();
@@ -90,7 +89,7 @@ public class LinkBuilder {
         return links;
     }
 
-    public static URI getVariableLink(UUID id) {
+    public static URI getVariableLink(String identifier) {
         UriComponents uri = UriComponentsBuilder
             .newInstance()
             .scheme("http")
@@ -98,7 +97,7 @@ public class LinkBuilder {
             .port(port)
             .path("api/")
             .path("vars/")
-            .path(id.toString())
+            .path(identifier)
             .build();
 
         return uri.toUri();
