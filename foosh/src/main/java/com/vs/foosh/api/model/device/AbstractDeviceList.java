@@ -25,10 +25,6 @@ public class AbstractDeviceList implements IThingListSubject, Serializable {
         this.devices = new ArrayList<>();
     }
 
-    public AbstractDeviceList(List<AbstractDevice> devices) {
-        this.devices = devices;
-    }
-
     public void setDevices(List<AbstractDevice> deviceList) {
         if (devices != null) {
             clearDevices();
