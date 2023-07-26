@@ -1,5 +1,6 @@
 package com.vs.foosh.api.model.device;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -14,7 +15,7 @@ import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilder;
 
-public class AbstractDeviceList implements IThingListSubject{
+public class AbstractDeviceList implements IThingListSubject, Serializable {
     private List<AbstractDevice> devices;
     private final int UNIQUE_QUERY_NAME_TIMEOUT = 25;
 

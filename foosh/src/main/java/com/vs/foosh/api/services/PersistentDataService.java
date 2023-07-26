@@ -14,6 +14,7 @@ import com.vs.foosh.api.exceptions.misc.CouldNotDeleteCollectionException;
 import com.vs.foosh.api.exceptions.misc.SaveFileNotFoundException;
 import com.vs.foosh.api.exceptions.misc.SavingToFileIOException;
 import com.vs.foosh.api.model.device.AbstractDevice;
+import com.vs.foosh.api.model.device.AbstractDeviceList;
 import com.vs.foosh.api.model.misc.ReadSaveFileResult;
 import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.variable.VariableList;
@@ -31,10 +32,10 @@ public class PersistentDataService {
     } 
 
     @SuppressWarnings("unchecked")
-    public static ReadSaveFileResult<AbstractDevice> hasSavedDeviceList() {
-        ReadSaveFileResult<AbstractDevice> result = new ReadSaveFileResult<>();
+    public static ReadSaveFileResult<AbstractDeviceList> hasSavedDeviceList() {
+        ReadSaveFileResult<AbstractDeviceList> result = new ReadSaveFileResult<>();
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ApplicationConfig.getDeviceSavePath().toFile()))) {
-            List<AbstractDevice> list = (List<AbstractDevice>) ois.readObject();
+            AbstractDeviceList list = (AbstractDeviceList) ois.readObject();
             result.setData(list);
             result.setSuccess(true);
         } catch (IOException e) {

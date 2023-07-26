@@ -74,9 +74,9 @@ public abstract class AbstractDeviceController {
         }
 
         FetchDeviceResponse apiResponse;
-        ReadSaveFileResult<AbstractDevice> readResult = PersistentDataService.hasSavedDeviceList();
+        ReadSaveFileResult<AbstractDeviceList> readResult = PersistentDataService.hasSavedDeviceList();
         if (readResult.getSuccess()) {
-            ListService.getAbstractDeviceList().setDevices(readResult.getData());
+            ListService.setAbstractDeviceList(readResult.getData());
         } else {
             try {
                 if (credentials == null) {

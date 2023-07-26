@@ -1,18 +1,16 @@
 package com.vs.foosh.api.model.misc;
 
-import java.util.List;
-
 public class ReadSaveFileResult<T> {
-    private List<T> data;
+    private T data;
     private boolean success;
 
     public ReadSaveFileResult() {}
 
-    public void setData(List<T> readResult) {
+    public void setData(T readResult) {
         this.data = readResult;
     }
 
-    public List<T> getData() {
+    public T getData() {
         return this.data;
     }
 
