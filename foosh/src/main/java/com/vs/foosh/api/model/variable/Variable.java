@@ -12,7 +12,6 @@ import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilder;
 import com.vs.foosh.api.services.ListService;
-import com.vs.foosh.api.services.PersistentDataService;
 
 public class Variable extends Thing implements IThingListObserver {
     private List<UUID> models  = new ArrayList<>();
