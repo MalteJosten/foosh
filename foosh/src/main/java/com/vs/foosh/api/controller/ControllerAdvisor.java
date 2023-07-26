@@ -34,7 +34,7 @@ import com.vs.foosh.api.exceptions.variable.VariableNameIsNotUniqueException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsNullException;
 import com.vs.foosh.api.exceptions.variable.VariableNameMustNotBeAnUuidException;
 import com.vs.foosh.api.exceptions.variable.VariableNotFoundException;
-import com.vs.foosh.api.model.device.DeviceList;
+import com.vs.foosh.api.model.device.AbstractDeviceList;
 import com.vs.foosh.api.model.variable.VariableList;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.HttpResponseBuilder;
@@ -85,7 +85,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
-                DeviceList.getLinks("devices"),
+                AbstractDeviceList.getLinks("devices"),
                 HttpStatus.BAD_REQUEST);
     }
 
@@ -94,7 +94,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
-                DeviceList.getLinks("devices"),
+                AbstractDeviceList.getLinks("devices"),
                 HttpStatus.NOT_FOUND);
     }
 
@@ -190,7 +190,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
-                DeviceList.getLinks("devices"),
+                AbstractDeviceList.getLinks("devices"),
                 HttpStatus.BAD_REQUEST);
     }
 

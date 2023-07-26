@@ -14,7 +14,7 @@ import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilder;
 
-public class DeviceList implements IThingListSubject{
+public class AbstractDeviceList implements IThingListSubject{
     private static List<AbstractDevice> devices;
     private static final int UNIQUE_QUERY_NAME_TIMEOUT = 25;
 

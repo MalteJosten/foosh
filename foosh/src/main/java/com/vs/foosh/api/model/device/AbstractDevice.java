@@ -80,7 +80,7 @@ public abstract class AbstractDevice extends Thing {
         }
 
         links = buildSelfEntries();
-        extLinks = DeviceList.getLinks("devices");
+        extLinks = AbstractDeviceList.getLinks("devices");
     }
 
 

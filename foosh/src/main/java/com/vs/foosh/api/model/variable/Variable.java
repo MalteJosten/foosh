@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.vs.foosh.api.model.device.DeviceList;
+import com.vs.foosh.api.model.device.AbstractDeviceList;
 import com.vs.foosh.api.model.enums.ListModification;
 import com.vs.foosh.api.model.misc.IThingListObserver;
 import com.vs.foosh.api.model.misc.Thing;
@@ -126,7 +126,7 @@ public class Variable extends Thing implements IThingListObserver {
         }
 
         for (UUID deviceId: devices) {
-            deviceLinks.addAll(DeviceList.getDeviceById(deviceId.toString()).getSelfStaticLinks("device"));
+            deviceLinks.addAll(AbstractDeviceList.getDeviceById(deviceId.toString()).getSelfStaticLinks("device"));
         }
     }
 

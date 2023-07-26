@@ -2,7 +2,7 @@ package com.vs.foosh.custom;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.vs.foosh.api.model.device.AbstractDevice;
-import com.vs.foosh.api.model.device.DeviceList;
+import com.vs.foosh.api.model.device.AbstractDeviceList;
 import com.vs.foosh.api.model.device.DeviceNamePatchRequest;
 
 public class Device extends AbstractDevice {
@@ -13,7 +13,7 @@ public class Device extends AbstractDevice {
         this.description = new DeviceDescription(description);
         setObjectFields();
 
-        setName(DeviceList.findUniqueName(new DeviceNamePatchRequest(this.id, this.description.getProperties().get("name").toString())));
+        setName(AbstractDeviceList.findUniqueName(new DeviceNamePatchRequest(this.id, this.description.getProperties().get("name").toString())));
     }        
 
     public Device(JsonNode description, String name) {
@@ -22,7 +22,7 @@ public class Device extends AbstractDevice {
         this.description = new DeviceDescription(description);
         setObjectFields();
 
-        setName(DeviceList.findUniqueName(new DeviceNamePatchRequest(this.id, name)));
+        setName(AbstractDeviceList.findUniqueName(new DeviceNamePatchRequest(this.id, name)));
     }
 
     @Override

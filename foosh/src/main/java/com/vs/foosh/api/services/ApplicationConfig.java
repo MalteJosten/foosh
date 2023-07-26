@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vs.foosh.api.model.device.AbstractDevice;
-import com.vs.foosh.api.model.device.DeviceList;
+import com.vs.foosh.api.model.device.AbstractDeviceList;
 import com.vs.foosh.api.model.misc.ReadSaveFileResult;
 import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.variable.VariableList;
@@ -124,7 +124,7 @@ public class ApplicationConfig {
     private static void tryToLoadSaveFiles() {
         ReadSaveFileResult<AbstractDevice> devicesResult = PersistentDataService.hasSavedDeviceList();
         if (devicesResult.getSuccess()) {
-            DeviceList.setDevices(devicesResult.getData());
+            AbstractDeviceList.setDevices(devicesResult.getData());
         }
 
         ReadSaveFileResult<Variable> variablesResult = PersistentDataService.hasSavedVariableList();
