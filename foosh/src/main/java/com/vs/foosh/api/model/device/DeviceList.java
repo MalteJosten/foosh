@@ -7,13 +7,18 @@ import java.util.UUID;
 import com.vs.foosh.api.exceptions.device.CouldNotFindUniqueDeviceNameException;
 import com.vs.foosh.api.exceptions.device.DeviceIdNotFoundException;
 import com.vs.foosh.api.exceptions.device.DeviceNameIsNotUniqueException;
+import com.vs.foosh.api.model.enums.ListModification;
+import com.vs.foosh.api.model.misc.IThingListObserver;
+import com.vs.foosh.api.model.misc.IThingListSubject;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilder;
 
-public class DeviceList {
+public class DeviceList implements IThingListSubject{
     private static List<AbstractDevice> devices;
     private static final int UNIQUE_QUERY_NAME_TIMEOUT = 25;
+
+    private static List<IThingListObserver> observers = new ArrayList<>();
 
     public static List<AbstractDevice> getInstance() {
         if (devices == null) {
@@ -54,6 +59,7 @@ public class DeviceList {
     }
 
     public static void clearDevices() {
+        notifyObservers(ListModification.DELETION);
         getInstance().clear();
     }
 
@@ -62,7 +68,7 @@ public class DeviceList {
     ///   (1) it's ID,
     ///   (2) it's name
     ///
-    public static AbstractDevice getDevice(String identifier) {
+    public static AbstractDevice getDeviceById(String identifier) {
         for (AbstractDevice device: getDevices()) {
             if (device.getId().toString().equals(identifier) || device.getName().equals(identifier.toLowerCase())) {
                 return device;
@@ -70,6 +76,20 @@ public class DeviceList {
         }
 
         throw new DeviceIdNotFoundException(identifier);
+    }
+
+    public static List<AbstractDevice> getDevicesById(List<UUID> identifiers) {
+        List<AbstractDevice> results = new ArrayList<>();
+
+        for(UUID identifier: identifiers) {
+            for (AbstractDevice device: getDevices()) {
+                if (device.getId().equals(identifier)) {
+                    results.add(device);
+                }
+            }
+        }
+
+        return results;
     }
 
     public static void checkIfIdIsPresent(String identifier) {
@@ -117,7 +137,7 @@ public class DeviceList {
 
         // Does the field contain any letters, i.e., is it not empty?
         if (name.toString().trim().isEmpty()) {
-            name.replace(0, name.length(), getDevice(id.toString()).getDeviceName());
+            name.replace(0, name.length(), getDeviceById(id.toString()).getDeviceName());
         }
 
         for (int i = 0; i < UNIQUE_QUERY_NAME_TIMEOUT; i++) {
@@ -125,7 +145,7 @@ public class DeviceList {
             if (isUniqueName(name.toString(), id)) {
                 return name.toString();
             } else {
-                name.replace(0, name.length(), getDevice(id.toString()).getDeviceName() + (i+1));
+                name.replace(0, name.length(), getDeviceById(id.toString()).getDeviceName() + (i+1));
             }
         }
 
@@ -151,4 +171,22 @@ public class DeviceList {
         }
     }
 
+    @Override
+    public void attach(IThingListObserver observer) {
+        if (!observers.contains(observer)) {
+            observers.add(observer);
+        }
+    }
+
+    @Override
+    public void detach(IThingListObserver observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers(ListModification modification) {
+        for(IThingListObserver observer: observers) {
+            observer.update(modification);
+        }
+    }
 }

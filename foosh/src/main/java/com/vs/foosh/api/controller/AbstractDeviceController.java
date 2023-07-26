@@ -154,7 +154,7 @@ public abstract class AbstractDeviceController {
     @GetMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deviceGet(@PathVariable("id") String id) {
-        AbstractDevice device = DeviceList.getDevice(id);
+        AbstractDevice device = DeviceList.getDeviceById(id);
 
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(device.getSelfLinks());
@@ -179,7 +179,7 @@ public abstract class AbstractDeviceController {
     public ResponseEntity<Object> devicePut(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
                 "You cannot use PUT on /devices/{id}! Either use PATCH to update or DELETE and POST to replace a device.",
-                DeviceList.getDevice(id).getSelfLinks());
+                DeviceList.getDeviceById(id).getSelfLinks());
     }
 
     @PatchMapping(value = "/{id}",
@@ -214,7 +214,7 @@ public abstract class AbstractDeviceController {
         if (patchDeviceName(new DeviceNamePatchRequest(uuid, name))) {
             PersistentDataService.saveDeviceList();
 
-            AbstractDevice device = DeviceList.getDevice(uuid.toString());
+            AbstractDevice device = DeviceList.getDeviceById(uuid.toString());
 
             List<LinkEntry> links = new ArrayList<>();
             links.addAll(device.getSelfLinks());
@@ -247,7 +247,7 @@ public abstract class AbstractDeviceController {
 
         // Is the name provided by the field unique?
         if (DeviceList.isUniqueName(name, id)) {
-            DeviceList.getDevice(id.toString()).setName(name);
+            DeviceList.getDeviceById(id.toString()).setName(name);
 
             return true;
         } else {

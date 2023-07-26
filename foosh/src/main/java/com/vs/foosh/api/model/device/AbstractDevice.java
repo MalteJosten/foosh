@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.vs.foosh.api.model.misc.IThingListObserver;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
@@ -17,6 +18,8 @@ public abstract class AbstractDevice extends Thing {
 
     protected List<LinkEntry> links    = new ArrayList<>();
     protected List<LinkEntry> extLinks = new ArrayList<>();
+
+    protected List<IThingListObserver> observers = new ArrayList<>();
 
     protected abstract void setObjectFields();
 

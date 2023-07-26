@@ -136,7 +136,7 @@ public class LinkBuilder {
 
     public static List<LinkEntry> getDeviceLinkWithDevices(String id) {
         List<LinkEntry> links = new ArrayList<>();
-        List<LinkEntry> deviceSelfLinks = DeviceList.getDevice(id).getSelfLinks();
+        List<LinkEntry> deviceSelfLinks = DeviceList.getDeviceById(id).getSelfLinks();
         List<LinkEntry> devicesLinks    = DeviceList.getLinks("devices");
 
         links.addAll(deviceSelfLinks);

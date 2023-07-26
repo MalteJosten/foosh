@@ -285,7 +285,7 @@ public class VariableController {
         List<Thing> devices = new ArrayList<>();
 
         for (UUID deviceId: variable.getDeviceIds()) {
-            devices.add(DeviceList.getDevice(deviceId.toString()));
+            devices.add(DeviceList.getDeviceById(deviceId.toString()));
         }
 
         List<LinkEntry> links = new ArrayList<>();
@@ -315,8 +315,8 @@ public class VariableController {
 
         Variable variable = VariableList.getVariable(id);
 
-        // TODO: Register observer at each device
         variable.setDevices(deviceIds);
+        variable.register();
 
         PersistentDataService.saveVariableList();
 
@@ -347,7 +347,7 @@ public class VariableController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> patchVarDevices(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /vars/{id}/devices/! Either use PATCH to update or DELETE and POST to replace the list of associated devices.",
+                "Not yet implemented",
                 VariableList.getVariable(id).getSelfLinks());
     }
     
@@ -356,7 +356,7 @@ public class VariableController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deletVarDevices(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /vars/{id}/devices/! Either use PATCH to update or DELETE and POST to replace the list of associated devices.",
+                "Not yet implemented",
                 VariableList.getVariable(id).getSelfLinks());
     }
 

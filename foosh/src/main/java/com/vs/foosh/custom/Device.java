@@ -30,4 +30,5 @@ public class Device extends AbstractDevice {
         this.deviceName = this.description.getProperties().get("name").toString();
         this.type       = this.description.getProperties().get("type").toString();
     }
+
 }

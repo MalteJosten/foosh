@@ -6,12 +6,14 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vs.foosh.api.model.device.DeviceList;
+import com.vs.foosh.api.model.enums.ListModification;
+import com.vs.foosh.api.model.misc.IThingListObserver;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilder;
 
-public class Variable extends Thing {
+public class Variable extends Thing implements IThingListObserver {
     private List<UUID> models  = new ArrayList<>();
     private List<UUID> devices = new ArrayList<>();
 
@@ -124,7 +126,7 @@ public class Variable extends Thing {
         }
 
         for (UUID deviceId: devices) {
-            deviceLinks.addAll(DeviceList.getDevice(deviceId.toString()).getSelfStaticLinks("device"));
+            deviceLinks.addAll(DeviceList.getDeviceById(deviceId.toString()).getSelfStaticLinks("device"));
         }
     }
 
@@ -149,6 +151,20 @@ public class Variable extends Thing {
         builder.append("Models:\t " + models + "\n");
 
         return builder.toString();
+    }
+
+    public void register() {
+        // TODO: Register at device collection
+    }
+
+    @Override
+    public void update(ListModification modification) {
+        if (modification == ListModification.DELETION) {
+            System.out.println("Deleting device links");
+            devices.clear();
+        }
+
+        updateLinks();
     }
 
 }
