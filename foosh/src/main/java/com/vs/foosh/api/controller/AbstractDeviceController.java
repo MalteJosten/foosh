@@ -127,12 +127,14 @@ public abstract class AbstractDeviceController {
         }
     }
 
+    // TODO: Fix response json (class fields json serialization)
     @DeleteMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesDelete() {
         ListService.getAbstractDeviceList().clearDevices();
 
         PersistentDataService.deleteDeviceListSave();
+        PersistentDataService.saveVariableList();
 
         List<LinkEntry> links = ListService.getAbstractDeviceList().getLinks("self");
 

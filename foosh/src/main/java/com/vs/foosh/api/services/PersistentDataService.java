@@ -8,15 +8,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
 
 import com.vs.foosh.api.exceptions.misc.CouldNotDeleteCollectionException;
 import com.vs.foosh.api.exceptions.misc.SaveFileNotFoundException;
 import com.vs.foosh.api.exceptions.misc.SavingToFileIOException;
-import com.vs.foosh.api.model.device.AbstractDevice;
 import com.vs.foosh.api.model.device.AbstractDeviceList;
 import com.vs.foosh.api.model.misc.ReadSaveFileResult;
-import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.variable.VariableList;
 
 public class PersistentDataService {
@@ -31,7 +28,6 @@ public class PersistentDataService {
         }
     } 
 
-    @SuppressWarnings("unchecked")
     public static ReadSaveFileResult<AbstractDeviceList> hasSavedDeviceList() {
         ReadSaveFileResult<AbstractDeviceList> result = new ReadSaveFileResult<>();
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ApplicationConfig.getDeviceSavePath().toFile()))) {
@@ -60,7 +56,7 @@ public class PersistentDataService {
 
     public static void saveVariableList() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ApplicationConfig.getVariableSavePath().toFile()))) {
-            oos.writeObject(VariableList.getInstance());
+            oos.writeObject(ListService.getVariableList());
         } catch (FileNotFoundException e) {
             throw new SaveFileNotFoundException("variables");
         } catch (IOException e) {
@@ -69,11 +65,10 @@ public class PersistentDataService {
         }
     } 
 
-    @SuppressWarnings("unchecked")
-    public static ReadSaveFileResult<Variable> hasSavedVariableList() {
-        ReadSaveFileResult<Variable> result = new ReadSaveFileResult<>();
+    public static ReadSaveFileResult<VariableList> hasSavedVariableList() {
+        ReadSaveFileResult<VariableList> result = new ReadSaveFileResult<>();
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ApplicationConfig.getVariableSavePath().toFile()))) {
-            List<Variable> list = (List<Variable>) ois.readObject();
+            VariableList list = (VariableList) ois.readObject();
             result.setData(list);
             result.setSuccess(true);
         } catch (IOException e) {

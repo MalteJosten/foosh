@@ -1,5 +1,6 @@
 package com.vs.foosh.api.model.variable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -11,34 +12,30 @@ import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilder;
 
-public class VariableList {
-    private static List<Variable> variables;
+public class VariableList implements Serializable {
+    private List<Variable> variables;
     
-    public static List<Variable> getInstance() {
-        if (variables == null) {
-            variables = new ArrayList<Variable>();
-        }
-
-        return variables;
+    public VariableList() {
+        this.variables = new ArrayList<>();
     }
 
-    public static void setVariables(List<Variable> variableList) {
+    public void setVariables(List<Variable> variableList) {
         if (variables != null) {
             clearVariables();
         }
 
-        getInstance().addAll(variableList);
+        this.variables.addAll(variableList);
     }
 
-    public static void pushVariable(Variable variable) {
-        getInstance().add(variable);
+    public void pushVariable(Variable variable) {
+        this.variables.add(variable);
     }
 
-    public static List<Variable> getVariables() {
-        return getInstance();
+    public List<Variable> getVariables() {
+        return this.variables;
     }
 
-    public static List<VariableDisplayRepresentation> getDisplayListRepresentation() {
+    public List<VariableDisplayRepresentation> getDisplayListRepresentation() {
         List<VariableDisplayRepresentation> displayRepresentation = new ArrayList<>();
 
         for(Variable variable: getVariables()) {
@@ -48,11 +45,11 @@ public class VariableList {
         return displayRepresentation;
     }
 
-    public static void clearVariables() {
-        getInstance().clear();
+    public void clearVariables() {
+        this.variables.clear();
     }
 
-    public static Variable getVariable(String identifier) {
+    public Variable getVariable(String identifier) {
         for (Variable variable: getVariables()) {
             if (variable.getId().toString().equals(identifier) || variable.getName().equals(identifier.toLowerCase())) {
                 return variable;
@@ -62,14 +59,14 @@ public class VariableList {
         throw new VariableNotFoundException(identifier);
     }
 
-    public static boolean isUniqueName(String name, UUID id) {
+    public boolean isUniqueName(String name, UUID id) {
         try {
             // Check whether the provided 'name' could be an UUID.
             // Names in form of an UUID are disallowed.
             UUID.fromString(name);
             throw new VariableNameMustNotBeAnUuidException(id);
         } catch (IllegalArgumentException e) {
-            for (Variable variable: getInstance()) {
+            for (Variable variable: this.variables) {
                 // Check whether the name is already used
                 if (variable.getName().equals(name)) {
                     // If it's already used, check whether it's the same variable.
@@ -86,7 +83,7 @@ public class VariableList {
         return true;
     }
 
-    public static void checkIfIdIsPresent(String identifier) {
+    public void checkIfIdIsPresent(String identifier) {
         for (Variable variable: getVariables()) {
             if (variable.getId().toString().equals(identifier) || variable.getName().equals(identifier.toLowerCase())) {
                 return;
@@ -96,7 +93,7 @@ public class VariableList {
         throw new VariableNotFoundException(identifier);
     }
 
-    public static void deleteVariable(String id) {
+    public void deleteVariable(String id) {
         for (Variable variable: getVariables()) {
             if (variable.getId().toString().equals(id) || variable.getName().equals(id)) {
                 getVariables().remove(variable);
@@ -107,7 +104,7 @@ public class VariableList {
         throw new VariableNotFoundException(id);
     }
 
-    public static List<LinkEntry> getLinks(String label) {
+    public List<LinkEntry> getLinks(String label) {
         LinkEntry get    = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.GET, List.of());
         LinkEntry post   = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.POST, List.of("application/json"));
         LinkEntry patch  = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.PATCH, List.of("application/json"));
@@ -120,7 +117,7 @@ public class VariableList {
         }
     }
     
-    public static void updateVariableLinks() {
+    public void updateVariableLinks() {
         for(Variable variable: getVariables()) {
             variable.updateLinks();
         }

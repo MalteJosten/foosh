@@ -11,11 +11,10 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.vs.foosh.api.model.variable.Variable;
-import com.vs.foosh.api.model.variable.VariableList;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 
-
+// TODO: Fix device link generation (/device/ to /api/devices/)
 public class LinkBuilder {
     private static String host;
     private static int port;
@@ -82,7 +81,7 @@ public class LinkBuilder {
     }
 
     public static List<LinkEntry> getVariableLinkBlock (String id) {
-        Variable variable = VariableList.getVariable(id);
+        Variable variable = ListService.getVariableList().getVariable(id);
 
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(variable.getSelfLinks());

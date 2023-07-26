@@ -12,6 +12,7 @@ import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilder;
 import com.vs.foosh.api.services.ListService;
+import com.vs.foosh.api.services.PersistentDataService;
 
 public class Variable extends Thing implements IThingListObserver {
     private List<UUID> models  = new ArrayList<>();
@@ -64,12 +65,14 @@ public class Variable extends Thing implements IThingListObserver {
     public void setDevices(List<UUID> deviceIDs) {
         this.devices = deviceIDs;
         updateDeviceLinks();
+        register();
     }
 
     public void addDevice(UUID deviceID) {
         if (!this.devices.contains(deviceID)) {
             this.devices.add(deviceID);
             updateDeviceLinks();
+            register();
         }
     }
 
@@ -139,7 +142,7 @@ public class Variable extends Thing implements IThingListObserver {
             extLinks.clear();
         }
 
-        extLinks.addAll(VariableList.getLinks("variables"));
+        extLinks.addAll(ListService.getVariableList().getLinks("variables"));
     }
 
     @Override
@@ -154,7 +157,14 @@ public class Variable extends Thing implements IThingListObserver {
     }
 
     public void register() {
-        // TODO: Register at device collection
+        System.out.println("Attaching to AbstractDeviceList");
+        ListService.getAbstractDeviceList().attach(this);
+    }
+
+    // TODO: Needs to be called after DELETE vars/{id} and DELETE vars/{id}/devices
+    public void unregister() {
+        System.out.println("Detaching form AbstractDeviceList");
+        ListService.getAbstractDeviceList().detach(this);
     }
 
     @Override

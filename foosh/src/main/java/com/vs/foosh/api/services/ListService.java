@@ -1,9 +1,11 @@
 package com.vs.foosh.api.services;
 
 import com.vs.foosh.api.model.device.AbstractDeviceList;
+import com.vs.foosh.api.model.variable.VariableList;
 
 public class ListService {
     private static AbstractDeviceList abstractDevices;
+    private static VariableList variables;
     
     public static AbstractDeviceList getAbstractDeviceList() {
         if (abstractDevices == null) {
@@ -17,4 +19,15 @@ public class ListService {
         abstractDevices = newDevices;
     }
 
+    public static VariableList getVariableList() {
+        if (variables == null) {
+            variables = new VariableList();
+        }
+
+        return variables;
+    }
+
+    public static void setVariableList(VariableList newVariables) {
+        variables = newVariables;
+    }
 }

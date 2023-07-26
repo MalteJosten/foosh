@@ -13,10 +13,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vs.foosh.api.model.device.AbstractDevice;
 import com.vs.foosh.api.model.device.AbstractDeviceList;
 import com.vs.foosh.api.model.misc.ReadSaveFileResult;
-import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.variable.VariableList;
 import com.vs.foosh.api.model.web.SmartHomeCredentials;
 
@@ -125,11 +123,13 @@ public class ApplicationConfig {
         ReadSaveFileResult<AbstractDeviceList> devicesResult = PersistentDataService.hasSavedDeviceList();
         if (devicesResult.getSuccess()) {
             ListService.setAbstractDeviceList(devicesResult.getData());
+            System.out.println("[INFO] Found and loaded devices save file.");
         }
 
-        ReadSaveFileResult<Variable> variablesResult = PersistentDataService.hasSavedVariableList();
+        ReadSaveFileResult<VariableList> variablesResult = PersistentDataService.hasSavedVariableList();
         if (variablesResult.getSuccess()) {
-            VariableList.setVariables(variablesResult.getData());
+            ListService.setVariableList(variablesResult.getData());
+            System.out.println("[INFO] Found and loaded variables save file.");
         }
     }
 

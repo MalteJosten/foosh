@@ -54,8 +54,8 @@ public class VariableController {
     public ResponseEntity<Object> getVars() {
 
         return HttpResponseBuilder.buildResponse(
-                new AbstractMap.SimpleEntry<String, Object>("variables", VariableList.getDisplayListRepresentation()),
-                VariableList.getLinks("self"),
+                new AbstractMap.SimpleEntry<String, Object>("variables", ListService.getVariableList().getDisplayListRepresentation()),
+                ListService.getVariableList().getLinks("self"),
                 HttpStatus.OK);
     }
 
@@ -73,14 +73,14 @@ public class VariableController {
             variables.add(processPostRequest(subRequest));
         }
 
-        VariableList.setVariables(variables);
-        VariableList.updateVariableLinks();
+        ListService.getVariableList().setVariables(variables);
+        ListService.getVariableList().updateVariableLinks();
 
         PersistentDataService.saveVariableList();
 
         return HttpResponseBuilder.buildResponse(
-                new AbstractMap.SimpleEntry<String, Object>("variables", VariableList.getDisplayListRepresentation()),
-                VariableList.getLinks("self"),
+                new AbstractMap.SimpleEntry<String, Object>("variables", ListService.getVariableList().getDisplayListRepresentation()),
+                ListService.getVariableList().getLinks("self"),
                 HttpStatus.CREATED);
     }
 
@@ -89,14 +89,14 @@ public class VariableController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> postSingleVar(@RequestBody VariablePostRequest request) {
-        VariableList.pushVariable(processPostRequest(request));
-        VariableList.updateVariableLinks();
+        ListService.getVariableList().pushVariable(processPostRequest(request));
+        ListService.getVariableList().updateVariableLinks();
 
         PersistentDataService.saveVariableList();
 
         return HttpResponseBuilder.buildResponse(
-                new AbstractMap.SimpleEntry<String, Object>("variables", VariableList.getDisplayListRepresentation()),
-                VariableList.getLinks("self"),
+                new AbstractMap.SimpleEntry<String, Object>("variables", ListService.getVariableList().getDisplayListRepresentation()),
+                ListService.getVariableList().getLinks("self"),
                 HttpStatus.CREATED);
 
     }
@@ -120,7 +120,7 @@ public class VariableController {
         } catch (IllegalArgumentException e) { }
 
         // Check for duplicates
-        if (!VariableList.isUniqueName(request.getName(), null)) {
+        if (!ListService.getVariableList().isUniqueName(request.getName(), null)) {
             throw new VariableCreationException("Cannot create variable(s)! The name '" + request.getName() + "' is already taken.");
         }
 
@@ -134,7 +134,7 @@ public class VariableController {
     public ResponseEntity<Object> putVars() {
         throw new HttpMappingNotAllowedException(
                 "You cannot use PUT on /variables/! Either use PATCH to update or DELETE and POST to replace the list of variables.", //TODO change /variables
-                VariableList.getLinks("self"));
+                ListService.getVariableList().getLinks("self"));
     }
 
     @PatchMapping(value = "/",
@@ -145,8 +145,8 @@ public class VariableController {
             PersistentDataService.saveVariableList();
 
             return HttpResponseBuilder.buildResponse(
-                    new AbstractMap.SimpleEntry<String, Object>("variables", VariableList.getDisplayListRepresentation()),
-                    VariableList.getLinks("self"),
+                    new AbstractMap.SimpleEntry<String, Object>("variables", ListService.getVariableList().getDisplayListRepresentation()),
+                    ListService.getVariableList().getLinks("self"),
                     HttpStatus.OK);
         } else {
             throw new BatchVariableNameException();
@@ -156,13 +156,13 @@ public class VariableController {
     @DeleteMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteVars() {
-        VariableList.clearVariables();
+        ListService.getVariableList().clearVariables();
 
         Map<String, String> linkBlock = new HashMap<>();
         linkBlock.put("self", LinkBuilder.getVariableListLink().toString());
 
         Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("variables", VariableList.getVariables());
+        responseBody.put("variables", ListService.getVariableList().getVariables());
         responseBody.put("links", linkBlock);
 
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
@@ -175,7 +175,7 @@ public class VariableController {
     @GetMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getVar(@PathVariable("id") String id) {
-        Variable variable = VariableList.getVariable(id);
+        Variable variable = ListService.getVariableList().getVariable(id);
 
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(variable.getSelfLinks());
@@ -197,7 +197,7 @@ public class VariableController {
     public ResponseEntity<Object> putVar(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
                 "You cannot use PUT on /variables/{id}! Either use PATCH to update or DELETE and POST to replace a variable.", //TODO change /variables
-                VariableList.getVariable(id).getSelfLinks());
+                ListService.getVariableList().getVariable(id).getSelfLinks());
     }
 
     @PatchMapping(value = "/{id}",
@@ -207,7 +207,7 @@ public class VariableController {
         if (patchVariableName(new VariableNamePatchRequest(id, requestBody.get("name")))) {
             PersistentDataService.saveVariableList();
 
-            Variable variable = VariableList.getVariable(id);
+            Variable variable = ListService.getVariableList().getVariable(id);
 
             List<LinkEntry> links = new ArrayList<>();
             links.addAll(variable.getSelfLinks());
@@ -222,13 +222,13 @@ public class VariableController {
     @DeleteMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteVar(@PathVariable("id") String id) {
-        VariableList.deleteVariable(id);
+        ListService.getVariableList().deleteVariable(id);
 
         PersistentDataService.saveVariableList();
 
         return HttpResponseBuilder.buildResponse(
-                new AbstractMap.SimpleEntry<String, Object>("variables", VariableList.getDisplayListRepresentation()),
-                VariableList.getLinks("self"),
+                new AbstractMap.SimpleEntry<String, Object>("variables", ListService.getVariableList().getDisplayListRepresentation()),
+                ListService.getVariableList().getLinks("self"),
                 HttpStatus.OK);
     }
 
@@ -251,21 +251,21 @@ public class VariableController {
         }
 
         // check whether there is a variable with the given id
-        VariableList.checkIfIdIsPresent(request.getId());
-        if (VariableList.isUniqueName(request.getName(), uuid)) {
-            VariableList.getVariable(request.getId().toString()).setName(request.getName());
+        ListService.getVariableList().checkIfIdIsPresent(request.getId());
+        if (ListService.getVariableList().isUniqueName(request.getName(), uuid)) {
+            ListService.getVariableList().getVariable(request.getId().toString()).setName(request.getName());
             return true;
         }
         return false;
     }
 
     private boolean patchBatchVariableName(List<VariableNamePatchRequest> batchRequest) {
-        List<Variable> oldVariableList = VariableList.getInstance();
+        VariableList oldVariableList = ListService.getVariableList();
 
         for(VariableNamePatchRequest request: batchRequest) {
             if (!patchVariableName(request)) {
-                VariableList.clearVariables();
-                VariableList.setVariables(oldVariableList);
+                ListService.getVariableList().clearVariables();
+                ListService.setVariableList(oldVariableList);
                 return false;
             } 
         }
@@ -281,7 +281,7 @@ public class VariableController {
     @GetMapping(value = "/{id}/devices/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getVarDevices(@PathVariable("id") String id) {
-        Variable variable = VariableList.getVariable(id);
+        Variable variable = ListService.getVariableList().getVariable(id);
         List<Thing> devices = new ArrayList<>();
 
         for (UUID deviceId: variable.getDeviceIds()) {
@@ -313,10 +313,9 @@ public class VariableController {
             }
         }
 
-        Variable variable = VariableList.getVariable(id);
+        Variable variable = ListService.getVariableList().getVariable(id);
 
         variable.setDevices(deviceIds);
-        variable.register();
 
         PersistentDataService.saveVariableList();
 
@@ -330,7 +329,7 @@ public class VariableController {
     @PutMapping(value = "/{id}/devices/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> putVarDevices(@PathVariable("id") String id) {
-        Variable variable = VariableList.getVariable(id);
+        Variable variable = ListService.getVariableList().getVariable(id);
 
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(variable.getSelfLinks());
@@ -348,7 +347,7 @@ public class VariableController {
     public ResponseEntity<Object> patchVarDevices(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
                 "Not yet implemented",
-                VariableList.getVariable(id).getSelfLinks());
+                ListService.getVariableList().getVariable(id).getSelfLinks());
     }
     
     // TODO
@@ -357,7 +356,7 @@ public class VariableController {
     public ResponseEntity<Object> deletVarDevices(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
                 "Not yet implemented",
-                VariableList.getVariable(id).getSelfLinks());
+                ListService.getVariableList().getVariable(id).getSelfLinks());
     }
 
     ///

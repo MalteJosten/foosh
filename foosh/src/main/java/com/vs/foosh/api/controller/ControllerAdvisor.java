@@ -34,7 +34,6 @@ import com.vs.foosh.api.exceptions.variable.VariableNameIsNotUniqueException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsNullException;
 import com.vs.foosh.api.exceptions.variable.VariableNameMustNotBeAnUuidException;
 import com.vs.foosh.api.exceptions.variable.VariableNotFoundException;
-import com.vs.foosh.api.model.variable.VariableList;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.HttpResponseBuilder;
 import com.vs.foosh.api.services.LinkBuilder;
@@ -107,7 +106,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
-                VariableList.getLinks("variables"),
+                ListService.getVariableList().getLinks("variables"),
                 HttpStatus.NOT_FOUND);
     }
 
@@ -116,7 +115,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
-                VariableList.getLinks("self"),
+                ListService.getVariableList().getLinks("self"),
                 HttpStatus.BAD_REQUEST);
     }
 
@@ -141,7 +140,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         List<LinkEntry> links = new ArrayList<>();
 
         if (exception.getId() == null) {
-                links = VariableList.getLinks("variables");
+                links = ListService.getVariableList().getLinks("variables");
         } else {
                 links = LinkBuilder.getVariableLinkBlock(exception.getId().toString());
         }
@@ -167,7 +166,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
-                VariableList.getLinks("self"),
+                ListService.getVariableList().getLinks("self"),
                 HttpStatus.BAD_REQUEST);
     }
 
@@ -175,7 +174,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleVariableDevicePostException(VariableDevicePostException exception, WebRequest request) {
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
-                VariableList.getVariable(exception.getVariableId().toString()).getDeviceLinks(),
+                ListService.getVariableList().getVariable(exception.getVariableId().toString()).getDeviceLinks(),
                 exception.getStatus());
     }
 
