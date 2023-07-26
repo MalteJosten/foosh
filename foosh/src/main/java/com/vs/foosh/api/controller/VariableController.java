@@ -133,7 +133,7 @@ public class VariableController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> putVars() {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /variables/! Either use PATCH to update or DELETE and POST to replace the list of variables.", //TODO change /variables
+                "You cannot use PUT on /vars/! Either use PATCH to update or DELETE and POST to replace the list of variables.",
                 ListService.getVariableList().getLinks("self"));
     }
 
@@ -196,7 +196,7 @@ public class VariableController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> putVar(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /variables/{id}! Either use PATCH to update or DELETE and POST to replace a variable.", //TODO change /variables
+                "You cannot use PUT on /vars/{id}! Either use PATCH to update or DELETE and POST to replace a variable.",
                 ListService.getVariableList().getVariable(id).getSelfLinks());
     }
 
@@ -340,7 +340,7 @@ public class VariableController {
                 links);
     }
     
-    // TODO
+    // TODO: Implement method
     @PatchMapping(value = "/{id}/devices/",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -350,7 +350,7 @@ public class VariableController {
                 ListService.getVariableList().getVariable(id).getSelfLinks());
     }
     
-    // TODO
+    // TODO: Implement method
     @DeleteMapping(value = "/{id}/devices/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deletVarDevices(@PathVariable("id") String id) {
