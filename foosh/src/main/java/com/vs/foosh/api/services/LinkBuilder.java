@@ -62,7 +62,7 @@ public class LinkBuilder {
             .host(host)
             .port(port)
             .path("api/")
-            .path("device/")
+            .path("devices/")
             .path(id.toString())
             .build();
 
@@ -99,7 +99,7 @@ public class LinkBuilder {
             .host(host)
             .port(port)
             .path("api/")
-            .path("var/")
+            .path("vars/")
             .path(id.toString())
             .build();
 
@@ -113,7 +113,7 @@ public class LinkBuilder {
             .host(host)
             .port(port)
             .path("api/")
-            .path("model/")
+            .path("models/")
             .path(id.toString())
             .build();
 
