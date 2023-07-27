@@ -29,13 +29,12 @@ import com.vs.foosh.api.exceptions.variable.VariableDevicePostException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsEmptyException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsNullException;
 import com.vs.foosh.api.exceptions.variable.VariableNamePatchRequest;
-import com.vs.foosh.api.model.misc.Thing;
+import com.vs.foosh.api.model.device.AbstractDeviceResponseObject;
 import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.variable.VariableDevicesPostRequest;
 import com.vs.foosh.api.model.variable.VariableList;
 import com.vs.foosh.api.model.variable.VariablePostRequest;
 import com.vs.foosh.api.model.web.LinkEntry;
-import com.vs.foosh.api.services.HttpResponseBuilder;
 import com.vs.foosh.api.services.IdService;
 import com.vs.foosh.api.services.LinkBuilder;
 import com.vs.foosh.api.services.ListService;
@@ -53,10 +52,11 @@ public class VariableController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getVars() {
 
-        return HttpResponseBuilder.buildResponse(
-                new AbstractMap.SimpleEntry<String, Object>("variables", ListService.getVariableList().getDisplayListRepresentation()),
-                ListService.getVariableList().getLinks("self"),
-                HttpStatus.OK);
+        AbstractMap.SimpleEntry<String, Object> result = new AbstractMap.SimpleEntry<String, Object>("variables", ListService.getVariableList().getDisplayListRepresentation());
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put(result.getKey(), result.getValue());
+        responseBody.put("_links", ListService.getVariableList().getLinks("self"));
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
     @PostMapping(value = "/",
@@ -78,10 +78,11 @@ public class VariableController {
 
         PersistentDataService.saveVariableList();
 
-        return HttpResponseBuilder.buildResponse(
-                new AbstractMap.SimpleEntry<String, Object>("variables", ListService.getVariableList().getDisplayListRepresentation()),
-                ListService.getVariableList().getLinks("self"),
-                HttpStatus.CREATED);
+        AbstractMap.SimpleEntry<String, Object> result = new AbstractMap.SimpleEntry<String, Object>("variables", ListService.getVariableList().getDisplayListRepresentation());
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put(result.getKey(), result.getValue());
+        responseBody.put("_links", ListService.getVariableList().getLinks("self"));
+        return new ResponseEntity<>(responseBody, HttpStatus.CREATED);
     }
 
     @PostMapping(value = "/",
@@ -94,10 +95,11 @@ public class VariableController {
 
         PersistentDataService.saveVariableList();
 
-        return HttpResponseBuilder.buildResponse(
-                new AbstractMap.SimpleEntry<String, Object>("variables", ListService.getVariableList().getDisplayListRepresentation()),
-                ListService.getVariableList().getLinks("self"),
-                HttpStatus.CREATED);
+        AbstractMap.SimpleEntry<String, Object> result = new AbstractMap.SimpleEntry<String, Object>("variables", ListService.getVariableList().getDisplayListRepresentation());
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put(result.getKey(), result.getValue());
+        responseBody.put("_links", ListService.getVariableList().getLinks("self"));
+        return new ResponseEntity<>(responseBody, HttpStatus.CREATED);
 
     }
 
@@ -144,10 +146,11 @@ public class VariableController {
         if (patchBatchVariableName(request)) {
             PersistentDataService.saveVariableList();
 
-            return HttpResponseBuilder.buildResponse(
-                    new AbstractMap.SimpleEntry<String, Object>("variables", ListService.getVariableList().getDisplayListRepresentation()),
-                    ListService.getVariableList().getLinks("self"),
-                    HttpStatus.OK);
+            AbstractMap.SimpleEntry<String, Object> result = new AbstractMap.SimpleEntry<String, Object>("variables", ListService.getVariableList().getDisplayListRepresentation());
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put(result.getKey(), result.getValue());
+            responseBody.put("_links", ListService.getVariableList().getLinks("self"));
+            return new ResponseEntity<>(responseBody, HttpStatus.OK);
         } else {
             throw new BatchVariableNameException();
         }
@@ -163,7 +166,7 @@ public class VariableController {
 
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("variables", ListService.getVariableList().getVariables());
-        responseBody.put("links", linkBlock);
+        responseBody.put("_links", linkBlock);
 
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
@@ -175,13 +178,12 @@ public class VariableController {
     @GetMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getVar(@PathVariable("id") String id) {
+
         Variable variable = ListService.getVariableList().getVariable(id);
-
-        List<LinkEntry> links = new ArrayList<>();
-        links.addAll(variable.getSelfLinks());
-        links.addAll(variable.getExtLinks());
-
-        return HttpResponseBuilder.buildResponse(variable, links, HttpStatus.OK);
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("variable", variable.getDisplayRepresentation().getVariable());
+        responseBody.put("_links", variable.getAllLinks());
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
     @PostMapping(value = "/{id}",
@@ -208,12 +210,10 @@ public class VariableController {
             PersistentDataService.saveVariableList();
 
             Variable variable = ListService.getVariableList().getVariable(id);
-
-            List<LinkEntry> links = new ArrayList<>();
-            links.addAll(variable.getSelfLinks());
-            links.addAll(variable.getExtLinks());
-
-            return HttpResponseBuilder.buildResponse(variable, links, HttpStatus.OK);
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("variable", variable.getDisplayRepresentation().getVariable());
+            responseBody.put("_links", variable.getAllLinks());
+            return new ResponseEntity<>(responseBody, HttpStatus.OK);
         } else {
             return new ResponseEntity<Object>("Could not patch name for variable '" + id + "' !'", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -226,10 +226,11 @@ public class VariableController {
 
         PersistentDataService.saveVariableList();
 
-        return HttpResponseBuilder.buildResponse(
-                new AbstractMap.SimpleEntry<String, Object>("variables", ListService.getVariableList().getDisplayListRepresentation()),
-                ListService.getVariableList().getLinks("self"),
-                HttpStatus.OK);
+        AbstractMap.SimpleEntry<String, Object> result = new AbstractMap.SimpleEntry<String, Object>("variables", ListService.getVariableList().getDisplayListRepresentation());
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put(result.getKey(), result.getValue());
+        responseBody.put("_links", ListService.getVariableList().getLinks("self"));
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
     private boolean patchVariableName(VariableNamePatchRequest request) {
@@ -282,17 +283,19 @@ public class VariableController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getVarDevices(@PathVariable("id") String id) {
         Variable variable = ListService.getVariableList().getVariable(id);
-        List<Thing> devices = new ArrayList<>();
+        List<AbstractDeviceResponseObject> devices = new ArrayList<>();
 
         for (UUID deviceId: variable.getDeviceIds()) {
-            devices.add(ListService.getAbstractDeviceList().getDeviceById(deviceId.toString()));
+            devices.add(ListService.getAbstractDeviceList().getDeviceById(deviceId.toString()).getDisplayRepresentation().getDevice());
         }
 
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(variable.getSelfLinks());
         links.addAll(variable.getDeviceLinks());
-
-        return HttpResponseBuilder.buildResponse(devices, "devices", links, HttpStatus.OK);
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("devices", devices);
+        responseBody.put("_links", links);
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
     @PostMapping(value = "/{id}/devices/",
@@ -319,10 +322,10 @@ public class VariableController {
 
         PersistentDataService.saveAll();
 
-        List<LinkEntry> links = new ArrayList<>();
-        links.addAll(variable.getSelfLinks());
-
-        return HttpResponseBuilder.buildResponse(variable, links, HttpStatus.CREATED);
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("variable", variable.getDisplayRepresentation().getVariable());
+        responseBody.put("_links", variable.getAllLinks());
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
 
     }
 
@@ -363,12 +366,13 @@ public class VariableController {
         PersistentDataService.saveAll();
 
         Variable variable = ListService.getVariableList().getVariable(id);
-
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(variable.getSelfLinks());
         links.addAll(variable.getDeviceLinks());
-
-        return HttpResponseBuilder.buildResponse(ListService.getVariableList().getVariable(id), links, HttpStatus.OK);
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("variable", variable.getDisplayRepresentation().getVariable());
+        responseBody.put("_links", links);
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
     ///

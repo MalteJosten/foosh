@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vs.foosh.api.model.enums.ListModification;
 import com.vs.foosh.api.model.misc.IThingListObserver;
 import com.vs.foosh.api.model.misc.Thing;
@@ -23,8 +22,8 @@ public class Variable extends Thing implements IThingListObserver {
     private List<LinkEntry> extLinks    = new ArrayList<>();
 
     public Variable(String name, List<UUID> modelIds, List<UUID> deviceIds) {
-        super(name);
-
+        this.id      = UUID.randomUUID();
+        this.name    = name;
         this.models  = modelIds;
         this.devices = deviceIds;
     }
@@ -46,12 +45,10 @@ public class Variable extends Thing implements IThingListObserver {
         }
     }
     
-    @JsonIgnore
     public List<UUID> getModelIds() {
         return this.models;
     }
 
-    @JsonIgnore
     public List<LinkEntry> getModelLinks() {
         return this.modelLinks;
     }
@@ -81,12 +78,10 @@ public class Variable extends Thing implements IThingListObserver {
     }
 
 
-    @JsonIgnore
     public List<UUID> getDeviceIds() {
         return this.devices;
     }
 
-    @JsonIgnore
     public List<LinkEntry> getDeviceLinks() {
         return this.deviceLinks;
     }
@@ -95,14 +90,25 @@ public class Variable extends Thing implements IThingListObserver {
         return this.deviceLinks;
     }
 
-    @JsonIgnore
     public List<LinkEntry> getSelfLinks() {
         return this.links;
     }
 
-    @JsonIgnore
     public List<LinkEntry> getExtLinks() {
         return this.extLinks;
+    }
+
+    public List<LinkEntry> getAllLinks() {
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(getSelfLinks());
+        links.addAll(getModelLinks());
+        links.addAll(getDeviceLinks());
+        links.addAll(getExtLinks());
+        return links;
+    }
+
+    public VariableDisplayRepresentation getDisplayRepresentation() {
+        return new VariableDisplayRepresentation(this);
     }
 
     public void updateLinks() {

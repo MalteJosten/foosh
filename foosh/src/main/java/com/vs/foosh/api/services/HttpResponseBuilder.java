@@ -15,7 +15,7 @@ public class HttpResponseBuilder {
     public static ResponseEntity<Object> buildResponse(Thing object, List<LinkEntry> links, HttpStatus status) {
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put(object.getClass().getSimpleName().toLowerCase(), object);
-        responseBody.put("links", links);
+        responseBody.put("_links", links);
 
         return new ResponseEntity<>(responseBody, status);
     }
@@ -23,7 +23,7 @@ public class HttpResponseBuilder {
     public static ResponseEntity<Object> buildResponse(List<Thing> collection, String collectionLabel, List<LinkEntry> links, HttpStatus status) {
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put(collectionLabel.toLowerCase(), collection);
-        responseBody.put("links", links);
+        responseBody.put("_links", links);
 
         return new ResponseEntity<>(responseBody, status);
     }
@@ -31,7 +31,7 @@ public class HttpResponseBuilder {
     public static ResponseEntity<Object> buildResponse(AbstractMap.Entry<String, Object> result, List<LinkEntry> links, HttpStatus status) {
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put(result.getKey(), result.getValue());
-        responseBody.put("links", links);
+        responseBody.put("_links", links);
 
         return new ResponseEntity<>(responseBody, status);
     }
@@ -39,7 +39,7 @@ public class HttpResponseBuilder {
     public static ResponseEntity<Object> buildException(String message, List<LinkEntry> links, HttpStatus status) {
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("message", message);
-        responseBody.put("links", links);
+        responseBody.put("_links", links);
 
         return new ResponseEntity<>(responseBody, status);
     }

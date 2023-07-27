@@ -50,7 +50,7 @@ public class VariableList implements Serializable {
         List<VariableDisplayRepresentation> displayRepresentation = new ArrayList<>();
 
         for(Variable variable: getVariables()) {
-            displayRepresentation.add(new VariableDisplayRepresentation(variable, variable.getSelfLinks()));
+            displayRepresentation.add(new VariableDisplayRepresentation(variable));
         }
 
         return displayRepresentation;
