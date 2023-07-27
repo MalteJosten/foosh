@@ -42,7 +42,6 @@ import com.vs.foosh.api.services.LinkBuilder;
 import com.vs.foosh.api.services.ListService;
 import com.vs.foosh.api.services.PersistentDataService;
 import com.vs.foosh.api.services.ApplicationConfig;
-import com.vs.foosh.api.services.HttpResponseBuilder;
 
 @RequestMapping(value="/api/devices")
 public abstract class AbstractDeviceController {
@@ -54,10 +53,13 @@ public abstract class AbstractDeviceController {
     @GetMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesGet() {
-        return HttpResponseBuilder.buildResponse(
-                new AbstractMap.SimpleEntry<String, Object>("devices", ListService.getAbstractDeviceList().getDisplayListRepresentation()),
-                ListService.getAbstractDeviceList().getLinks("self"),
-                HttpStatus.OK);
+        AbstractMap.SimpleEntry<String, Object> result = new AbstractMap.SimpleEntry<String, Object>("devices", ListService.getAbstractDeviceList().getDisplayListRepresentation());
+
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put(result.getKey(), result.getValue());
+        responseBody.put("_links", ListService.getAbstractDeviceList().getLinks("self"));
+
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
     @PostMapping(value = "/",
@@ -67,10 +69,11 @@ public abstract class AbstractDeviceController {
             @RequestBody(required = false) SmartHomeCredentials credentials) {
         if (ListService.getAbstractDeviceList().getDevices() == null || !ListService.getAbstractDeviceList().getDevices().isEmpty()) {
 
-            return HttpResponseBuilder.buildException(
-                "There are already registered devices! Please use PUT/PATCH on /devices/ to update the list.",
-                ListService.getAbstractDeviceList().getLinks("self"),
-                HttpStatus.CONFLICT);
+            String message = "There are already registered devices! Please use PUT/PATCH on /devices/ to update the list.";
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("message", message);
+            responseBody.put("_links", ListService.getAbstractDeviceList().getLinks("self"));
+            return new ResponseEntity<>(responseBody, HttpStatus.CONFLICT);
         }
 
         FetchDeviceResponse apiResponse;
@@ -96,10 +99,11 @@ public abstract class AbstractDeviceController {
             }
         }
 
-        return HttpResponseBuilder.buildResponse(
-                new AbstractMap.SimpleEntry<String, Object>("devices", ListService.getAbstractDeviceList().getDisplayListRepresentation()),
-                ListService.getAbstractDeviceList().getLinks("self"),
-                HttpStatus.CREATED);
+        AbstractMap.SimpleEntry<String, Object> result = new AbstractMap.SimpleEntry<String, Object>("devices", ListService.getAbstractDeviceList().getDisplayListRepresentation());
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put(result.getKey(), result.getValue());
+        responseBody.put("_links", ListService.getAbstractDeviceList().getLinks("self"));
+        return new ResponseEntity<>(responseBody, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/",
@@ -117,11 +121,13 @@ public abstract class AbstractDeviceController {
     public ResponseEntity<Object> devicesPatch(@RequestBody List<DeviceNamePatchRequest> request) {
         if (patchBatchDeviceName(request)) {
             PersistentDataService.saveDeviceList();
+        
+            AbstractMap.SimpleEntry<String, Object> result = new AbstractMap.SimpleEntry<String, Object>("devices", ListService.getAbstractDeviceList().getDisplayListRepresentation());
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put(result.getKey(), result.getValue());
+            responseBody.put("_links", ListService.getAbstractDeviceList().getLinks("self"));
+            return new ResponseEntity<>(responseBody, HttpStatus.OK);
 
-            return HttpResponseBuilder.buildResponse(
-                    new AbstractMap.SimpleEntry<String, Object>("devices", ListService.getAbstractDeviceList().getDisplayListRepresentation()),
-                    ListService.getAbstractDeviceList().getLinks("self"),
-                    HttpStatus.OK);
         } else {
             throw new BatchDeviceNameException();
         }
@@ -139,7 +145,7 @@ public abstract class AbstractDeviceController {
 
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("devices", ListService.getAbstractDeviceList().getDisplayListRepresentation());
-        responseBody.put("links", links);
+        responseBody.put("_links", links);
 
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
@@ -162,7 +168,11 @@ public abstract class AbstractDeviceController {
         links.addAll(device.getSelfLinks());
         links.addAll(device.getExtLinks());
 
-        return HttpResponseBuilder.buildResponse(device, links, HttpStatus.OK);
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("device", device.getDisplayRepresentation().getDevice());
+        responseBody.put("_links", links);
+
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
     @PostMapping(value = "/{id}",
@@ -217,12 +227,14 @@ public abstract class AbstractDeviceController {
             PersistentDataService.saveDeviceList();
 
             AbstractDevice device = ListService.getAbstractDeviceList().getDeviceById(uuid.toString());
-
             List<LinkEntry> links = new ArrayList<>();
             links.addAll(device.getSelfLinks());
             links.addAll(device.getExtLinks());
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("device", device.getDisplayRepresentation().getDevice());
+            responseBody.put("_links", links);
+            return new ResponseEntity<>(responseBody, HttpStatus.OK);
 
-            return HttpResponseBuilder.buildResponse(device, links, HttpStatus.OK);
         } else {
             return new ResponseEntity<Object>("Could not patch name for device '" + id + "' !'", HttpStatus.INTERNAL_SERVER_ERROR);
         }

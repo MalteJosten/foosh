@@ -60,7 +60,7 @@ public class AbstractDeviceList implements IThingListSubject, Serializable {
         List<AbstractDeviceDisplayRepresentation> displayRepresentation = new ArrayList<>();
 
         for(AbstractDevice device: getDevices()) {
-            displayRepresentation.add(new AbstractDeviceDisplayRepresentation(device, device.getSelfLinks()));
+            displayRepresentation.add(device.getDisplayRepresentation());
         }
 
         return displayRepresentation;

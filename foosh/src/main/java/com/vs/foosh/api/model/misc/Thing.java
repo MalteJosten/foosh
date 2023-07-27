@@ -4,17 +4,10 @@ import java.io.Serializable;
 import java.util.UUID;
 
 public class Thing implements Serializable {
-    protected final UUID id;
+    protected UUID id;
     protected String name;
 
-    public Thing() {
-        this.id = UUID.randomUUID();
-    }
-
-    public Thing(String name) {
-        this.id   = UUID.randomUUID();
-        this.name = name;
-    }
+    public Thing() { }
 
     public UUID getId() {
         return this.id;

@@ -3,8 +3,8 @@ package com.vs.foosh.api.model.device;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vs.foosh.api.model.misc.IThingListObserver;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.HttpAction;
@@ -25,7 +25,8 @@ public abstract class AbstractDevice extends Thing {
     protected abstract void setObjectFields();
 
     public AbstractDevice(String name) {
-        super(name);
+        this.id   = UUID.randomUUID();
+        this.name = name;
     }
 
     public void setName(String name) {
@@ -51,12 +52,10 @@ public abstract class AbstractDevice extends Thing {
         this.description = description;
     }
 
-    @JsonIgnore
     public List<LinkEntry> getSelfLinks() {
         return this.links;
     }
 
-    @JsonIgnore
     public List<LinkEntry> getSelfStaticLinks(String label) {
         List<LinkEntry> links = new ArrayList<>();
        
@@ -69,7 +68,6 @@ public abstract class AbstractDevice extends Thing {
         return links;
     }
 
-    @JsonIgnore
     public List<LinkEntry> getExtLinks() {
         return this.extLinks;
     }
@@ -95,7 +93,6 @@ public abstract class AbstractDevice extends Thing {
         return new ArrayList<>(List.of(selfGet, selfPatch, queryGet, queryPatch));
     }
 
-    @JsonIgnore
     public URI getStaticLink() {
         for (LinkEntry entry: links) {
             if (entry.getRelation().equals("selfStatic")) {
@@ -106,7 +103,6 @@ public abstract class AbstractDevice extends Thing {
         return LinkBuilder.getRootLinkEntry().getLink();
     }
 
-    @JsonIgnore
     public URI getQueryLink() {
         for (LinkEntry entry: links) {
             if (entry.getRelation().equals("selfQuery")) {
@@ -115,6 +111,10 @@ public abstract class AbstractDevice extends Thing {
         }
 
         return LinkBuilder.getRootLinkEntry().getLink();
+    }
+
+    public AbstractDeviceDisplayRepresentation getDisplayRepresentation() {
+        return new AbstractDeviceDisplayRepresentation(this);
     }
 
     @Override
