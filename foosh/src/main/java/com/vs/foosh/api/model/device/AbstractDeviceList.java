@@ -11,6 +11,7 @@ import com.vs.foosh.api.exceptions.device.DeviceNameIsNotUniqueException;
 import com.vs.foosh.api.model.enums.ListModification;
 import com.vs.foosh.api.model.misc.IThingListObserver;
 import com.vs.foosh.api.model.misc.IThingListSubject;
+import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilder;
@@ -43,6 +44,16 @@ public class AbstractDeviceList implements IThingListSubject, Serializable {
 
     public List<AbstractDevice> getDevices() {
         return this.devices;
+    }
+
+    public List<Thing> getDevicesAsThings() {
+        List<Thing> things = new ArrayList<>();
+
+        for (AbstractDevice device: this.devices) {
+            things.add(device);
+        }
+
+        return things;
     }
 
     public List<AbstractDeviceDisplayRepresentation> getDisplayListRepresentation() {

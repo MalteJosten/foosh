@@ -317,7 +317,7 @@ public class VariableController {
 
         variable.setDevices(deviceIds);
 
-        PersistentDataService.saveVariableList();
+        PersistentDataService.saveAll();
 
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(variable.getSelfLinks());
@@ -350,13 +350,20 @@ public class VariableController {
                 ListService.getVariableList().getVariable(id).getSelfLinks());
     }
     
-    // TODO: Implement method
     @DeleteMapping(value = "/{id}/devices/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deletVarDevices(@PathVariable("id") String id) {
-        throw new HttpMappingNotAllowedException(
-                "Not yet implemented",
-                ListService.getVariableList().getVariable(id).getSelfLinks());
+        ListService.getVariableList().getVariable(id).clearDevices();
+
+        PersistentDataService.saveAll();
+
+        Variable variable = ListService.getVariableList().getVariable(id);
+
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(variable.getSelfLinks());
+        links.addAll(variable.getDeviceLinks());
+
+        return HttpResponseBuilder.buildResponse(ListService.getVariableList().getVariable(id), links, HttpStatus.OK);
     }
 
     ///

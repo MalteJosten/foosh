@@ -8,6 +8,7 @@ import java.util.UUID;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsNotUniqueException;
 import com.vs.foosh.api.exceptions.variable.VariableNameMustNotBeAnUuidException;
 import com.vs.foosh.api.exceptions.variable.VariableNotFoundException;
+import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilder;
@@ -35,6 +36,16 @@ public class VariableList implements Serializable {
         return this.variables;
     }
 
+    public List<Thing> getVariablesAsThings() {
+        List<Thing> things = new ArrayList<>();
+
+        for(Variable variable: this.variables) {
+            things.add(variable);
+        }
+
+        return things;
+    }
+
     public List<VariableDisplayRepresentation> getDisplayListRepresentation() {
         List<VariableDisplayRepresentation> displayRepresentation = new ArrayList<>();
 
@@ -46,6 +57,10 @@ public class VariableList implements Serializable {
     }
 
     public void clearVariables() {
+        for(Variable variable: this.variables) {
+            variable.unregister();
+        }
+
         this.variables.clear();
     }
 

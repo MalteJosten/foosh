@@ -60,6 +60,11 @@ public class Variable extends Thing implements IThingListObserver {
         return this.modelLinks;
     }
 
+    public void clearDevices() {
+       unregister();
+       this.devices.clear();
+       updateDeviceLinks(); 
+    }
 
     public void setDevices(List<UUID> deviceIDs) {
         this.devices = deviceIDs;
@@ -133,7 +138,7 @@ public class Variable extends Thing implements IThingListObserver {
     }
 
     private void updateModelLinks() {
-        // TODO: Needs to be called after PUT or PATCH
+        // TODO: Needs to be called after PATCH
     }
 
     private void updateExtLinks() {
@@ -147,10 +152,10 @@ public class Variable extends Thing implements IThingListObserver {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("ID:\t " + id + "\n");
-        builder.append("Name:\t " + name + "\n");
-        builder.append("Devices: " + devices + "\n");
-        builder.append("Models:\t " + models + "\n");
+        builder.append("ID:\t "     + id      + "\n");
+        builder.append("Name:\t "   + name    + "\n");
+        builder.append("Devices: "  + devices + "\n");
+        builder.append("Models:\t " + models  + "\n");
 
         return builder.toString();
     }
