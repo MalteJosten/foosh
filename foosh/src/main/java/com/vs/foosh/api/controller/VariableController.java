@@ -357,7 +357,6 @@ public class VariableController {
                 links);
     }
 
-    // TODO: Implement method
     @DeleteMapping(value = "/{id}/devices/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deletVarDevices(@PathVariable("id") String id) {
