@@ -340,16 +340,21 @@ public class VariableController {
                 links);
     }
     
-    // TODO: Implement method
     @PatchMapping(value = "/{id}/devices/",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> patchVarDevices(@PathVariable("id") String id) {
+        Variable variable = ListService.getVariableList().getVariable(id);
+
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(variable.getSelfLinks());
+        links.addAll(variable.getDeviceLinks());
+
         throw new HttpMappingNotAllowedException(
-                "Not yet implemented",
-                ListService.getVariableList().getVariable(id).getSelfLinks());
+                "You cannot use PATCH on /vars/{id}/devices/! Use PATCH on /vars/{id} instead.",
+                links);
     }
-    
+
+    // TODO: Implement method
     @DeleteMapping(value = "/{id}/devices/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deletVarDevices(@PathVariable("id") String id) {
