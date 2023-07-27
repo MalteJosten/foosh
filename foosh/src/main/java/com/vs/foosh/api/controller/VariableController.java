@@ -28,7 +28,6 @@ import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
 import com.vs.foosh.api.exceptions.misc.IdIsNoValidUUIDException;
-import com.vs.foosh.api.exceptions.variable.BatchVariableNameException;
 import com.vs.foosh.api.exceptions.variable.VariableCreationException;
 import com.vs.foosh.api.exceptions.variable.VariableDevicePostException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsEmptyException;
@@ -38,7 +37,6 @@ import com.vs.foosh.api.exceptions.variable.VariablePatchException;
 import com.vs.foosh.api.model.device.AbstractDeviceResponseObject;
 import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.variable.VariableDevicesPostRequest;
-import com.vs.foosh.api.model.variable.VariableList;
 import com.vs.foosh.api.model.variable.VariablePostRequest;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.IdService;
@@ -141,25 +139,16 @@ public class VariableController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> putVars() {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /vars/! Either use PATCH to update or DELETE and POST to replace the list of variables.",
+                "You cannot use PUT on /vars/! Use DELETE and POST to replace the list of variables.",
                 ListService.getVariableList().getLinks("self"));
     }
 
     @PatchMapping(value = "/",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> patchVars(@RequestBody List<VariableNamePatchRequest> request) {
-        if (patchBatchVariableName(request)) {
-            PersistentDataService.saveVariableList();
-
-            AbstractMap.SimpleEntry<String, Object> result = new AbstractMap.SimpleEntry<String, Object>("variables", ListService.getVariableList().getDisplayListRepresentation());
-            Map<String, Object> responseBody = new HashMap<>();
-            responseBody.put(result.getKey(), result.getValue());
-            responseBody.put("_links", ListService.getVariableList().getLinks("self"));
-            return new ResponseEntity<>(responseBody, HttpStatus.OK);
-        } else {
-            throw new BatchVariableNameException();
-        }
+        throw new HttpMappingNotAllowedException(
+                "You cannot use PATCH on /vars/! Either use PATCH on /vars/{id} to update the variable's name or DELETE and POST to replace the list of variables.",
+                ListService.getVariableList().getLinks("self"));
     }
 
     @DeleteMapping(value = "/",
@@ -300,22 +289,6 @@ public class VariableController {
             e.printStackTrace();
             throw new VariablePatchException(uuid);
         }
-
-    }
-
-    // TODO: see above
-    private boolean patchBatchVariableName(List<VariableNamePatchRequest> batchRequest) {
-        VariableList oldVariableList = ListService.getVariableList();
-
-        for(VariableNamePatchRequest request: batchRequest) {
-            if (!patchVariableName(request)) {
-                ListService.getVariableList().clearVariables();
-                ListService.setVariableList(oldVariableList);
-                return false;
-            } 
-        }
-
-        return true;
 
     }
 

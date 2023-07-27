@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.vs.foosh.api.exceptions.device.BatchDeviceNameException;
 import com.vs.foosh.api.exceptions.device.CouldNotFindUniqueDeviceNameException;
 import com.vs.foosh.api.exceptions.device.DeviceIdNotFoundException;
 import com.vs.foosh.api.exceptions.device.DeviceNameIsEmptyException;
@@ -26,7 +25,6 @@ import com.vs.foosh.api.exceptions.misc.SaveFileNotFoundException;
 import com.vs.foosh.api.exceptions.misc.SavingToFileIOException;
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeAccessException;
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeIOException;
-import com.vs.foosh.api.exceptions.variable.BatchVariableNameException;
 import com.vs.foosh.api.exceptions.variable.VariableCreationException;
 import com.vs.foosh.api.exceptions.variable.VariableDevicePostException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsEmptyException;
@@ -77,15 +75,6 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
                 LinkBuilder.getDeviceLinkWithDevices(exception.getId().toString()),
-                HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(BatchDeviceNameException.class)
-    public ResponseEntity<Object> handleBatchDeviceNameException(BatchDeviceNameException exception, WebRequest request) {
-
-        return HttpResponseBuilder.buildException(
-                exception.getMessage(),
-                ListService.getAbstractDeviceList().getLinks("devices"),
                 HttpStatus.BAD_REQUEST);
     }
 
@@ -159,15 +148,6 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
                 LinkBuilder.getVariableLinkBlock(exception.getId().toString()),
-                HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(BatchVariableNameException.class)
-    public ResponseEntity<Object> handleBatchVariableNameException(BatchVariableNameException exception, WebRequest request) {
-
-        return HttpResponseBuilder.buildException(
-                exception.getMessage(),
-                ListService.getVariableList().getLinks("self"),
                 HttpStatus.BAD_REQUEST);
     }
 

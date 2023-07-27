@@ -30,7 +30,6 @@ import com.vs.foosh.api.model.misc.ReadSaveFileResult;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.model.web.SmartHomeCredentials;
-import com.vs.foosh.api.exceptions.device.BatchDeviceNameException;
 import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
 import com.vs.foosh.api.exceptions.misc.IdIsNoValidUUIDException;
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeAccessException;
@@ -116,21 +115,11 @@ public abstract class AbstractDeviceController {
     }
 
     @PatchMapping(value = "/",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesPatch(@RequestBody List<DeviceNamePatchRequest> request) {
-        if (patchBatchDeviceName(request)) {
-            PersistentDataService.saveDeviceList();
-        
-            AbstractMap.SimpleEntry<String, Object> result = new AbstractMap.SimpleEntry<String, Object>("devices", ListService.getAbstractDeviceList().getDisplayListRepresentation());
-            Map<String, Object> responseBody = new HashMap<>();
-            responseBody.put(result.getKey(), result.getValue());
-            responseBody.put("_links", ListService.getAbstractDeviceList().getLinks("self"));
-            return new ResponseEntity<>(responseBody, HttpStatus.OK);
-
-        } else {
-            throw new BatchDeviceNameException();
-        }
+        throw new HttpMappingNotAllowedException(
+                "You cannot use PATCH on /devices/! Either use PATCH on /devices/{id} to update the device's name or DELETE and POST to replace the list of devices.",
+                ListService.getAbstractDeviceList().getLinks("self"));
     }
 
     @DeleteMapping(value = "/",
@@ -269,17 +258,4 @@ public abstract class AbstractDeviceController {
         }
     }
 
-    private boolean patchBatchDeviceName(List<DeviceNamePatchRequest> batchRequest) {
-        AbstractDeviceList oldDeviceList = ListService.getAbstractDeviceList();
-
-        for(DeviceNamePatchRequest request: batchRequest) {
-            if (!patchDeviceName(request)) {
-                ListService.getAbstractDeviceList().clearDevices();
-                ListService.setAbstractDeviceList(oldDeviceList);
-                return false;
-            } 
-        }
-
-        return true;
-    }
 }
