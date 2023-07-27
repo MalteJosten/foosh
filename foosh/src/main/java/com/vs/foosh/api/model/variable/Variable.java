@@ -133,6 +133,7 @@ public class Variable extends Thing implements IThingListObserver {
         links.addAll(List.of(getId, patchId, deleteId, getName, deleteName));
     }
 
+    // TODO: Needs to be called after PATCH
     private void updateDeviceLinks() {
         if (deviceLinks != null || !deviceLinks.isEmpty()) {
             deviceLinks.clear();
@@ -143,8 +144,9 @@ public class Variable extends Thing implements IThingListObserver {
         }
     }
 
+    // TODO: Needs to be called after PATCH
     private void updateModelLinks() {
-        // TODO: Needs to be called after PATCH
+
     }
 
     private void updateExtLinks() {
@@ -164,6 +166,20 @@ public class Variable extends Thing implements IThingListObserver {
         builder.append("Models:\t " + models  + "\n");
 
         return builder.toString();
+    }
+
+    public List<String> getModifiedFields(Variable old) {
+        List<String> modifications = new ArrayList<>();
+        if (!this.id.equals(old.getId()))                   modifications.add("id");
+        if (!this.name.equals(old.getName()))               modifications.add("name");
+        if (!this.models.equals(old.getModelIds()))         modifications.add("models");
+        if (!this.devices.equals(old.getDeviceIds()))       modifications.add("devices");
+        if (!this.modelLinks.equals(old.getModelLinks()))   modifications.add("modelLinks");
+        if (!this.deviceLinks.equals(old.getDeviceLinks())) modifications.add("deviceLinks");
+        if (!this.links.equals(old.getSelfLinks()))         modifications.add("links");
+        if (!this.extLinks.equals(old.getExtLinks()))       modifications.add("extLinks");
+
+        return modifications;
     }
 
     public void register() {

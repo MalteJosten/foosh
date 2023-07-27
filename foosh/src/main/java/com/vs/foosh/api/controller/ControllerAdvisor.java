@@ -34,6 +34,7 @@ import com.vs.foosh.api.exceptions.variable.VariableNameIsNotUniqueException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsNullException;
 import com.vs.foosh.api.exceptions.variable.VariableNameMustNotBeAnUuidException;
 import com.vs.foosh.api.exceptions.variable.VariableNotFoundException;
+import com.vs.foosh.api.exceptions.variable.VariablePatchException;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.HttpResponseBuilder;
 import com.vs.foosh.api.services.LinkBuilder;
@@ -176,6 +177,14 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
                 exception.getMessage(),
                 ListService.getVariableList().getVariable(exception.getVariableId().toString()).getDeviceLinks(),
                 exception.getStatus());
+    }
+
+    @ExceptionHandler(VariablePatchException.class)
+    public ResponseEntity<Object> handleVariablePatchException(VariablePatchException exception, WebRequest request) {
+        return HttpResponseBuilder.buildException(
+                exception.getMessage(),
+                LinkBuilder.getVariableLinkBlock(exception.getId().toString()),
+                HttpStatus.BAD_REQUEST);
     }
 
     /**

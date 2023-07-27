@@ -21,6 +21,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
 import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
 import com.vs.foosh.api.exceptions.misc.IdIsNoValidUUIDException;
 import com.vs.foosh.api.exceptions.variable.BatchVariableNameException;
@@ -29,6 +34,7 @@ import com.vs.foosh.api.exceptions.variable.VariableDevicePostException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsEmptyException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsNullException;
 import com.vs.foosh.api.exceptions.variable.VariableNamePatchRequest;
+import com.vs.foosh.api.exceptions.variable.VariablePatchException;
 import com.vs.foosh.api.model.device.AbstractDeviceResponseObject;
 import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.variable.VariableDevicesPostRequest;
@@ -203,10 +209,10 @@ public class VariableController {
     }
 
     @PatchMapping(value = "/{id}",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
+            consumes = "application/json-patch+json",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> patchVar(@PathVariable("id") String id, @RequestBody Map<String, String> requestBody) {
-        if (patchVariableName(new VariableNamePatchRequest(id, requestBody.get("name")))) {
+    public ResponseEntity<Object> patchVar(@PathVariable("id") String id, @RequestBody JsonPatch patch) {
+        if (patchVariableName(id, patch)) {
             PersistentDataService.saveVariableList();
 
             Variable variable = ListService.getVariableList().getVariable(id);
@@ -233,33 +239,71 @@ public class VariableController {
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
-    private boolean patchVariableName(VariableNamePatchRequest request) {
+    // TODO: May need a rework to only work with one resource or maybe on the entire collection...
+    private boolean patchVariableName(String id, JsonPatch patch) {
         UUID uuid;
 
         // Is the provided id a valid UUID?
         try {
-            uuid = UUID.fromString(request.getId());
+            uuid = UUID.fromString(id);
         } catch (IllegalArgumentException e) {
-            throw new IdIsNoValidUUIDException(request.getId());
+            throw new IdIsNoValidUUIDException(id);
         }
 
-        if (request.getName() == null) {
-            throw new VariableNameIsNullException(uuid);
+        try {
+            Variable oldVariable = ListService.getVariableList().getVariable(id);
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode patched = patch.apply(objectMapper.convertValue(oldVariable, JsonNode.class));
+            Variable newVariable = objectMapper.treeToValue(patched, Variable.class);
+
+            // make sure that only the name was modified
+            List<String> modifications = newVariable.getModifiedFields(oldVariable);
+
+            // No changes.
+            if (modifications.size() == 0) {
+                return true;
+            }
+
+            // More than one field has been changed.
+            // Not desired behavior. Abort!
+            if (modifications.size() > 1) {
+                // TODO: Error response
+                return false;
+            }
+
+            // Exactly one field has been changed.
+            if (modifications.size() == 1) {
+                // Was the changed field the 'name' field?
+                // We do not allow any other field to be altered.
+                if (!modifications.get(0).equals("name")) {
+                    return false;
+                }
+
+                if (newVariable.getName() == null) {
+                    throw new VariableNameIsNullException(uuid);
+                }
+
+                if (newVariable.getName().trim().isEmpty() || newVariable.getName().equals("")) {
+                    throw new VariableNameIsEmptyException(uuid);
+                }
+
+                // check whether there is a variable with the given id
+                ListService.getVariableList().checkIfIdIsPresent(id);
+                if (ListService.getVariableList().isUniqueName(newVariable.getName(), uuid)) {
+                    ListService.getVariableList().getVariable(id).setName(newVariable.getName());
+                    return true;
+                }
+            }
+
+            return false;
+        } catch (JsonPatchException | JsonProcessingException e) {
+            e.printStackTrace();
+            throw new VariablePatchException(uuid);
         }
 
-        if (request.getName().trim().isEmpty() || request.getName().equals("")) {
-            throw new VariableNameIsEmptyException(uuid);
-        }
-
-        // check whether there is a variable with the given id
-        ListService.getVariableList().checkIfIdIsPresent(request.getId());
-        if (ListService.getVariableList().isUniqueName(request.getName(), uuid)) {
-            ListService.getVariableList().getVariable(request.getId().toString()).setName(request.getName());
-            return true;
-        }
-        return false;
     }
 
+    // TODO: see above
     private boolean patchBatchVariableName(List<VariableNamePatchRequest> batchRequest) {
         VariableList oldVariableList = ListService.getVariableList();
 
