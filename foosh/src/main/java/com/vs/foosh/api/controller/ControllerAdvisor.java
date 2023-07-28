@@ -19,6 +19,11 @@ import com.vs.foosh.api.exceptions.device.DeviceNameIsEmptyException;
 import com.vs.foosh.api.exceptions.device.DeviceNameIsNotUniqueException;
 import com.vs.foosh.api.exceptions.device.DeviceNameIsNullException;
 import com.vs.foosh.api.exceptions.misc.CouldNotDeleteCollectionException;
+import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchEmptyValueException;
+import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchFormatException;
+import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchIllegalArgumentException;
+import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchIllegalOperationException;
+import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchValueException;
 import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
 import com.vs.foosh.api.exceptions.misc.IdIsNoValidUUIDException;
 import com.vs.foosh.api.exceptions.misc.SaveFileNotFoundException;
@@ -229,6 +234,19 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
                 HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler({
+        FooSHJsonPatchIllegalArgumentException.class,
+        FooSHJsonPatchIllegalOperationException.class,
+        FooSHJsonPatchFormatException.class,
+        FooSHJsonPatchEmptyValueException.class,
+        FooSHJsonPatchValueException.class})
+    public ResponseEntity<Object> handleFooSHJsonPatchIllegalArgumentException(FooSHJsonPatchIllegalArgumentException exception,
+            WebRequest request) {
+        return HttpResponseBuilder.buildException(
+                exception.getMessage(),
+                HttpStatus.BAD_REQUEST);
     }
 
     ///
