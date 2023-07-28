@@ -123,9 +123,38 @@ public class FooSHJsonPatch {
         this.value = value;
     }
 
-    public boolean hasPathDestination(String destination) {
-        String actualDestination = this.path.split("/")[this.path.split("/").length-1];
-        return actualDestination.equalsIgnoreCase(destination);
+    // TODO: Fix lenght bzw. Vergleich
+    public boolean hasPath(String[] desiredPath, boolean includeLast) {
+        String[] pathSegments = this.path.split("/");
+
+        for(String s: pathSegments) {
+            System.out.println(s);
+        }
+
+        if (includeLast) {
+            if (pathSegments.length != desiredPath.length) {
+                System.err.println("not the same length");
+                return false;
+            }
+        } else {
+            if ((pathSegments.length - 1) != desiredPath.length) {
+                System.err.println("not the same length");
+                return false;
+            }
+        }
+
+        int lastIndex = pathSegments.length - 1;
+        if (!includeLast) {
+            lastIndex--;
+        }
+
+        for(int i = 0; i <= lastIndex; i++) {
+            if (!pathSegments[i].equalsIgnoreCase(desiredPath[i])) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public FooSHPatchOperation getOperation() {
@@ -134,6 +163,10 @@ public class FooSHJsonPatch {
 
     public String getPath() {
         return this.path;
+    }
+
+    public String getDestination() {
+        return this.path.split("/")[this.path.split("/").length - 1];
     }
 
     public String getValue() {

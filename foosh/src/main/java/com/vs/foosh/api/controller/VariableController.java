@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchIllegalArgumentException;
+import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchIllegalOperationException;
 import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
 import com.vs.foosh.api.exceptions.variable.VariableCreationException;
 import com.vs.foosh.api.exceptions.variable.VariableDevicePostException;
@@ -203,6 +204,9 @@ public class VariableController {
     @PatchMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> patchVar(@PathVariable("id") String id, @RequestBody List<Map<String, String>> patchMappings) {
+        // check whether id is an UUID and whether there is a device with the given id
+        ListService.getVariableList().checkIfIdIsPresent(id);
+
         List<FooSHJsonPatch> patches = new ArrayList<>();
         for (Map<String, String> patchMapping: patchMappings) {
             FooSHJsonPatch patch = new FooSHJsonPatch(patchMapping);
@@ -214,7 +218,8 @@ public class VariableController {
 
         Variable variable = ListService.getVariableList().getVariable(id);
         for (FooSHJsonPatch patch: patches) {
-            if (!patch.hasPathDestination("name")) {
+            List<String> pathSegments = List.of("name");
+            if (!patch.hasPath(pathSegments.toArray(new String[0]), true)) {
                 throw new FooSHJsonPatchIllegalArgumentException("You can only edit the field 'name'!");
             }
 
@@ -333,20 +338,102 @@ public class VariableController {
                 links);
     }
     
-    // TODO: Allow patching?
     // TODO: (Implement custom Json Patch)
     @PatchMapping(value = "/{id}/devices/",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> patchVarDevices(@PathVariable("id") String id) {
+    public ResponseEntity<Object> patchVarDevices(@PathVariable("id") String id, @RequestBody List<Map<String, String>> patchMappings) {
+        // check whether there is a device with the given id
+        ListService.getVariableList().checkIfIdIsPresent(id);
+
         Variable variable = ListService.getVariableList().getVariable(id);
 
+        // Convert patchMappings to FooSHJsonPatches
+        List<FooSHJsonPatch> patches = new ArrayList<>();
+        for (Map<String, String> patchMapping: patchMappings) {
+            FooSHJsonPatch patch = new FooSHJsonPatch(patchMapping);
+            patch.validateRequest(List.of(FooSHPatchOperation.ADD));
+
+            // TODO: Implement replace, remove
+            switch (patch.getOperation()) {
+                case ADD:
+                    patch.validateAdd(UUID.class);
+                    break;
+                case REPLACE:
+                    patch.validateReplace(UUID.class);
+                    break;
+                case REMOVE:
+                    patch.validateRemove();
+                    break;
+                default:
+                    throw new FooSHJsonPatchIllegalOperationException(patch.getOperation());
+            }
+
+            patches.add(patch);
+
+        }    
+
+        // Check for correct path
+        for (FooSHJsonPatch patch : patches) {
+            List<String> pathSegments;
+            switch (patch.getOperation()) {
+                case ADD:
+                    pathSegments = List.of();
+                    break;
+                case REPLACE:
+                    // use "uuid" as a placeholder for checking path
+                    pathSegments = List.of("uuid");
+                    break;
+                case REMOVE:
+                    // use "uuid" as a placeholder for checking path
+                    pathSegments = List.of("uuid");
+                    break;
+                default:
+                    throw new FooSHJsonPatchIllegalOperationException(patch.getOperation());
+            }
+            if (!patch.hasPath(pathSegments.toArray(new String[0]), false)) {
+                throw new FooSHJsonPatchIllegalArgumentException("You can only add a device under '/' and/or replace/remove a device using its UUID with '/<uuid>'!");
+            }
+
+            // Execute operation
+            List<UUID> devices = variable.getDeviceIds();
+            String value = patch.getValue();
+            switch (patch.getOperation()) {
+                case ADD:
+                    if (!devices.contains(UUID.fromString(value))) {
+                        devices.add(UUID.fromString(value));
+                    }
+                    break;
+                case REPLACE:
+                    if (!devices.contains(UUID.fromString(value))) {
+                        throw new FooSHJsonPatchIllegalArgumentException("Could not replace device since it is not part of the device collection.");
+                    }
+
+                    devices.remove(UUID.fromString(patch.getDestination()));
+                    devices.add(UUID.fromString(value));
+                    break;
+                case REMOVE:
+                    devices.remove(UUID.fromString(patch.getDestination()));
+                    break;
+                default:
+                    throw new FooSHJsonPatchIllegalOperationException(patch.getOperation());
+            }
+
+            variable.unregister();
+            variable.setDevices(devices);
+            variable.register();
+            variable.updateLinks();
+
+            PersistentDataService.saveAll();
+        }
+
+        List<AbstractDeviceResponseObject> devices = new ArrayList<>();
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(variable.getSelfLinks());
         links.addAll(variable.getDeviceLinks());
-
-        throw new HttpMappingNotAllowedException(
-                "You cannot use PATCH on /vars/{id}/devices/! Use PATCH on /vars/{id} instead.",
-                links);
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("devices", devices);
+        responseBody.put("_links", links);
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}/devices/",
