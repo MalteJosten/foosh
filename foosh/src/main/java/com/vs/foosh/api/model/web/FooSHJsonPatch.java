@@ -111,5 +111,15 @@ public class FooSHJsonPatch {
         this.value = value;
     }
 
-    
+    public FooSHPatchOperation getOperation() {
+        return this.operation;
+    }
+
+    public String getPath() {
+        return this.path;
+    }
+
+    public String getValue() {
+        return this.value;
+    }
 }
