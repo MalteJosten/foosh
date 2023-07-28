@@ -38,6 +38,7 @@ import com.vs.foosh.api.model.device.AbstractDeviceResponseObject;
 import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.variable.VariableDevicesPostRequest;
 import com.vs.foosh.api.model.variable.VariablePostRequest;
+import com.vs.foosh.api.model.web.FooSHJsonPatch;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.IdService;
 import com.vs.foosh.api.services.LinkBuilder;
@@ -203,11 +204,11 @@ public class VariableController {
     }
 
     // TODO: (Implement Paging)
-    // TODO: Implemenet JSON Patch
+    // TODO: Implement custom Json Patch
     @PatchMapping(value = "/{id}",
-            consumes = "application/json-patch+json",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> patchVar(@PathVariable("id") String id, @RequestBody JsonPatch patch) {
+    public ResponseEntity<Object> patchVar(@PathVariable("id") String id, @RequestBody List<FooSHJsonPatch> patch) {
         if (patchVariableName(id, patch)) {
             PersistentDataService.saveVariableList();
 
@@ -371,7 +372,7 @@ public class VariableController {
     }
     
     // TODO: Allow patching?
-    // TODO: (Implement JSON Patch)
+    // TODO: (Implement custom Json Patch)
     @PatchMapping(value = "/{id}/devices/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> patchVarDevices(@PathVariable("id") String id) {

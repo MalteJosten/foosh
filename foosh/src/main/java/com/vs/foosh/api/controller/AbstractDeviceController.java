@@ -113,7 +113,7 @@ public abstract class AbstractDeviceController {
     public ResponseEntity<Object> devicesPut(
             @RequestBody(required=false) SmartHomeCredentials credentials) {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /devices/! Either use PATCH to update or DELETE and POST to replace the list of devices.",
+                "You cannot use PUT on /devices/! Use DELETE and POST to replace the list of devices.",
                 ListService.getAbstractDeviceList().getLinks("self"));
     }
 
@@ -187,7 +187,7 @@ public abstract class AbstractDeviceController {
                 ListService.getAbstractDeviceList().getDeviceById(id).getSelfLinks());
     }
 
-    // TODO: Implement JSON Patch
+    // TODO: Implement custom Json Patch
     @PatchMapping(value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
