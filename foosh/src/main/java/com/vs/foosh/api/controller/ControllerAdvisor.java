@@ -236,13 +236,13 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler({
+    @ExceptionHandler(value = {
         FooSHJsonPatchIllegalArgumentException.class,
         FooSHJsonPatchIllegalOperationException.class,
         FooSHJsonPatchFormatException.class,
         FooSHJsonPatchEmptyValueException.class,
         FooSHJsonPatchValueException.class})
-    public ResponseEntity<Object> handleFooSHJsonPatchIllegalArgumentException(FooSHJsonPatchIllegalArgumentException exception,
+    public ResponseEntity<Object> handleFooSHJsonPatchExceptions(RuntimeException exception,
             WebRequest request) {
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),

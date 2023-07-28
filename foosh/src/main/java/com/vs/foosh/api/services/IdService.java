@@ -1,20 +1,22 @@
 package com.vs.foosh.api.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.vs.foosh.api.model.misc.Thing;
 
 // TODO: Add method to check whether String is an UUID
 public class IdService {
-    public static boolean isUuid(String id) {
+    public static Optional<UUID> isUuid(String id) {
+        UUID uuid;
         try {
-            UUID.fromString(id);
+            uuid = UUID.fromString(id);
         } catch (IllegalArgumentException e) {
-            return false;
+            return Optional.empty();
         } 
 
-        return true;
+        return Optional.of(uuid);
     }
 
     public static <T extends Thing> boolean isIdentifierInList(String id, List<T> collection) {

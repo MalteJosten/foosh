@@ -21,24 +21,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
+import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchIllegalArgumentException;
 import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
-import com.vs.foosh.api.exceptions.misc.IdIsNoValidUUIDException;
 import com.vs.foosh.api.exceptions.variable.VariableCreationException;
 import com.vs.foosh.api.exceptions.variable.VariableDevicePostException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsEmptyException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsNullException;
 import com.vs.foosh.api.exceptions.variable.VariableNamePatchRequest;
-import com.vs.foosh.api.exceptions.variable.VariablePatchException;
 import com.vs.foosh.api.model.device.AbstractDeviceResponseObject;
 import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.variable.VariableDevicesPostRequest;
 import com.vs.foosh.api.model.variable.VariablePostRequest;
 import com.vs.foosh.api.model.web.FooSHJsonPatch;
+import com.vs.foosh.api.model.web.FooSHPatchOperation;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.IdService;
 import com.vs.foosh.api.services.LinkBuilder;
@@ -206,20 +201,31 @@ public class VariableController {
     // TODO: (Implement Paging)
     // TODO: Implement custom Json Patch
     @PatchMapping(value = "/{id}",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> patchVar(@PathVariable("id") String id, @RequestBody List<FooSHJsonPatch> patch) {
-        if (patchVariableName(id, patch)) {
-            PersistentDataService.saveVariableList();
+    public ResponseEntity<Object> patchVar(@PathVariable("id") String id, @RequestBody List<Map<String, String>> patchMappings) {
+        List<FooSHJsonPatch> patches = new ArrayList<>();
+        for (Map<String, String> patchMapping: patchMappings) {
+            FooSHJsonPatch patch = new FooSHJsonPatch(patchMapping);
+            patch.validateRequest(List.of(FooSHPatchOperation.REPLACE));
+            patch.validateReplace(String.class);
 
-            Variable variable = ListService.getVariableList().getVariable(id);
-            Map<String, Object> responseBody = new HashMap<>();
-            responseBody.put("variable", variable.getDisplayRepresentation().getVariable());
-            responseBody.put("_links", variable.getAllLinks());
-            return new ResponseEntity<>(responseBody, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<Object>("Could not patch name for variable '" + id + "' !'", HttpStatus.INTERNAL_SERVER_ERROR);
+            patches.add(patch);
+        }    
+
+        Variable variable = ListService.getVariableList().getVariable(id);
+        for (FooSHJsonPatch patch: patches) {
+            if (!patch.hasPathDestination("name")) {
+                throw new FooSHJsonPatchIllegalArgumentException("You can only edit the field 'name'!");
+            }
+
+            patchVariableName(id, patch.getValue());
         }
+
+        PersistentDataService.saveVariableList();
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("variable", variable.getDisplayRepresentation().getVariable());
+        responseBody.put("_links", variable.getAllLinks());
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}",
@@ -236,68 +242,24 @@ public class VariableController {
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
-    // TODO: May need a rework to only work with one resource or maybe on the entire collection...
-    private boolean patchVariableName(String id, JsonPatch patch) {
-        UUID uuid;
+    private boolean patchVariableName(String id, String patchName) {
+        UUID uuid = IdService.isUuid(id).get();
 
-        // TODO: Use IdService
-        // Is the provided id a valid UUID?
-        try {
-            uuid = UUID.fromString(id);
-        } catch (IllegalArgumentException e) {
-            throw new IdIsNoValidUUIDException(id);
+        if (patchName == null) {
+            throw new VariableNameIsNullException(uuid);
         }
 
-        try {
-            Variable oldVariable = ListService.getVariableList().getVariable(id);
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode patched = patch.apply(objectMapper.convertValue(oldVariable, JsonNode.class));
-            Variable newVariable = objectMapper.treeToValue(patched, Variable.class);
-
-            // make sure that only the name was modified
-            List<String> modifications = newVariable.getModifiedFields(oldVariable);
-
-            // No changes.
-            if (modifications.size() == 0) {
-                return true;
-            }
-
-            // More than one field has been changed.
-            // Not desired behavior. Abort!
-            if (modifications.size() > 1) {
-                // TODO: Error response
-                return false;
-            }
-
-            // Exactly one field has been changed.
-            if (modifications.size() == 1) {
-                // Was the changed field the 'name' field?
-                // We do not allow any other field to be altered.
-                if (!modifications.get(0).equals("name")) {
-                    return false;
-                }
-
-                if (newVariable.getName() == null) {
-                    throw new VariableNameIsNullException(uuid);
-                }
-
-                if (newVariable.getName().trim().isEmpty() || newVariable.getName().equals("")) {
-                    throw new VariableNameIsEmptyException(uuid);
-                }
-
-                // check whether there is a variable with the given id
-                ListService.getVariableList().checkIfIdIsPresent(id);
-                if (ListService.getVariableList().isUniqueName(newVariable.getName(), uuid)) {
-                    ListService.getVariableList().getVariable(id).setName(newVariable.getName());
-                    return true;
-                }
-            }
-
-            return false;
-        } catch (JsonPatchException | JsonProcessingException e) {
-            e.printStackTrace();
-            throw new VariablePatchException(uuid);
+        if (patchName.trim().isEmpty() || patchName.equals("")) {
+            throw new VariableNameIsEmptyException(uuid);
         }
+
+        // check whether there is a variable with the given id
+        ListService.getVariableList().checkIfIdIsPresent(id);
+        if (ListService.getVariableList().isUniqueName(patchName, uuid)) {
+            ListService.getVariableList().getVariable(id).setName(patchName);
+            return true;
+        }
+        return false;
 
     }
 
