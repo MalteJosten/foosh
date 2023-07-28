@@ -1,5 +1,6 @@
 package com.vs.foosh.api.model.variable;
 
+// TODO: @Override toString()
 public class VariablePostRequest {
     private String name;
     

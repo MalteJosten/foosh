@@ -117,6 +117,7 @@ public abstract class AbstractDevice extends Thing {
         return new AbstractDeviceDisplayRepresentation(this);
     }
 
+    // TODO: Add Variable Header
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

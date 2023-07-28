@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+// TODO: @Override toString()
 public abstract class AbstractDeviceDescription implements Serializable {
     protected Map<String, Object> properties = new HashMap<>();
 

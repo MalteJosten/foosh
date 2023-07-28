@@ -5,6 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vs.foosh.api.model.web.LinkEntry;
 
+// TODO: @Override toString()
 public class AbstractDeviceDisplayRepresentation {
     private AbstractDeviceResponseObject device;
     private List<LinkEntry> links;

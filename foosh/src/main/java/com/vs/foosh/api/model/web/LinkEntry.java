@@ -38,6 +38,7 @@ public class LinkEntry implements Serializable {
         return types;
     }
 
+    // Add class name header
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

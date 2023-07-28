@@ -42,6 +42,7 @@ import com.vs.foosh.api.services.ListService;
 import com.vs.foosh.api.services.PersistentDataService;
 import com.vs.foosh.api.services.ApplicationConfig;
 
+// TODO: Extract logic into dedicated service(s)
 @RequestMapping(value="/api/devices")
 public abstract class AbstractDeviceController {
 
@@ -49,6 +50,7 @@ public abstract class AbstractDeviceController {
     // Device Collection
     //
 
+    // TODO: Implement Paging
     @GetMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesGet() {
@@ -61,6 +63,7 @@ public abstract class AbstractDeviceController {
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
+    // TODO: Implement Paging
     @PostMapping(value = "/",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -114,6 +117,7 @@ public abstract class AbstractDeviceController {
                 ListService.getAbstractDeviceList().getLinks("self"));
     }
 
+    // TODO: Allow patching? What is the correct path? How do we address the device we want to update, since we have no index but only its ID?
     @PatchMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesPatch(@RequestBody List<DeviceNamePatchRequest> request) {
@@ -183,12 +187,14 @@ public abstract class AbstractDeviceController {
                 ListService.getAbstractDeviceList().getDeviceById(id).getSelfLinks());
     }
 
+    // TODO: Implement JSON Patch
     @PatchMapping(value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicePatch(@PathVariable("id") String id, @RequestBody Map<String, String> requestBody) {
         UUID uuid;
 
+        // TODO: Use IdService
         // Is the provided id a valid UUID?
         try {
             uuid = UUID.fromString(id);

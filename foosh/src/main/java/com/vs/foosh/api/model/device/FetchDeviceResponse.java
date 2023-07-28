@@ -2,6 +2,7 @@ package com.vs.foosh.api.model.device;
 
 import java.util.List;
 
+// TODO: @Override toString()
 public class FetchDeviceResponse {
     private String message;
     private List<AbstractDevice> devices;

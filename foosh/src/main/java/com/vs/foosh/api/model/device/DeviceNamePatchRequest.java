@@ -2,6 +2,7 @@ package com.vs.foosh.api.model.device;
 
 import java.util.UUID;
 
+// TODO: @Override toString()
 public class DeviceNamePatchRequest {
     private UUID id;
     private String name;

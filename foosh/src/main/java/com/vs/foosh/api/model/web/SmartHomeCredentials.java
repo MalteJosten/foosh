@@ -35,6 +35,7 @@ public class SmartHomeCredentials {
         return (this.credentials == null || this.credentials.isEmpty());
     }
 
+    // Modify class name header
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

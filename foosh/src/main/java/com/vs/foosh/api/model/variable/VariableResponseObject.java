@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.vs.foosh.api.model.misc.Thing;
 
+// TODO: @Override toString()
 public class VariableResponseObject extends Thing {
     private List<UUID> models;
     private List<UUID> devices;

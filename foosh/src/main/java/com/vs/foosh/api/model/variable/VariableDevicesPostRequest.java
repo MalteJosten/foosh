@@ -3,6 +3,7 @@ package com.vs.foosh.api.model.variable;
 import java.util.List;
 import java.util.UUID;
 
+// TODO: @Override toString()
 public class VariableDevicesPostRequest {
     private List<UUID> devices;
 

@@ -13,6 +13,7 @@ import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilder;
 
+// TODO: @Override toString()
 public class VariableList implements Serializable {
     private List<Variable> variables;
     

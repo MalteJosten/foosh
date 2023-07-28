@@ -38,6 +38,7 @@ import com.vs.foosh.api.services.HttpResponseBuilder;
 import com.vs.foosh.api.services.LinkBuilder;
 import com.vs.foosh.api.services.ListService;
 
+// TODO: Split into dedicated Advisors.
 @ControllerAdvice
 public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
@@ -233,6 +234,8 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     ///
     /// Spring Boot Overrides
     ///
+
+    // TODO: Test each API Endpoint and make sure to cover all @RequestBody exceptions (implement custom handler methods below)
     
     @Override
     protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {

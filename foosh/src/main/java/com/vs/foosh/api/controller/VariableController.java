@@ -44,6 +44,7 @@ import com.vs.foosh.api.services.LinkBuilder;
 import com.vs.foosh.api.services.ListService;
 import com.vs.foosh.api.services.PersistentDataService;
 
+// TODO: Extract logic into dedicated service(s)
 @RestController
 @RequestMapping(value = "/api/vars")
 public class VariableController {
@@ -52,6 +53,7 @@ public class VariableController {
     /// Variable Collection
     ///
 
+    // TODO: Implement Paging
     @GetMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getVars() {
@@ -63,6 +65,7 @@ public class VariableController {
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
+    // TODO: Implement Paging
     @PostMapping(value = "/",
             headers  = "batch=true",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -89,6 +92,7 @@ public class VariableController {
         return new ResponseEntity<>(responseBody, HttpStatus.CREATED);
     }
 
+    // TODO: Implement Paging
     @PostMapping(value = "/",
             headers  = "batch=false",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -119,6 +123,7 @@ public class VariableController {
             throw new VariableCreationException("Cannot create variable without a name! The field 'name' is empty.");
         }
 
+        // TODO: Use IdService
         // Does this field contain an UUID?
         try {
             UUID.fromString(request.getName());
@@ -197,6 +202,8 @@ public class VariableController {
                 ListService.getVariableList().getVariable(id).getSelfLinks());
     }
 
+    // TODO: (Implement Paging)
+    // TODO: Implemenet JSON Patch
     @PatchMapping(value = "/{id}",
             consumes = "application/json-patch+json",
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -232,6 +239,7 @@ public class VariableController {
     private boolean patchVariableName(String id, JsonPatch patch) {
         UUID uuid;
 
+        // TODO: Use IdService
         // Is the provided id a valid UUID?
         try {
             uuid = UUID.fromString(id);
@@ -296,6 +304,7 @@ public class VariableController {
     /// Devices
     ///
 
+    // TODO: Implement Paging
     @GetMapping(value = "/{id}/devices/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getVarDevices(@PathVariable("id") String id) {
@@ -315,6 +324,7 @@ public class VariableController {
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
+    // TODO: Implement Paging
     @PostMapping(value = "/{id}/devices/",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -360,6 +370,8 @@ public class VariableController {
                 links);
     }
     
+    // TODO: Allow patching?
+    // TODO: (Implement JSON Patch)
     @PatchMapping(value = "/{id}/devices/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> patchVarDevices(@PathVariable("id") String id) {

@@ -1,5 +1,6 @@
 package com.vs.foosh.api.model.misc;
 
+// TODO: @Override toString()
 public class ReadSaveFileResult<T> {
     private T data;
     private boolean success;

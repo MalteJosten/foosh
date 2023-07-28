@@ -1,5 +1,6 @@
 package com.vs.foosh.api.model.device;
 
+// TODO: @Override toString()
 public class DeviceValue<T> {
     private T value;
 
