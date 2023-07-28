@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.vs.foosh.api.model.enums.ListModification;
 import com.vs.foosh.api.model.misc.IThingListObserver;
+import com.vs.foosh.api.model.misc.ListModification;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
