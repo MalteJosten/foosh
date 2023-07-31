@@ -80,7 +80,7 @@ public class LinkBuilder {
     }
 
     public static List<LinkEntry> getVariableLinkBlock (String id) {
-        Variable variable = ListService.getVariableList().getVariable(id);
+        Variable variable = ListService.getVariableList().getThing(id);
 
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(variable.getSelfLinks());
@@ -133,7 +133,7 @@ public class LinkBuilder {
 
     public static List<LinkEntry> getDeviceLinkWithDevices(String id) {
         List<LinkEntry> links = new ArrayList<>();
-        List<LinkEntry> deviceSelfLinks = ListService.getAbstractDeviceList().getDeviceById(id).getSelfLinks();
+        List<LinkEntry> deviceSelfLinks = ListService.getAbstractDeviceList().getThing(id).getSelfLinks();
         List<LinkEntry> devicesLinks    = ListService.getAbstractDeviceList().getLinks("devices");
 
         links.addAll(deviceSelfLinks);

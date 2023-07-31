@@ -8,36 +8,33 @@ import java.util.UUID;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsNotUniqueException;
 import com.vs.foosh.api.exceptions.variable.VariableNameMustNotBeAnUuidException;
 import com.vs.foosh.api.exceptions.variable.VariableNotFoundException;
+import com.vs.foosh.api.model.misc.IThingList;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilder;
 
 // TODO: @Override toString()
-public class VariableList implements Serializable {
+public class VariableList implements Serializable, IThingList<Variable, VariableDisplayRepresentation> {
     private List<Variable> variables;
     
     public VariableList() {
         this.variables = new ArrayList<>();
     }
 
-    public void setVariables(List<Variable> variableList) {
+    public void setList(List<Variable> variableList) {
         if (variables != null) {
-            clearVariables();
+            clearList();
         }
 
         this.variables.addAll(variableList);
     }
 
-    public void pushVariable(Variable variable) {
-        this.variables.add(variable);
-    }
-
-    public List<Variable> getVariables() {
+    public List<Variable> getList() {
         return this.variables;
     }
 
-    public List<Thing> getVariablesAsThings() {
+    public List<Thing> getAsThings() {
         List<Thing> things = new ArrayList<>();
 
         for(Variable variable: this.variables) {
@@ -47,17 +44,7 @@ public class VariableList implements Serializable {
         return things;
     }
 
-    public List<VariableDisplayRepresentation> getDisplayListRepresentation() {
-        List<VariableDisplayRepresentation> displayRepresentation = new ArrayList<>();
-
-        for(Variable variable: getVariables()) {
-            displayRepresentation.add(new VariableDisplayRepresentation(variable));
-        }
-
-        return displayRepresentation;
-    }
-
-    public void clearVariables() {
+    public void clearList() {
         for(Variable variable: this.variables) {
             variable.unregister();
         }
@@ -65,10 +52,35 @@ public class VariableList implements Serializable {
         this.variables.clear();
     }
 
-    public Variable getVariable(String identifier) {
-        for (Variable variable: getVariables()) {
+    public List<VariableDisplayRepresentation> getDisplayListRepresentation() {
+        List<VariableDisplayRepresentation> displayRepresentation = new ArrayList<>();
+
+        for(Variable variable: getList()) {
+            displayRepresentation.add(new VariableDisplayRepresentation(variable));
+        }
+
+        return displayRepresentation;
+    }
+
+    public Variable getThing(String identifier) {
+        for (Variable variable: getList()) {
             if (variable.getId().toString().equals(identifier) || variable.getName().equals(identifier.toLowerCase())) {
                 return variable;
+            }
+        }
+
+        throw new VariableNotFoundException(identifier);
+    }
+
+    public void addThing(Variable variable) {
+        this.variables.add(variable);
+    }
+
+    public void deleteThing(String identifier) {
+        for (Variable variable: getList()) {
+            if (variable.getId().toString().equals(identifier) || variable.getName().equals(identifier)) {
+                getList().remove(variable);
+                return;
             }
         }
 
@@ -100,7 +112,7 @@ public class VariableList implements Serializable {
     }
 
     public void checkIfIdIsPresent(String identifier) {
-        for (Variable variable: getVariables()) {
+        for (Variable variable: getList()) {
             if (variable.getId().toString().equals(identifier) || variable.getName().equals(identifier.toLowerCase())) {
                 return;
             }
@@ -109,16 +121,6 @@ public class VariableList implements Serializable {
         throw new VariableNotFoundException(identifier);
     }
 
-    public void deleteVariable(String id) {
-        for (Variable variable: getVariables()) {
-            if (variable.getId().toString().equals(id) || variable.getName().equals(id)) {
-                getVariables().remove(variable);
-                return;
-            }
-        }
-
-        throw new VariableNotFoundException(id);
-    }
 
     public List<LinkEntry> getLinks(String label) {
         LinkEntry get    = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.GET, List.of());
@@ -126,16 +128,17 @@ public class VariableList implements Serializable {
         LinkEntry patch  = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.PATCH, List.of("application/json"));
         LinkEntry delete = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.DELETE, List.of());
 
-        if (getVariables().isEmpty() || getVariables().size() == 0) {
+        if (getList().isEmpty() || getList().size() == 0) {
             return new ArrayList<>(List.of(get, post));
         } else {
             return new ArrayList<>(List.of(get, patch, delete));
         }
     }
     
-    public void updateVariableLinks() {
-        for(Variable variable: getVariables()) {
+    public void updateLinks() {
+        for(Variable variable: getList()) {
             variable.updateLinks();
         }
     }
+
 }

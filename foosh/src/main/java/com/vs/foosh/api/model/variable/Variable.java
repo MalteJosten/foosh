@@ -140,7 +140,7 @@ public class Variable extends Thing implements IThingListObserver {
         }
 
         for (UUID deviceId: devices) {
-            deviceLinks.addAll(ListService.getAbstractDeviceList().getDeviceById(deviceId.toString()).getSelfStaticLinks("device"));
+            deviceLinks.addAll(ListService.getAbstractDeviceList().getThing(deviceId.toString()).getSelfStaticLinks("device"));
         }
     }
 

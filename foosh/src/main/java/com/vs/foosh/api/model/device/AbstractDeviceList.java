@@ -8,6 +8,7 @@ import java.util.UUID;
 import com.vs.foosh.api.exceptions.device.CouldNotFindUniqueDeviceNameException;
 import com.vs.foosh.api.exceptions.device.DeviceIdNotFoundException;
 import com.vs.foosh.api.exceptions.device.DeviceNameIsNotUniqueException;
+import com.vs.foosh.api.model.misc.IThingList;
 import com.vs.foosh.api.model.misc.IThingListObserver;
 import com.vs.foosh.api.model.misc.IThingListSubject;
 import com.vs.foosh.api.model.misc.ListModification;
@@ -17,7 +18,7 @@ import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilder;
 
 // TODO: @Override toString()
-public class AbstractDeviceList implements IThingListSubject, Serializable {
+public class AbstractDeviceList implements IThingListSubject, IThingList<AbstractDevice, AbstractDeviceDisplayRepresentation>, Serializable {
     private List<AbstractDevice> devices;
     private final int UNIQUE_QUERY_NAME_TIMEOUT = 25;
 
@@ -27,27 +28,19 @@ public class AbstractDeviceList implements IThingListSubject, Serializable {
         this.devices = new ArrayList<>();
     }
 
-    public void setDevices(List<AbstractDevice> deviceList) {
+    public void setList(List<AbstractDevice> deviceList) {
         if (devices != null) {
-            clearDevices();
+            clearList();
         }
 
         this.devices.addAll(deviceList);
     }
 
-    public void pushDevice(AbstractDevice device) {
-        if (isUniqueName(device.getName(), device.getId())) {
-            this.devices.add(device);
-        } else {
-            throw new DeviceNameIsNotUniqueException(new DeviceNamePatchRequest(device.getId(), device.getName()));
-        }
-    }
-
-    public List<AbstractDevice> getDevices() {
+    public List<AbstractDevice> getList() {
         return this.devices;
     }
 
-    public List<Thing> getDevicesAsThings() {
+    public List<Thing> getAsThings() {
         List<Thing> things = new ArrayList<>();
 
         for (AbstractDevice device: this.devices) {
@@ -57,41 +50,11 @@ public class AbstractDeviceList implements IThingListSubject, Serializable {
         return things;
     }
 
-    public List<AbstractDeviceDisplayRepresentation> getDisplayListRepresentation() {
-        List<AbstractDeviceDisplayRepresentation> displayRepresentation = new ArrayList<>();
-
-        for(AbstractDevice device: getDevices()) {
-            displayRepresentation.add(device.getDisplayRepresentation());
-        }
-
-        return displayRepresentation;
-    }
-
-    public void clearDevices() {
-        notifyObservers(ListModification.DELETION);
-        this.devices.clear();
-    }
-
-    ///
-    /// Let the client search for a device by
-    ///   (1) it's ID,
-    ///   (2) it's name
-    ///
-    public AbstractDevice getDeviceById(String identifier) {
-        for (AbstractDevice device: getDevices()) {
-            if (device.getId().toString().equals(identifier) || device.getName().equals(identifier.toLowerCase())) {
-                return device;
-            }
-        }
-
-        throw new DeviceIdNotFoundException(identifier);
-    }
-
-    public List<AbstractDevice> getDevicesById(List<UUID> identifiers) {
+    public List<AbstractDevice> getThingsById(List<UUID> identifiers) {
         List<AbstractDevice> results = new ArrayList<>();
 
         for(UUID identifier: identifiers) {
-            for (AbstractDevice device: getDevices()) {
+            for (AbstractDevice device: getList()) {
                 if (device.getId().equals(identifier)) {
                     results.add(device);
                 }
@@ -101,14 +64,50 @@ public class AbstractDeviceList implements IThingListSubject, Serializable {
         return results;
     }
 
-    public void checkIfIdIsPresent(String identifier) {
-        for (AbstractDevice device: getDevices()) {
+    public void clearList() {
+        notifyObservers(ListModification.DELETION);
+        this.devices.clear();
+    }
+
+    public List<AbstractDeviceDisplayRepresentation> getDisplayListRepresentation() {
+        List<AbstractDeviceDisplayRepresentation> displayRepresentation = new ArrayList<>();
+
+        for(AbstractDevice device: getList()) {
+            displayRepresentation.add(device.getDisplayRepresentation());
+        }
+
+        return displayRepresentation;
+    }
+
+    ///
+    /// Let the client search for a device by
+    ///   (1) it's ID,
+    ///   (2) it's name
+    ///
+    public AbstractDevice getThing(String identifier) {
+        for (AbstractDevice device: getList()) {
             if (device.getId().toString().equals(identifier) || device.getName().equals(identifier.toLowerCase())) {
-                return;
+                return device;
             }
         }
 
         throw new DeviceIdNotFoundException(identifier);
+    }
+
+    public void addThing(AbstractDevice device) {
+        if (isUniqueName(device.getName(), device.getId())) {
+            this.devices.add(device);
+        } else {
+            throw new DeviceNameIsNotUniqueException(new DeviceNamePatchRequest(device.getId(), device.getName()));
+        }
+    }
+
+    public void deleteThing(String identifier) {
+        for (AbstractDevice device: getList()) {
+            if (device.getId().toString().equals(identifier) || device.getName().equals(identifier.toLowerCase())) {
+                getList().remove(device); 
+            }
+        }
     }
 
     public boolean isUniqueName(String name, UUID id) {
@@ -135,6 +134,16 @@ public class AbstractDeviceList implements IThingListSubject, Serializable {
         return true;
     }
 
+    public void checkIfIdIsPresent(String identifier) {
+        for (AbstractDevice device: getList()) {
+            if (device.getId().toString().equals(identifier) || device.getName().equals(identifier.toLowerCase())) {
+                return;
+            }
+        }
+
+        throw new DeviceIdNotFoundException(identifier);
+    }
+
     ///
     /// Check whether the given request contains an unique (new) name.
     /// If the name is not unique, try and find another unique one by
@@ -146,7 +155,7 @@ public class AbstractDeviceList implements IThingListSubject, Serializable {
 
         // Does the field contain any letters, i.e., is it not empty?
         if (name.toString().trim().isEmpty()) {
-            name.replace(0, name.length(), getDeviceById(id.toString()).getDeviceName());
+            name.replace(0, name.length(), getThing(id.toString()).getDeviceName());
         }
 
         for (int i = 0; i < UNIQUE_QUERY_NAME_TIMEOUT; i++) {
@@ -154,7 +163,7 @@ public class AbstractDeviceList implements IThingListSubject, Serializable {
             if (isUniqueName(name.toString(), id)) {
                 return name.toString();
             } else {
-                name.replace(0, name.length(), getDeviceById(id.toString()).getDeviceName() + (i+1));
+                name.replace(0, name.length(), getThing(id.toString()).getDeviceName() + (i+1));
             }
         }
 
@@ -167,15 +176,15 @@ public class AbstractDeviceList implements IThingListSubject, Serializable {
         LinkEntry patch  = new LinkEntry(label, LinkBuilder.getDeviceListLink(), HttpAction.PATCH, List.of("application/json"));
         LinkEntry delete = new LinkEntry(label, LinkBuilder.getDeviceListLink(), HttpAction.DELETE, List.of());
 
-        if (getDevices().isEmpty() || getDevices().size() == 0) {
+        if (getList().isEmpty() || getList().size() == 0) {
             return new ArrayList<>(List.of(get, post));
         } else {
             return new ArrayList<>(List.of(get, patch, delete));
         }
     }
 
-    public void updateDeviceLinks() {
-        for (AbstractDevice device: getDevices()) {
+    public void updateLinks() {
+        for (AbstractDevice device: getList()) {
             device.setLinks();
         }
     }

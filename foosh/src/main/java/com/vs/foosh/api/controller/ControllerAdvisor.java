@@ -161,7 +161,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleVariableDevicePostException(VariableDevicePostException exception, WebRequest request) {
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
-                ListService.getVariableList().getVariable(exception.getVariableId().toString()).getDeviceLinks(),
+                ListService.getVariableList().getThing(exception.getVariableId().toString()).getDeviceLinks(),
                 exception.getStatus());
     }
 

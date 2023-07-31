@@ -69,7 +69,7 @@ public abstract class AbstractDeviceController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesPost(
             @RequestBody(required = false) SmartHomeCredentials credentials) {
-        if (ListService.getAbstractDeviceList().getDevices() == null || !ListService.getAbstractDeviceList().getDevices().isEmpty()) {
+        if (ListService.getAbstractDeviceList().getList() == null || !ListService.getAbstractDeviceList().getList().isEmpty()) {
 
             String message = "There are already registered devices! Please use PUT/PATCH on /devices/ to update the list.";
             Map<String, Object> responseBody = new HashMap<>();
@@ -90,8 +90,8 @@ public abstract class AbstractDeviceController {
                     apiResponse = fetchDevicesFromSmartHomeAPI(credentials);
                 }
 
-                ListService.getAbstractDeviceList().setDevices(apiResponse.getDevices());
-                ListService.getAbstractDeviceList().updateDeviceLinks();
+                ListService.getAbstractDeviceList().setList(apiResponse.getDevices());
+                ListService.getAbstractDeviceList().updateLinks();
 
                 PersistentDataService.saveDeviceList();
             } catch (ResourceAccessException rAccessException) {
@@ -129,7 +129,7 @@ public abstract class AbstractDeviceController {
     @DeleteMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesDelete() {
-        ListService.getAbstractDeviceList().clearDevices();
+        ListService.getAbstractDeviceList().clearList();
 
         PersistentDataService.deleteDeviceListSave();
         PersistentDataService.saveVariableList();
@@ -155,7 +155,7 @@ public abstract class AbstractDeviceController {
     @GetMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deviceGet(@PathVariable("id") String id) {
-        AbstractDevice device = ListService.getAbstractDeviceList().getDeviceById(id);
+        AbstractDevice device = ListService.getAbstractDeviceList().getThing(id);
 
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(device.getSelfLinks());
@@ -184,7 +184,7 @@ public abstract class AbstractDeviceController {
     public ResponseEntity<Object> devicePut(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
                 "You cannot use PUT on /devices/{id}! Either use PATCH to update or DELETE and POST to replace a device.",
-                ListService.getAbstractDeviceList().getDeviceById(id).getSelfLinks());
+                ListService.getAbstractDeviceList().getThing(id).getSelfLinks());
     }
 
     // TODO: Implement custom Json Patch
@@ -221,7 +221,7 @@ public abstract class AbstractDeviceController {
         if (patchDeviceName(new DeviceNamePatchRequest(uuid, name))) {
             PersistentDataService.saveDeviceList();
 
-            AbstractDevice device = ListService.getAbstractDeviceList().getDeviceById(uuid.toString());
+            AbstractDevice device = ListService.getAbstractDeviceList().getThing(uuid.toString());
             List<LinkEntry> links = new ArrayList<>();
             links.addAll(device.getSelfLinks());
             links.addAll(device.getExtLinks());
@@ -256,7 +256,7 @@ public abstract class AbstractDeviceController {
 
         // Is the name provided by the field unique?
         if (ListService.getAbstractDeviceList().isUniqueName(name, id)) {
-            ListService.getAbstractDeviceList().getDeviceById(id.toString()).setName(name);
+            ListService.getAbstractDeviceList().getThing(id.toString()).setName(name);
 
             return true;
         } else {

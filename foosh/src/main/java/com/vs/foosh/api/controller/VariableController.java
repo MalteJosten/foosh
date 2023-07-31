@@ -77,8 +77,8 @@ public class VariableController {
             variables.add(processPostRequest(subRequest));
         }
 
-        ListService.getVariableList().setVariables(variables);
-        ListService.getVariableList().updateVariableLinks();
+        ListService.getVariableList().setList(variables);
+        ListService.getVariableList().updateLinks();
 
         PersistentDataService.saveVariableList();
 
@@ -95,8 +95,8 @@ public class VariableController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> postSingleVar(@RequestBody VariablePostRequest request) {
-        ListService.getVariableList().pushVariable(processPostRequest(request));
-        ListService.getVariableList().updateVariableLinks();
+        ListService.getVariableList().addThing(processPostRequest(request));
+        ListService.getVariableList().updateLinks();
 
         PersistentDataService.saveVariableList();
 
@@ -156,13 +156,13 @@ public class VariableController {
     @DeleteMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteVars() {
-        ListService.getVariableList().clearVariables();
+        ListService.getVariableList().clearList();
 
         Map<String, String> linkBlock = new HashMap<>();
         linkBlock.put("self", LinkBuilder.getVariableListLink().toString());
 
         Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("variables", ListService.getVariableList().getVariables());
+        responseBody.put("variables", ListService.getVariableList().getList());
         responseBody.put("_links", linkBlock);
 
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
@@ -176,7 +176,7 @@ public class VariableController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getVar(@PathVariable("id") String id) {
 
-        Variable variable = ListService.getVariableList().getVariable(id);
+        Variable variable = ListService.getVariableList().getThing(id);
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("variable", variable.getDisplayRepresentation().getVariable());
         responseBody.put("_links", variable.getAllLinks());
@@ -196,7 +196,7 @@ public class VariableController {
     public ResponseEntity<Object> putVar(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
                 "You cannot use PUT on /vars/{id}! Either use PATCH to update or DELETE and POST to replace a variable.",
-                ListService.getVariableList().getVariable(id).getSelfLinks());
+                ListService.getVariableList().getThing(id).getSelfLinks());
     }
 
     // TODO: (Implement Paging)
@@ -215,7 +215,7 @@ public class VariableController {
             patches.add(patch);
         }    
 
-        Variable variable = ListService.getVariableList().getVariable(id);
+        Variable variable = ListService.getVariableList().getThing(id);
         for (FooSHJsonPatch patch: patches) {
             List<String> pathSegments = List.of("name");
             if (!patch.hasPath(pathSegments.toArray(new String[0]), true)) {
@@ -235,7 +235,7 @@ public class VariableController {
     @DeleteMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteVar(@PathVariable("id") String id) {
-        ListService.getVariableList().deleteVariable(id);
+        ListService.getVariableList().deleteThing(id);
 
         PersistentDataService.saveVariableList();
 
@@ -260,7 +260,7 @@ public class VariableController {
         // check whether there is a variable with the given id
         ListService.getVariableList().checkIfIdIsPresent(id);
         if (ListService.getVariableList().isUniqueName(patchName, uuid)) {
-            ListService.getVariableList().getVariable(id).setName(patchName);
+            ListService.getVariableList().getThing(id).setName(patchName);
             return true;
         }
         return false;
@@ -275,11 +275,11 @@ public class VariableController {
     @GetMapping(value = "/{id}/devices/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getVarDevices(@PathVariable("id") String id) {
-        Variable variable = ListService.getVariableList().getVariable(id);
+        Variable variable = ListService.getVariableList().getThing(id);
         List<AbstractDeviceResponseObject> devices = new ArrayList<>();
 
         for (UUID deviceId: variable.getDeviceIds()) {
-            devices.add(ListService.getAbstractDeviceList().getDeviceById(deviceId.toString()).getDisplayRepresentation().getDevice());
+            devices.add(ListService.getAbstractDeviceList().getThing(deviceId.toString()).getDisplayRepresentation().getDevice());
         }
 
         List<LinkEntry> links = new ArrayList<>();
@@ -300,7 +300,7 @@ public class VariableController {
         List<UUID> deviceIds = new ArrayList<>(new HashSet<>(request.getDevices()));
 
         for (UUID deviceId: deviceIds) {
-            if(!IdService.isUuidInList(deviceId, ListService.getAbstractDeviceList().getDevices())) {
+            if(!IdService.isUuidInList(deviceId, ListService.getAbstractDeviceList().getList())) {
                 throw new VariableDevicePostException(
                     id,
                     deviceId,
@@ -310,7 +310,7 @@ public class VariableController {
             }
         }
 
-        Variable variable = ListService.getVariableList().getVariable(id);
+        Variable variable = ListService.getVariableList().getThing(id);
 
         variable.setDevices(deviceIds);
 
@@ -326,7 +326,7 @@ public class VariableController {
     @PutMapping(value = "/{id}/devices/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> putVarDevices(@PathVariable("id") String id) {
-        Variable variable = ListService.getVariableList().getVariable(id);
+        Variable variable = ListService.getVariableList().getThing(id);
 
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(variable.getSelfLinks());
@@ -344,7 +344,7 @@ public class VariableController {
         // check whether there is a device with the given id
         ListService.getVariableList().checkIfIdIsPresent(id);
 
-        Variable variable = ListService.getVariableList().getVariable(id);
+        Variable variable = ListService.getVariableList().getThing(id);
 
         // Convert patchMappings to FooSHJsonPatches
         List<FooSHJsonPatch> patches = new ArrayList<>();
@@ -438,11 +438,11 @@ public class VariableController {
     @DeleteMapping(value = "/{id}/devices/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deletVarDevices(@PathVariable("id") String id) {
-        ListService.getVariableList().getVariable(id).clearDevices();
+        ListService.getVariableList().getThing(id).clearDevices();
 
         PersistentDataService.saveAll();
 
-        Variable variable = ListService.getVariableList().getVariable(id);
+        Variable variable = ListService.getVariableList().getThing(id);
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(variable.getSelfLinks());
         links.addAll(variable.getDeviceLinks());
