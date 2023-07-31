@@ -200,7 +200,6 @@ public class VariableController {
     }
 
     // TODO: (Implement Paging)
-    // TODO: Implement custom Json Patch
     @PatchMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> patchVar(@PathVariable("id") String id, @RequestBody List<Map<String, String>> patchMappings) {

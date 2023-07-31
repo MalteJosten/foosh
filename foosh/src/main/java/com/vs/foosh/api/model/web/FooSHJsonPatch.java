@@ -31,7 +31,7 @@ public class FooSHJsonPatch {
     public void validateRequest(List<FooSHPatchOperation> allowedOperations) {
         String operationField = request.get("op");
 
-        // Does the Patch contains a valid operation?
+        // Does the Patch contain a valid operation?
         try {
             operation = FooSHPatchOperation.valueOf(operationField.toUpperCase());
         } catch (IllegalArgumentException e) {
