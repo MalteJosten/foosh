@@ -25,8 +25,6 @@ public class LinkBuilder {
             .port(port);
 
         for (int i = 0; i < paths.size(); i++) {
-            String segment = paths.get(i);
-            segment = segment.replace(" ", "%20");
             StringBuilder toAppend = new StringBuilder(paths.get(i));
 
             if (i != (paths.size() - 1)) {
@@ -54,7 +52,6 @@ public class LinkBuilder {
 
 
     public static URI getDeviceLink(String identifier) {
-        identifier = identifier.replace(" ", "%20");
         UriComponents uri = UriComponentsBuilder
             .newInstance()
             .scheme("http")
@@ -92,7 +89,6 @@ public class LinkBuilder {
     }
 
     public static URI getVariableLink(String identifier) {
-        identifier = identifier.replace(" ", "%20");
         UriComponents uri = UriComponentsBuilder
             .newInstance()
             .scheme("http")
