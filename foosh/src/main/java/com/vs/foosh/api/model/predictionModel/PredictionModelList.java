@@ -41,7 +41,7 @@ public class PredictionModelList implements Serializable, IThingList<AbstractPre
     @Override
     public List<PredictionModelDisplayRepresentation> getDisplayListRepresentation() {
         List<PredictionModelDisplayRepresentation> displayRepresentations = new ArrayList<>();
-        for (AbstractPredictionModel model: ListService.getAbstractPredictionModelList().getList()) {
+        for (AbstractPredictionModel model: ListService.getPredictionModelList().getList()) {
             displayRepresentations.add(new PredictionModelDisplayRepresentation(model));
         }
 
@@ -56,8 +56,9 @@ public class PredictionModelList implements Serializable, IThingList<AbstractPre
 
     @Override
     public void addThing(AbstractPredictionModel thing) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addThing'");
+        if (!models.contains(thing)) {
+            models.add(thing);
+        }
     }
 
     @Override

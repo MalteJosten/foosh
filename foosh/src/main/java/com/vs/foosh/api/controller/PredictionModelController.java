@@ -27,11 +27,11 @@ public class PredictionModelController {
     @GetMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modelsGet() {
-        AbstractMap.SimpleEntry<String, Object> result = new AbstractMap.SimpleEntry<String, Object>("prediction_models", ListService.getAbstractPredictionModelList().getDisplayListRepresentation());
+        AbstractMap.SimpleEntry<String, Object> result = new AbstractMap.SimpleEntry<String, Object>("prediction_models", ListService.getPredictionModelList().getDisplayListRepresentation());
 
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put(result.getKey(), result.getValue());
-        responseBody.put("_links", ListService.getAbstractPredictionModelList().getLinks("self"));
+        responseBody.put("_links", ListService.getPredictionModelList().getLinks("self"));
 
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
@@ -42,7 +42,7 @@ public class PredictionModelController {
     public ResponseEntity<Object> modelsPost() {
         throw new HttpMappingNotAllowedException(
                 "You cannot use POST on /models/! Use GET on /models/ to get the list of available models.",
-                ListService.getAbstractPredictionModelList().getLinks("self"));
+                ListService.getPredictionModelList().getLinks("self"));
     }
 
     @PutMapping(value = "/",
@@ -50,7 +50,7 @@ public class PredictionModelController {
     public ResponseEntity<Object> modelsPut() {
         throw new HttpMappingNotAllowedException(
                 "You cannot use PUT on /devices/! Use DELETE and POST to replace the list of devices.",
-                ListService.getAbstractPredictionModelList().getLinks("self"));
+                ListService.getPredictionModelList().getLinks("self"));
     }
 
     @PatchMapping(value = "/",
@@ -58,7 +58,7 @@ public class PredictionModelController {
     public ResponseEntity<Object> modelsPatch() {
         throw new HttpMappingNotAllowedException(
                 "You cannot use PATCH on /devices/! Either use PATCH on /devices/{id} to update the device's name or DELETE and POST to replace the list of devices.",
-                ListService.getAbstractPredictionModelList().getLinks("self"));
+                ListService.getPredictionModelList().getLinks("self"));
     }
 
     @DeleteMapping(value = "/",
@@ -66,7 +66,7 @@ public class PredictionModelController {
     public ResponseEntity<Object> modelsDelete() {
         throw new HttpMappingNotAllowedException(
                 "You cannot use POST on /models/! Use GET on /models/ to get the list of available models.",
-                ListService.getAbstractPredictionModelList().getLinks("self"));
+                ListService.getPredictionModelList().getLinks("self"));
     }
 
 
@@ -79,7 +79,7 @@ public class PredictionModelController {
     public ResponseEntity<Object> modelGet(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
                 "You cannot use POST on /models/! Use GET on /models/ to get the list of available models.",
-                ListService.getAbstractPredictionModelList().getLinks("self"));
+                ListService.getPredictionModelList().getLinks("self"));
     }
 
     @PostMapping(value = "/{id}",
@@ -87,7 +87,7 @@ public class PredictionModelController {
     public ResponseEntity<Object> modelPost(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
                 "You cannot use POST on /models/! Use GET on /models/ to get the list of available models.",
-                ListService.getAbstractPredictionModelList().getLinks("self"));
+                ListService.getPredictionModelList().getLinks("self"));
     }
 
     @PutMapping(value = "/{id}",
@@ -95,7 +95,7 @@ public class PredictionModelController {
     public ResponseEntity<Object> modelPut(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
                 "You cannot use PUT on /devices/{id}! Either use PATCH to update or DELETE and POST to replace a device.",
-                ListService.getAbstractPredictionModelList().getThing(id).getSelfLinks());
+                ListService.getPredictionModelList().getThing(id).getSelfLinks());
     }
 
     // TODO: Implement custom Json Patch
@@ -105,13 +105,13 @@ public class PredictionModelController {
     public ResponseEntity<Object> modelPatch(@PathVariable("id") String id, @RequestBody Map<String, String> requestBody) {
         throw new HttpMappingNotAllowedException(
                 "You cannot use POST on /models/! Use GET on /models/ to get the list of available models.",
-                ListService.getAbstractPredictionModelList().getLinks("self"));
+                ListService.getPredictionModelList().getLinks("self"));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> modelDelete(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
                 "You cannot use POST on /models/! Use GET on /models/ to get the list of available models.",
-                ListService.getAbstractPredictionModelList().getLinks("self"));
+                ListService.getPredictionModelList().getLinks("self"));
     }
 }

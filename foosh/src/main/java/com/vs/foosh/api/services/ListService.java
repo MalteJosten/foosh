@@ -33,7 +33,7 @@ public class ListService {
         variables = newVariables;
     }
 
-    public static PredictionModelList getAbstractPredictionModelList() {
+    public static PredictionModelList getPredictionModelList() {
         if (predictionModels == null) {
             predictionModels = new PredictionModelList();
         }
@@ -41,7 +41,7 @@ public class ListService {
         return predictionModels;
     }
 
-    public static void setAbstractPredictionModelList(PredictionModelList newPredictionModels) {
+    public static void setPredictionModelList(PredictionModelList newPredictionModels) {
         predictionModels = newPredictionModels;
     }
 
