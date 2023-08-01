@@ -1,10 +1,7 @@
 package com.vs.foosh.api.model.predictionModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.FooSHJsonPatch;
@@ -15,7 +12,7 @@ import com.vs.foosh.api.services.LinkBuilder;
 import com.vs.foosh.api.services.ListService;
 
 public abstract class AbstractPredictionModel extends Thing {
-    private Map<String, UUID> parameterMapping = new HashMap<>();
+    private List<ParameterMapping> parameterMapping = new ArrayList<>();
 
     protected List<LinkEntry> links = new ArrayList<>();
     protected List<LinkEntry> deviceLinks = new ArrayList<>();
@@ -26,12 +23,13 @@ public abstract class AbstractPredictionModel extends Thing {
         return new ArrayList<>();
     }
 
-    public Map<String, UUID> getMapping() {
+    public List<ParameterMapping> getMapping() {
         return this.parameterMapping;
     }
 
-    public void setMapping(Map<String, UUID> mapping) {
-        this.parameterMapping = mapping;
+    public void setMapping(List<ParameterMapping> mapping) {
+        this.parameterMapping.clear();
+        this.parameterMapping.addAll(mapping);
     }
 
     public void patchMapping(FooSHJsonPatch patch) {
@@ -79,8 +77,8 @@ public abstract class AbstractPredictionModel extends Thing {
             deviceLinks.clear();
         }
 
-        for (UUID deviceId: parameterMapping.values()) {
-            deviceLinks.addAll(ListService.getDeviceList().getThing(deviceId.toString()).getSelfStaticLinks("device"));
+        for (ParameterMapping mapping: parameterMapping) {
+            deviceLinks.addAll(ListService.getDeviceList().getThing(mapping.getDeviceId().toString()).getSelfStaticLinks("device"));
         }
     }
 

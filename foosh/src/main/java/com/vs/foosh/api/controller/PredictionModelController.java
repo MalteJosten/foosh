@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
 import com.vs.foosh.api.model.device.DeviceResponseObject;
 import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
+import com.vs.foosh.api.model.predictionModel.ParameterMapping;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.ListService;
 
@@ -133,7 +134,7 @@ public class PredictionModelController {
     public ResponseEntity<Object> getModelDevices(@PathVariable("id") String id) {
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
 
-        Map<String, UUID> mapping = model.getMapping();
+        List<ParameterMapping> mapping = model.getMapping();
 
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(model.getSelfLinks());
