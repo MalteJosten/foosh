@@ -14,10 +14,10 @@ public class PredictionModelSR extends AbstractPredictionModel {
         this.id   = UUID.randomUUID();
         this.name = "Symbolic Regression Model";
 
-        updateLinks();
-
         ParameterMapping mapping = new ParameterMapping("x1", UUID.fromString("3bd47c41-a21b-4769-a177-33088646bf48"));
         setMapping(List.of(mapping));
+
+        updateLinks();
     }
 
     @Override
