@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.vs.foosh.api.exceptions.variable.VariableNotFoundException;
 import com.vs.foosh.api.model.misc.IThingList;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.HttpAction;
@@ -50,8 +51,14 @@ public class PredictionModelList implements Serializable, IThingList<AbstractPre
 
     @Override
     public AbstractPredictionModel getThing(String identifier) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getThing'");
+        for (AbstractPredictionModel model: getList()) {
+            System.out.println(identifier);
+            if (model.getId().toString().equals(identifier) || model.getName().toLowerCase().equals(identifier.toLowerCase().replace("%20", " "))) {
+                return model;
+            }
+        }
+
+        throw new VariableNotFoundException(identifier);
     }
 
     @Override

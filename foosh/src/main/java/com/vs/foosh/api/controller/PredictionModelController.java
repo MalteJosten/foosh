@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
+import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
 import com.vs.foosh.api.services.ListService;
 
 @RestController
@@ -77,9 +78,11 @@ public class PredictionModelController {
     @GetMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modelGet(@PathVariable("id") String id) {
-        throw new HttpMappingNotAllowedException(
-                "You cannot use POST on /models/! Use GET on /models/ to get the list of available models.",
-                ListService.getPredictionModelList().getLinks("self"));
+        AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("prediction_model", model.getDisplayRepresentation().getModel());
+        responseBody.put("_links", model.getAllLinks());
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
     @PostMapping(value = "/{id}",

@@ -5,7 +5,9 @@ import com.vs.foosh.api.model.misc.Thing;
 // TODO: @Override toString()
 public class PredictionModelResponseObject extends Thing {
 
-    public PredictionModelResponseObject() {
+    public PredictionModelResponseObject(AbstractPredictionModel model) {
+        this.id   = model.getId();
+        this.name = model.getName();
     }
 
 }

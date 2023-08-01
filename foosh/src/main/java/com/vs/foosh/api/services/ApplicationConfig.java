@@ -136,7 +136,7 @@ public class ApplicationConfig {
     }
 
     private static void setupPredictionModels() {
-        ListService.getAbstractPredictionModelList().addThing(new PredictionModelSR());
+        ListService.getPredictionModelList().addThing(new PredictionModelSR());
     }
 
     public static SmartHomeCredentials getSmartHomeCredentials() {

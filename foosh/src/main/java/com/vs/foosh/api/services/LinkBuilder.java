@@ -120,7 +120,6 @@ public class LinkBuilder {
     }
 
     public static URI getPredictionModelLink(String identifier) {
-        identifier = identifier.replace(" ", "%20");
         UriComponents uri = UriComponentsBuilder
             .newInstance()
             .scheme("http")

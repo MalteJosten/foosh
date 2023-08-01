@@ -10,11 +10,11 @@ public class PredictionModelDisplayRepresentation {
     private List<LinkEntry> links;
 
     public PredictionModelDisplayRepresentation(AbstractPredictionModel model) {
-        this.model = new PredictionModelResponseObject();
+        this.model = new PredictionModelResponseObject(model);
         this.links = model.getSelfLinks();
     }
 
-    public PredictionModelResponseObject getResponseObject() {
+    public PredictionModelResponseObject getModel() {
         return this.model;
     }
 
