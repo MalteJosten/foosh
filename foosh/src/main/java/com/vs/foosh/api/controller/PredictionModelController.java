@@ -1,8 +1,11 @@
 package com.vs.foosh.api.controller;
 
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
+import com.vs.foosh.api.model.device.DeviceResponseObject;
 import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
+import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.ListService;
 
 @RestController
@@ -42,7 +47,7 @@ public class PredictionModelController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modelsPost() {
         throw new HttpMappingNotAllowedException(
-                "You cannot use POST on /models/! Use GET on /models/ to get the list of available models.",
+                "Not implemented",
                 ListService.getPredictionModelList().getLinks("self"));
     }
 
@@ -66,7 +71,7 @@ public class PredictionModelController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modelsDelete() {
         throw new HttpMappingNotAllowedException(
-                "You cannot use POST on /models/! Use GET on /models/ to get the list of available models.",
+                "Not implemented",
                 ListService.getPredictionModelList().getLinks("self"));
     }
 
@@ -89,7 +94,7 @@ public class PredictionModelController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modelPost(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
-                "You cannot use POST on /models/! Use GET on /models/ to get the list of available models.",
+                "Not implemented",
                 ListService.getPredictionModelList().getLinks("self"));
     }
 
@@ -107,14 +112,81 @@ public class PredictionModelController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modelPatch(@PathVariable("id") String id, @RequestBody Map<String, String> requestBody) {
         throw new HttpMappingNotAllowedException(
-                "You cannot use POST on /models/! Use GET on /models/ to get the list of available models.",
+                "Not implemented",
                 ListService.getPredictionModelList().getLinks("self"));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> modelDelete(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
-                "You cannot use POST on /models/! Use GET on /models/ to get the list of available models.",
+                "Not implemented",
                 ListService.getPredictionModelList().getLinks("self"));
     }
+    
+    ///
+    /// Devices
+    ///
+
+    // TODO: Implement Paging
+    @GetMapping(value = "/{id}/devices/",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getModelDevices(@PathVariable("id") String id) {
+        AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
+        List<DeviceResponseObject> devices = new ArrayList<>();
+
+        for (UUID deviceId: model.getMapping().values()) {
+            devices.add(ListService.getDeviceList().getThing(deviceId.toString()).getDisplayRepresentation().getDevice());
+        }
+
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(model.getSelfLinks());
+        links.addAll(model.getDeviceLinks());
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("devices", devices);
+        responseBody.put("_links", links);
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
+    }
+
+    // TODO: Implement Paging
+    @PostMapping(value = "/{id}/devices/",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> postModelDevices(@PathVariable("id") String id) {
+        throw new HttpMappingNotAllowedException(
+                "Not implemented",
+                ListService.getPredictionModelList().getLinks("self"));
+
+    }
+
+    @PutMapping(value = "/{id}/devices/",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> putModelDevices(@PathVariable("id") String id) {
+        AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
+
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(model.getSelfLinks());
+        links.addAll(model.getDeviceLinks());
+
+        throw new HttpMappingNotAllowedException(
+                "You cannot use PUT on /models/{id}/mapping/! Use DELETE and POST to replace the current mapping.",
+                links);
+    }
+    
+    // TODO: (Implement custom Json Patch)
+    @PatchMapping(value = "/{id}/devices/",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> patchModelDevices(@PathVariable("id") String id, @RequestBody List<Map<String, String>> patchMappings) {
+        throw new HttpMappingNotAllowedException(
+                "Not implemented",
+                ListService.getPredictionModelList().getLinks("self"));
+    }
+
+    @DeleteMapping(value = "/{id}/devices/",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> deleteModelDevices(@PathVariable("id") String id) {
+        throw new HttpMappingNotAllowedException(
+                "Not implemented",
+                ListService.getPredictionModelList().getLinks("self"));
+    }
+
 }

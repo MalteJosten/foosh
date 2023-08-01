@@ -437,7 +437,7 @@ public class VariableController {
 
     @DeleteMapping(value = "/{id}/devices/",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> deletVarDevices(@PathVariable("id") String id) {
+    public ResponseEntity<Object> deleteVarDevices(@PathVariable("id") String id) {
         ListService.getVariableList().getThing(id).clearDevices();
 
         PersistentDataService.saveAll();
