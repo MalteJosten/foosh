@@ -5,7 +5,6 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vs.foosh.api.model.web.LinkEntry;
 
-// TODO: @Override toString()
 public class AbstractPredictionModelDisplayRepresentation {
     private AbstractPredictionModelResponseObject model;
     private List<LinkEntry> links;
@@ -22,5 +21,14 @@ public class AbstractPredictionModelDisplayRepresentation {
     @JsonProperty("_links")
     public List<LinkEntry> getLinks() {
         return this.links;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("<< AbstractPredictionModelDisplayRepresentation >>");
+        builder.append("model:\t" + model + "\n");
+        builder.append("links:\t" + links);
+        
+        return builder.toString();
     }
 }

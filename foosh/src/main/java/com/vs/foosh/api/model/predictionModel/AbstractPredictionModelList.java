@@ -1,14 +1,19 @@
 package com.vs.foosh.api.model.predictionModel;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import com.vs.foosh.api.model.misc.IThingList;
 import com.vs.foosh.api.model.misc.Thing;
+import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
+import com.vs.foosh.api.services.LinkBuilder;
+import com.vs.foosh.api.services.ListService;
 
 public class AbstractPredictionModelList implements Serializable, IThingList<AbstractPredictionModel, AbstractPredictionModelDisplayRepresentation>{
+    private List<AbstractPredictionModel> models = new ArrayList<>();
 
     @Override
     public void setList(List<AbstractPredictionModel> thingList) {
@@ -18,8 +23,7 @@ public class AbstractPredictionModelList implements Serializable, IThingList<Abs
 
     @Override
     public List<AbstractPredictionModel> getList() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getList'");
+        return this.models;
     }
 
     @Override
@@ -36,8 +40,12 @@ public class AbstractPredictionModelList implements Serializable, IThingList<Abs
 
     @Override
     public List<AbstractPredictionModelDisplayRepresentation> getDisplayListRepresentation() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getDisplayListRepresentation'");
+        List<AbstractPredictionModelDisplayRepresentation> displayRepresentations = new ArrayList<>();
+        for (AbstractPredictionModel model: ListService.getAbstractPredictionModelList().getList()) {
+            displayRepresentations.add(new AbstractPredictionModelDisplayRepresentation(model));
+        }
+
+        return displayRepresentations;
     }
 
     @Override
@@ -72,8 +80,9 @@ public class AbstractPredictionModelList implements Serializable, IThingList<Abs
 
     @Override
     public List<LinkEntry> getLinks(String label) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getLinks'");
+        LinkEntry get = new LinkEntry(label, LinkBuilder.getPredictionModelListLink(), HttpAction.GET, List.of());
+
+        return new ArrayList<>(List.of(get));
     }
 
     @Override

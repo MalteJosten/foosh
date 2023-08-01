@@ -103,7 +103,20 @@ public class LinkBuilder {
         return uri.toUri();
     }
 
-    public static URI getModelLink(UUID id) {
+    public static URI getPredictionModelListLink() {
+        UriComponents uri = UriComponentsBuilder
+            .newInstance()
+            .scheme("http")
+            .host(host)
+            .port(port)
+            .path("api/")
+            .path("models/")
+            .build();
+
+        return uri.toUri();
+    }
+
+    public static URI getPredictionModelLink(UUID id) {
         UriComponents uri = UriComponentsBuilder
             .newInstance()
             .scheme("http")
