@@ -64,7 +64,7 @@ public class VariableList implements Serializable, IThingList<Variable, Variable
 
     public Variable getThing(String identifier) {
         for (Variable variable: getList()) {
-            if (variable.getId().toString().equals(identifier) || variable.getName().equals(identifier.toLowerCase())) {
+            if (variable.getId().toString().equals(identifier) || variable.getName().equals(identifier.toLowerCase().replace("%20", " "))) {
                 return variable;
             }
         }
@@ -78,7 +78,7 @@ public class VariableList implements Serializable, IThingList<Variable, Variable
 
     public void deleteThing(String identifier) {
         for (Variable variable: getList()) {
-            if (variable.getId().toString().equals(identifier) || variable.getName().equals(identifier)) {
+            if (variable.getId().toString().equals(identifier) || variable.getName().equals(identifier.toLowerCase().replace("%20", " "))) {
                 getList().remove(variable);
                 return;
             }
@@ -96,7 +96,7 @@ public class VariableList implements Serializable, IThingList<Variable, Variable
         } catch (IllegalArgumentException e) {
             for (Variable variable: this.variables) {
                 // Check whether the name is already used
-                if (variable.getName().equals(name)) {
+                if (variable.getName().equals(name.toLowerCase().replace("%20", " "))) {
                     // If it's already used, check whether it's the same variable.
                     if (variable.getId().equals(id)) {
                         return true;

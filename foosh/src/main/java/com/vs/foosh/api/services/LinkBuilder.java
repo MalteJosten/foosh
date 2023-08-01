@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -26,6 +25,8 @@ public class LinkBuilder {
             .port(port);
 
         for (int i = 0; i < paths.size(); i++) {
+            String segment = paths.get(i);
+            segment = segment.replace(" ", "%20");
             StringBuilder toAppend = new StringBuilder(paths.get(i));
 
             if (i != (paths.size() - 1)) {
@@ -53,6 +54,7 @@ public class LinkBuilder {
 
 
     public static URI getDeviceLink(String identifier) {
+        identifier = identifier.replace(" ", "%20");
         UriComponents uri = UriComponentsBuilder
             .newInstance()
             .scheme("http")
@@ -90,6 +92,7 @@ public class LinkBuilder {
     }
 
     public static URI getVariableLink(String identifier) {
+        identifier = identifier.replace(" ", "%20");
         UriComponents uri = UriComponentsBuilder
             .newInstance()
             .scheme("http")
@@ -116,7 +119,8 @@ public class LinkBuilder {
         return uri.toUri();
     }
 
-    public static URI getPredictionModelLink(UUID id) {
+    public static URI getPredictionModelLink(String identifier) {
+        identifier = identifier.replace(" ", "%20");
         UriComponents uri = UriComponentsBuilder
             .newInstance()
             .scheme("http")
@@ -124,7 +128,7 @@ public class LinkBuilder {
             .port(port)
             .path("api/")
             .path("models/")
-            .path(id.toString())
+            .path(identifier)
             .build();
 
         return uri.toUri();

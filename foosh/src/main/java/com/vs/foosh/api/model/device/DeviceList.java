@@ -86,7 +86,7 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
     ///
     public AbstractDevice getThing(String identifier) {
         for (AbstractDevice device: getList()) {
-            if (device.getId().toString().equals(identifier) || device.getName().equals(identifier.toLowerCase())) {
+            if (device.getId().toString().equals(identifier) || device.getName().equals(identifier.toLowerCase().replace("%20", " "))) {
                 return device;
             }
         }
@@ -104,7 +104,7 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
 
     public void deleteThing(String identifier) {
         for (AbstractDevice device: getList()) {
-            if (device.getId().toString().equals(identifier) || device.getName().equals(identifier.toLowerCase())) {
+            if (device.getId().toString().equals(identifier) || device.getName().equals(identifier.toLowerCase().replace("%20", " "))) {
                 getList().remove(device); 
             }
         }
@@ -119,7 +119,7 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
         } catch (IllegalArgumentException e) {
             for (AbstractDevice d: this.devices) {
                 // Check whether the name is already used
-                if (d.getName().equals(name)) {
+                if (d.getName().equals(name.toLowerCase().replace("%20", " "))) {
                     // If it's already used, check whether it's the same device.
                     if (d.getId().equals(id)) {
                         return true;
@@ -136,7 +136,7 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
 
     public void checkIfIdIsPresent(String identifier) {
         for (AbstractDevice device: getList()) {
-            if (device.getId().toString().equals(identifier) || device.getName().equals(identifier.toLowerCase())) {
+            if (device.getId().toString().equals(identifier) || device.getName().equals(identifier.toLowerCase().replace("%20", " "))) {
                 return;
             }
         }
