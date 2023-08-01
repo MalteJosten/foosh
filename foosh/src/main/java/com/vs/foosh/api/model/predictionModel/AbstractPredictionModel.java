@@ -12,11 +12,13 @@ import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.model.web.SmartHomeInstruction;
 import com.vs.foosh.api.services.LinkBuilder;
+import com.vs.foosh.api.services.ListService;
 
 public abstract class AbstractPredictionModel extends Thing {
     private Map<String, UUID> parameterMapping = new HashMap<>();
 
     protected List<LinkEntry> links = new ArrayList<>();
+    protected List<LinkEntry> deviceLinks = new ArrayList<>();
 
     /// This is a default implementation.
     /// Needs to be overwritten!
@@ -44,11 +46,21 @@ public abstract class AbstractPredictionModel extends Thing {
         return this.links;
     }
 
+    public List<LinkEntry> getDeviceLinks() {
+        return this.deviceLinks;
+    }
+
     public List<LinkEntry> getAllLinks() {
         List<LinkEntry> allLinks = new ArrayList<>();
-        allLinks.addAll(links);
+        allLinks.addAll(this.links);
+        allLinks.addAll(this.deviceLinks);
 
         return allLinks;
+    }
+
+    public void updateLinks() {
+        updateSelfLinks();
+        updateDeviceLinks();
     }
 
     protected void updateSelfLinks() {
@@ -60,6 +72,16 @@ public abstract class AbstractPredictionModel extends Thing {
         }
 
         links.addAll(List.of(getId, getName));
+    }
+
+    protected void updateDeviceLinks() {
+        if (deviceLinks != null || !deviceLinks.isEmpty()) {
+            deviceLinks.clear();
+        }
+
+        for (UUID deviceId: parameterMapping.values()) {
+            deviceLinks.addAll(ListService.getDeviceList().getThing(deviceId.toString()).getSelfStaticLinks("device"));
+        }
     }
 
     public PredictionModelDisplayRepresentation getDisplayRepresentation() {

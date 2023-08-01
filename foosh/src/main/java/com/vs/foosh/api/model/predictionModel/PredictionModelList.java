@@ -52,7 +52,6 @@ public class PredictionModelList implements Serializable, IThingList<AbstractPre
     @Override
     public AbstractPredictionModel getThing(String identifier) {
         for (AbstractPredictionModel model: getList()) {
-            System.out.println(identifier);
             if (model.getId().toString().equals(identifier) || model.getName().toLowerCase().equals(identifier.toLowerCase().replace("%20", " "))) {
                 return model;
             }
