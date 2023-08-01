@@ -113,8 +113,8 @@ public abstract class AbstractDevice extends Thing {
         return LinkBuilder.getRootLinkEntry().getLink();
     }
 
-    public AbstractDeviceDisplayRepresentation getDisplayRepresentation() {
-        return new AbstractDeviceDisplayRepresentation(this);
+    public DeviceDisplayRepresentation getDisplayRepresentation() {
+        return new DeviceDisplayRepresentation(this);
     }
 
     // TODO: Add Variable Header

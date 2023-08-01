@@ -18,13 +18,13 @@ import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilder;
 
 // TODO: @Override toString()
-public class AbstractDeviceList implements IThingListSubject, IThingList<AbstractDevice, AbstractDeviceDisplayRepresentation>, Serializable {
+public class DeviceList implements IThingListSubject, IThingList<AbstractDevice, DeviceDisplayRepresentation>, Serializable {
     private List<AbstractDevice> devices;
     private final int UNIQUE_QUERY_NAME_TIMEOUT = 25;
 
     private List<IThingListObserver> observers = new ArrayList<>();
 
-    public AbstractDeviceList() {
+    public DeviceList() {
         this.devices = new ArrayList<>();
     }
 
@@ -69,8 +69,8 @@ public class AbstractDeviceList implements IThingListSubject, IThingList<Abstrac
         this.devices.clear();
     }
 
-    public List<AbstractDeviceDisplayRepresentation> getDisplayListRepresentation() {
-        List<AbstractDeviceDisplayRepresentation> displayRepresentation = new ArrayList<>();
+    public List<DeviceDisplayRepresentation> getDisplayListRepresentation() {
+        List<DeviceDisplayRepresentation> displayRepresentation = new ArrayList<>();
 
         for(AbstractDevice device: getList()) {
             displayRepresentation.add(device.getDisplayRepresentation());

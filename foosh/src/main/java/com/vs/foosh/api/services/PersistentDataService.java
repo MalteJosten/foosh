@@ -12,7 +12,7 @@ import java.nio.file.StandardCopyOption;
 import com.vs.foosh.api.exceptions.misc.CouldNotDeleteCollectionException;
 import com.vs.foosh.api.exceptions.misc.SaveFileNotFoundException;
 import com.vs.foosh.api.exceptions.misc.SavingToFileIOException;
-import com.vs.foosh.api.model.device.AbstractDeviceList;
+import com.vs.foosh.api.model.device.DeviceList;
 import com.vs.foosh.api.model.misc.ReadSaveFileResult;
 import com.vs.foosh.api.model.variable.VariableList;
 
@@ -33,10 +33,10 @@ public class PersistentDataService {
         }
     } 
 
-    public static ReadSaveFileResult<AbstractDeviceList> hasSavedDeviceList() {
-        ReadSaveFileResult<AbstractDeviceList> result = new ReadSaveFileResult<>();
+    public static ReadSaveFileResult<DeviceList> hasSavedDeviceList() {
+        ReadSaveFileResult<DeviceList> result = new ReadSaveFileResult<>();
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ApplicationConfig.getDeviceSavePath().toFile()))) {
-            AbstractDeviceList list = (AbstractDeviceList) ois.readObject();
+            DeviceList list = (DeviceList) ois.readObject();
             result.setData(list);
             result.setSuccess(true);
         } catch (IOException e) {

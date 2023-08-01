@@ -1,23 +1,23 @@
 package com.vs.foosh.api.services;
 
-import com.vs.foosh.api.model.device.AbstractDeviceList;
-import com.vs.foosh.api.model.predictionModel.AbstractPredictionModelList;
+import com.vs.foosh.api.model.device.DeviceList;
+import com.vs.foosh.api.model.predictionModel.PredictionModelList;
 import com.vs.foosh.api.model.variable.VariableList;
 
 public class ListService {
-    private static AbstractDeviceList abstractDevices;
+    private static DeviceList abstractDevices;
     private static VariableList variables;
-    private static AbstractPredictionModelList abstractPredictionModels;
+    private static PredictionModelList abstractPredictionModels;
     
-    public static AbstractDeviceList getAbstractDeviceList() {
+    public static DeviceList getAbstractDeviceList() {
         if (abstractDevices == null) {
-            abstractDevices = new AbstractDeviceList();
+            abstractDevices = new DeviceList();
         }
 
         return abstractDevices;
     }
 
-    public static void setAbstractDeviceList(AbstractDeviceList newDevices) {
+    public static void setAbstractDeviceList(DeviceList newDevices) {
         abstractDevices = newDevices;
     }
 
@@ -33,15 +33,15 @@ public class ListService {
         variables = newVariables;
     }
 
-    public static AbstractPredictionModelList getAbstractPredictionModelList() {
+    public static PredictionModelList getAbstractPredictionModelList() {
         if (abstractPredictionModels == null) {
-            abstractPredictionModels = new AbstractPredictionModelList();
+            abstractPredictionModels = new PredictionModelList();
         }
 
         return abstractPredictionModels;
     }
 
-    public static void setAbstractPredictionModelList(AbstractPredictionModelList newPredictionModels) {
+    public static void setAbstractPredictionModelList(PredictionModelList newPredictionModels) {
         abstractPredictionModels = newPredictionModels;
     }
 

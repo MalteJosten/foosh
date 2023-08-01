@@ -22,7 +22,7 @@ import com.vs.foosh.api.services.ListService;
 
 @RestController
 @RequestMapping(value = "/api/models")
-public class AbstractPredictionModelController {
+public class PredictionModelController {
 
     @GetMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)

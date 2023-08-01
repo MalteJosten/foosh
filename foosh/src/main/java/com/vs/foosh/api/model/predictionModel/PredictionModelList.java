@@ -12,7 +12,7 @@ import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilder;
 import com.vs.foosh.api.services.ListService;
 
-public class AbstractPredictionModelList implements Serializable, IThingList<AbstractPredictionModel, AbstractPredictionModelDisplayRepresentation>{
+public class PredictionModelList implements Serializable, IThingList<AbstractPredictionModel, PredictionModelDisplayRepresentation>{
     private List<AbstractPredictionModel> models = new ArrayList<>();
 
     @Override
@@ -39,10 +39,10 @@ public class AbstractPredictionModelList implements Serializable, IThingList<Abs
     }
 
     @Override
-    public List<AbstractPredictionModelDisplayRepresentation> getDisplayListRepresentation() {
-        List<AbstractPredictionModelDisplayRepresentation> displayRepresentations = new ArrayList<>();
+    public List<PredictionModelDisplayRepresentation> getDisplayListRepresentation() {
+        List<PredictionModelDisplayRepresentation> displayRepresentations = new ArrayList<>();
         for (AbstractPredictionModel model: ListService.getAbstractPredictionModelList().getList()) {
-            displayRepresentations.add(new AbstractPredictionModelDisplayRepresentation(model));
+            displayRepresentations.add(new PredictionModelDisplayRepresentation(model));
         }
 
         return displayRepresentations;

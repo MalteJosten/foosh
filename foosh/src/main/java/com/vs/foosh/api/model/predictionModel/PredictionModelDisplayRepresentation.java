@@ -5,16 +5,16 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vs.foosh.api.model.web.LinkEntry;
 
-public class AbstractPredictionModelDisplayRepresentation {
-    private AbstractPredictionModelResponseObject model;
+public class PredictionModelDisplayRepresentation {
+    private PredictionModelResponseObject model;
     private List<LinkEntry> links;
 
-    public AbstractPredictionModelDisplayRepresentation(AbstractPredictionModel model) {
-        this.model = new AbstractPredictionModelResponseObject();
+    public PredictionModelDisplayRepresentation(AbstractPredictionModel model) {
+        this.model = new PredictionModelResponseObject();
         this.links = model.getSelfLinks();
     }
 
-    public AbstractPredictionModelResponseObject getResponseObject() {
+    public PredictionModelResponseObject getResponseObject() {
         return this.model;
     }
 

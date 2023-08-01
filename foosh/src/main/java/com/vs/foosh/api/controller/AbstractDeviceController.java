@@ -23,7 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
 import com.vs.foosh.api.model.device.AbstractDevice;
-import com.vs.foosh.api.model.device.AbstractDeviceList;
+import com.vs.foosh.api.model.device.DeviceList;
 import com.vs.foosh.api.model.device.FetchDeviceResponse;
 import com.vs.foosh.api.model.device.DeviceNamePatchRequest;
 import com.vs.foosh.api.model.misc.ReadSaveFileResult;
@@ -79,7 +79,7 @@ public abstract class AbstractDeviceController {
         }
 
         FetchDeviceResponse apiResponse;
-        ReadSaveFileResult<AbstractDeviceList> readResult = PersistentDataService.hasSavedDeviceList();
+        ReadSaveFileResult<DeviceList> readResult = PersistentDataService.hasSavedDeviceList();
         if (readResult.getSuccess()) {
             ListService.setAbstractDeviceList(readResult.getData());
         } else {

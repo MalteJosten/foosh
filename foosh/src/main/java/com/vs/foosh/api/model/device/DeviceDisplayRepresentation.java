@@ -6,11 +6,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vs.foosh.api.model.web.LinkEntry;
 
 // TODO: @Override toString()
-public class AbstractDeviceDisplayRepresentation {
+public class DeviceDisplayRepresentation {
     private AbstractDeviceResponseObject device;
     private List<LinkEntry> links;
 
-    public AbstractDeviceDisplayRepresentation(AbstractDevice device) {
+    public DeviceDisplayRepresentation(AbstractDevice device) {
         this.device = new AbstractDeviceResponseObject(device);
         this.links  = device.getSelfLinks();
     }
