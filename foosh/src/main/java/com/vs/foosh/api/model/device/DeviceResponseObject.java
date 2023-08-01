@@ -3,12 +3,12 @@ package com.vs.foosh.api.model.device;
 import com.vs.foosh.api.model.misc.Thing;
 
 // TODO: @Override toString()
-public class AbstractDeviceResponseObject extends Thing {
+public class DeviceResponseObject extends Thing {
     private String deviceName;
     private String type;
     private AbstractDeviceDescription description;
 
-    public AbstractDeviceResponseObject(AbstractDevice device) {
+    public DeviceResponseObject(AbstractDevice device) {
         this.id          = device.getId();
         this.name        = device.getName();
         this.deviceName  = device.getDeviceName();

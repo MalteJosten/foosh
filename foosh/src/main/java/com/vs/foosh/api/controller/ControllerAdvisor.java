@@ -89,7 +89,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
-                ListService.getAbstractDeviceList().getLinks("devices"),
+                ListService.getDeviceList().getLinks("devices"),
                 HttpStatus.NOT_FOUND);
     }
 
@@ -184,7 +184,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
-                ListService.getAbstractDeviceList().getLinks("devices"),
+                ListService.getDeviceList().getLinks("devices"),
                 HttpStatus.BAD_REQUEST);
     }
 

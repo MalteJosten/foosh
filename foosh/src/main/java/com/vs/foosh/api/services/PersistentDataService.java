@@ -24,7 +24,7 @@ public class PersistentDataService {
     
     public static void saveDeviceList() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ApplicationConfig.getDeviceSavePath().toFile()))) {
-            oos.writeObject(ListService.getAbstractDeviceList());
+            oos.writeObject(ListService.getDeviceList());
         } catch (FileNotFoundException e) {
             throw new SaveFileNotFoundException("devices");
         } catch (IOException e) {

@@ -79,7 +79,7 @@ public abstract class AbstractDevice extends Thing {
         }
 
         links = buildSelfEntries();
-        extLinks = ListService.getAbstractDeviceList().getLinks("devices");
+        extLinks = ListService.getDeviceList().getLinks("devices");
     }
 
 

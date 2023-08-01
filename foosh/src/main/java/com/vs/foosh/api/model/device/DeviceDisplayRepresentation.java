@@ -7,15 +7,15 @@ import com.vs.foosh.api.model.web.LinkEntry;
 
 // TODO: @Override toString()
 public class DeviceDisplayRepresentation {
-    private AbstractDeviceResponseObject device;
+    private DeviceResponseObject device;
     private List<LinkEntry> links;
 
     public DeviceDisplayRepresentation(AbstractDevice device) {
-        this.device = new AbstractDeviceResponseObject(device);
+        this.device = new DeviceResponseObject(device);
         this.links  = device.getSelfLinks();
     }
 
-    public AbstractDeviceResponseObject getDevice() {
+    public DeviceResponseObject getDevice() {
         return this.device;
     }
 

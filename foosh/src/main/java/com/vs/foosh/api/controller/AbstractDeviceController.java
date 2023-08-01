@@ -54,11 +54,11 @@ public abstract class AbstractDeviceController {
     @GetMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesGet() {
-        AbstractMap.SimpleEntry<String, Object> result = new AbstractMap.SimpleEntry<String, Object>("devices", ListService.getAbstractDeviceList().getDisplayListRepresentation());
+        AbstractMap.SimpleEntry<String, Object> result = new AbstractMap.SimpleEntry<String, Object>("devices", ListService.getDeviceList().getDisplayListRepresentation());
 
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put(result.getKey(), result.getValue());
-        responseBody.put("_links", ListService.getAbstractDeviceList().getLinks("self"));
+        responseBody.put("_links", ListService.getDeviceList().getLinks("self"));
 
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
@@ -69,19 +69,19 @@ public abstract class AbstractDeviceController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesPost(
             @RequestBody(required = false) SmartHomeCredentials credentials) {
-        if (ListService.getAbstractDeviceList().getList() == null || !ListService.getAbstractDeviceList().getList().isEmpty()) {
+        if (ListService.getDeviceList().getList() == null || !ListService.getDeviceList().getList().isEmpty()) {
 
             String message = "There are already registered devices! Please use PUT/PATCH on /devices/ to update the list.";
             Map<String, Object> responseBody = new HashMap<>();
             responseBody.put("message", message);
-            responseBody.put("_links", ListService.getAbstractDeviceList().getLinks("self"));
+            responseBody.put("_links", ListService.getDeviceList().getLinks("self"));
             return new ResponseEntity<>(responseBody, HttpStatus.CONFLICT);
         }
 
         FetchDeviceResponse apiResponse;
         ReadSaveFileResult<DeviceList> readResult = PersistentDataService.hasSavedDeviceList();
         if (readResult.getSuccess()) {
-            ListService.setAbstractDeviceList(readResult.getData());
+            ListService.setDeviceList(readResult.getData());
         } else {
             try {
                 if (credentials == null) {
@@ -90,8 +90,8 @@ public abstract class AbstractDeviceController {
                     apiResponse = fetchDevicesFromSmartHomeAPI(credentials);
                 }
 
-                ListService.getAbstractDeviceList().setList(apiResponse.getDevices());
-                ListService.getAbstractDeviceList().updateLinks();
+                ListService.getDeviceList().setList(apiResponse.getDevices());
+                ListService.getDeviceList().updateLinks();
 
                 PersistentDataService.saveDeviceList();
             } catch (ResourceAccessException rAccessException) {
@@ -101,10 +101,10 @@ public abstract class AbstractDeviceController {
             }
         }
 
-        AbstractMap.SimpleEntry<String, Object> result = new AbstractMap.SimpleEntry<String, Object>("devices", ListService.getAbstractDeviceList().getDisplayListRepresentation());
+        AbstractMap.SimpleEntry<String, Object> result = new AbstractMap.SimpleEntry<String, Object>("devices", ListService.getDeviceList().getDisplayListRepresentation());
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put(result.getKey(), result.getValue());
-        responseBody.put("_links", ListService.getAbstractDeviceList().getLinks("self"));
+        responseBody.put("_links", ListService.getDeviceList().getLinks("self"));
         return new ResponseEntity<>(responseBody, HttpStatus.CREATED);
     }
 
@@ -114,7 +114,7 @@ public abstract class AbstractDeviceController {
             @RequestBody(required=false) SmartHomeCredentials credentials) {
         throw new HttpMappingNotAllowedException(
                 "You cannot use PUT on /devices/! Use DELETE and POST to replace the list of devices.",
-                ListService.getAbstractDeviceList().getLinks("self"));
+                ListService.getDeviceList().getLinks("self"));
     }
 
     // TODO: Allow patching? What is the correct path? How do we address the device we want to update, since we have no index but only its ID?
@@ -123,21 +123,21 @@ public abstract class AbstractDeviceController {
     public ResponseEntity<Object> devicesPatch(@RequestBody List<DeviceNamePatchRequest> request) {
         throw new HttpMappingNotAllowedException(
                 "You cannot use PATCH on /devices/! Either use PATCH on /devices/{id} to update the device's name or DELETE and POST to replace the list of devices.",
-                ListService.getAbstractDeviceList().getLinks("self"));
+                ListService.getDeviceList().getLinks("self"));
     }
 
     @DeleteMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesDelete() {
-        ListService.getAbstractDeviceList().clearList();
+        ListService.getDeviceList().clearList();
 
         PersistentDataService.deleteDeviceListSave();
         PersistentDataService.saveVariableList();
 
-        List<LinkEntry> links = ListService.getAbstractDeviceList().getLinks("self");
+        List<LinkEntry> links = ListService.getDeviceList().getLinks("self");
 
         Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("devices", ListService.getAbstractDeviceList().getDisplayListRepresentation());
+        responseBody.put("devices", ListService.getDeviceList().getDisplayListRepresentation());
         responseBody.put("_links", links);
 
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
@@ -155,7 +155,7 @@ public abstract class AbstractDeviceController {
     @GetMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deviceGet(@PathVariable("id") String id) {
-        AbstractDevice device = ListService.getAbstractDeviceList().getThing(id);
+        AbstractDevice device = ListService.getDeviceList().getThing(id);
 
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(device.getSelfLinks());
@@ -184,7 +184,7 @@ public abstract class AbstractDeviceController {
     public ResponseEntity<Object> devicePut(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
                 "You cannot use PUT on /devices/{id}! Either use PATCH to update or DELETE and POST to replace a device.",
-                ListService.getAbstractDeviceList().getThing(id).getSelfLinks());
+                ListService.getDeviceList().getThing(id).getSelfLinks());
     }
 
     // TODO: Implement custom Json Patch
@@ -203,7 +203,7 @@ public abstract class AbstractDeviceController {
         }
 
         // check whether there is a device with the given id
-        ListService.getAbstractDeviceList().checkIfIdIsPresent(id);
+        ListService.getDeviceList().checkIfIdIsPresent(id);
 
         // Is there a field called 'name'?
         if (requestBody.get("name") == null) {
@@ -221,7 +221,7 @@ public abstract class AbstractDeviceController {
         if (patchDeviceName(new DeviceNamePatchRequest(uuid, name))) {
             PersistentDataService.saveDeviceList();
 
-            AbstractDevice device = ListService.getAbstractDeviceList().getThing(uuid.toString());
+            AbstractDevice device = ListService.getDeviceList().getThing(uuid.toString());
             List<LinkEntry> links = new ArrayList<>();
             links.addAll(device.getSelfLinks());
             links.addAll(device.getExtLinks());
@@ -255,8 +255,8 @@ public abstract class AbstractDeviceController {
         }
 
         // Is the name provided by the field unique?
-        if (ListService.getAbstractDeviceList().isUniqueName(name, id)) {
-            ListService.getAbstractDeviceList().getThing(id.toString()).setName(name);
+        if (ListService.getDeviceList().isUniqueName(name, id)) {
+            ListService.getDeviceList().getThing(id.toString()).setName(name);
 
             return true;
         } else {

@@ -17,6 +17,7 @@ import com.vs.foosh.api.model.device.DeviceList;
 import com.vs.foosh.api.model.misc.ReadSaveFileResult;
 import com.vs.foosh.api.model.variable.VariableList;
 import com.vs.foosh.api.model.web.SmartHomeCredentials;
+import com.vs.foosh.custom.PredictionModelSR;
 
 @Configuration
 public class ApplicationConfig {
@@ -31,6 +32,7 @@ public class ApplicationConfig {
     private static void setup() {
         readInApplicationProperties();
         tryToLoadSaveFiles();
+        setupPredictionModels();
     }
 
     private static void readInApplicationProperties() {
@@ -122,7 +124,7 @@ public class ApplicationConfig {
     private static void tryToLoadSaveFiles() {
         ReadSaveFileResult<DeviceList> devicesResult = PersistentDataService.hasSavedDeviceList();
         if (devicesResult.getSuccess()) {
-            ListService.setAbstractDeviceList(devicesResult.getData());
+            ListService.setDeviceList(devicesResult.getData());
             System.out.println("[INFO] Found and loaded devices save file.");
         }
 
@@ -131,6 +133,10 @@ public class ApplicationConfig {
             ListService.setVariableList(variablesResult.getData());
             System.out.println("[INFO] Found and loaded variables save file.");
         }
+    }
+
+    private static void setupPredictionModels() {
+        ListService.getAbstractPredictionModelList().addThing(new PredictionModelSR());
     }
 
     public static SmartHomeCredentials getSmartHomeCredentials() {

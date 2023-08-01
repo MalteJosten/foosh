@@ -140,7 +140,7 @@ public class Variable extends Thing implements IThingListObserver {
         }
 
         for (UUID deviceId: devices) {
-            deviceLinks.addAll(ListService.getAbstractDeviceList().getThing(deviceId.toString()).getSelfStaticLinks("device"));
+            deviceLinks.addAll(ListService.getDeviceList().getThing(deviceId.toString()).getSelfStaticLinks("device"));
         }
     }
 
@@ -183,12 +183,12 @@ public class Variable extends Thing implements IThingListObserver {
     }
 
     public void register() {
-        ListService.getAbstractDeviceList().attach(this);
+        ListService.getDeviceList().attach(this);
     }
 
     // TODO: Needs to be called after DELETE vars/{id} and DELETE vars/{id}/devices
     public void unregister() {
-        ListService.getAbstractDeviceList().detach(this);
+        ListService.getDeviceList().detach(this);
     }
 
     @Override

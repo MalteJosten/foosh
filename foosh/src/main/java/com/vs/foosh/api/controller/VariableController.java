@@ -29,7 +29,7 @@ import com.vs.foosh.api.exceptions.variable.VariableDevicePostException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsEmptyException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsNullException;
 import com.vs.foosh.api.exceptions.variable.VariableNamePatchRequest;
-import com.vs.foosh.api.model.device.AbstractDeviceResponseObject;
+import com.vs.foosh.api.model.device.DeviceResponseObject;
 import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.variable.VariableDevicesPostRequest;
 import com.vs.foosh.api.model.variable.VariablePostRequest;
@@ -276,10 +276,10 @@ public class VariableController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getVarDevices(@PathVariable("id") String id) {
         Variable variable = ListService.getVariableList().getThing(id);
-        List<AbstractDeviceResponseObject> devices = new ArrayList<>();
+        List<DeviceResponseObject> devices = new ArrayList<>();
 
         for (UUID deviceId: variable.getDeviceIds()) {
-            devices.add(ListService.getAbstractDeviceList().getThing(deviceId.toString()).getDisplayRepresentation().getDevice());
+            devices.add(ListService.getDeviceList().getThing(deviceId.toString()).getDisplayRepresentation().getDevice());
         }
 
         List<LinkEntry> links = new ArrayList<>();
@@ -300,7 +300,7 @@ public class VariableController {
         List<UUID> deviceIds = new ArrayList<>(new HashSet<>(request.getDevices()));
 
         for (UUID deviceId: deviceIds) {
-            if(!IdService.isUuidInList(deviceId, ListService.getAbstractDeviceList().getList())) {
+            if(!IdService.isUuidInList(deviceId, ListService.getDeviceList().getList())) {
                 throw new VariableDevicePostException(
                     id,
                     deviceId,
@@ -425,7 +425,7 @@ public class VariableController {
             PersistentDataService.saveAll();
         }
 
-        List<AbstractDeviceResponseObject> devices = new ArrayList<>();
+        List<DeviceResponseObject> devices = new ArrayList<>();
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(variable.getSelfLinks());
         links.addAll(variable.getDeviceLinks());

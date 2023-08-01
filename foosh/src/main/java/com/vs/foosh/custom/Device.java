@@ -13,7 +13,7 @@ public class Device extends AbstractDevice {
         this.description = new DeviceDescription(description);
         setObjectFields();
 
-        setName(ListService.getAbstractDeviceList().findUniqueName(new DeviceNamePatchRequest(this.id, this.description.getProperties().get("name").toString())));
+        setName(ListService.getDeviceList().findUniqueName(new DeviceNamePatchRequest(this.id, this.description.getProperties().get("name").toString())));
     }        
 
     public Device(JsonNode description, String name) {
@@ -22,7 +22,7 @@ public class Device extends AbstractDevice {
         this.description = new DeviceDescription(description);
         setObjectFields();
 
-        setName(ListService.getAbstractDeviceList().findUniqueName(new DeviceNamePatchRequest(this.id, name)));
+        setName(ListService.getDeviceList().findUniqueName(new DeviceNamePatchRequest(this.id, name)));
     }
 
     @Override

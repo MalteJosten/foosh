@@ -5,20 +5,20 @@ import com.vs.foosh.api.model.predictionModel.PredictionModelList;
 import com.vs.foosh.api.model.variable.VariableList;
 
 public class ListService {
-    private static DeviceList abstractDevices;
+    private static DeviceList devices;
     private static VariableList variables;
-    private static PredictionModelList abstractPredictionModels;
+    private static PredictionModelList predictionModels;
     
-    public static DeviceList getAbstractDeviceList() {
-        if (abstractDevices == null) {
-            abstractDevices = new DeviceList();
+    public static DeviceList getDeviceList() {
+        if (devices == null) {
+            devices = new DeviceList();
         }
 
-        return abstractDevices;
+        return devices;
     }
 
-    public static void setAbstractDeviceList(DeviceList newDevices) {
-        abstractDevices = newDevices;
+    public static void setDeviceList(DeviceList newDevices) {
+        devices = newDevices;
     }
 
     public static VariableList getVariableList() {
@@ -34,15 +34,15 @@ public class ListService {
     }
 
     public static PredictionModelList getAbstractPredictionModelList() {
-        if (abstractPredictionModels == null) {
-            abstractPredictionModels = new PredictionModelList();
+        if (predictionModels == null) {
+            predictionModels = new PredictionModelList();
         }
 
-        return abstractPredictionModels;
+        return predictionModels;
     }
 
     public static void setAbstractPredictionModelList(PredictionModelList newPredictionModels) {
-        abstractPredictionModels = newPredictionModels;
+        predictionModels = newPredictionModels;
     }
 
 }
