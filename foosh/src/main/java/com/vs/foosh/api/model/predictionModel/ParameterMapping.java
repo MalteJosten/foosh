@@ -1,12 +1,10 @@
 package com.vs.foosh.api.model.predictionModel;
 
-import java.util.UUID;
-
 public class ParameterMapping {
     private String parameter;
-    private UUID deviceId;
+    private String deviceId;
 
-    public ParameterMapping(String parameter, UUID deviceId) {
+    public ParameterMapping(String parameter, String deviceId) {
         this.parameter = parameter;
         this.deviceId  = deviceId;
     }
@@ -15,7 +13,7 @@ public class ParameterMapping {
         return this.parameter;
     }
 
-    public UUID getDeviceId() {
+    public String getDeviceId() {
         return this.deviceId;
     }
 

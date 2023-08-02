@@ -12,10 +12,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.vs.foosh.api.exceptions.predictionModel.CouldNotFindVariableParameterMappingException;
 import com.vs.foosh.api.exceptions.predictionModel.MalformedParameterMappingException;
+import com.vs.foosh.api.exceptions.predictionModel.ParameterMappingDeviceException;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.HttpResponseBuilder;
 import com.vs.foosh.api.services.LinkBuilder;
+import com.vs.foosh.api.services.ListService;
 
 @ControllerAdvice
 public class PredictionModelAdvisor extends ResponseEntityExceptionHandler {
@@ -40,4 +42,16 @@ public class PredictionModelAdvisor extends ResponseEntityExceptionHandler {
                 HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(ParameterMappingDeviceException.class)
+    public ResponseEntity<Object> handleParameterMappingDeviceException(ParameterMappingDeviceException exception, WebRequest request) {
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(LinkBuilder.getPredictionModelLinkBlock(exception.getModelId().toString()));
+        links.addAll(ListService.getVariableList().getThing(exception.getVariableId().toString()).getSelfStaticLinks("variable"));
+        links.addAll(ListService.getDeviceList().getThing(exception.getDeviceId().toString()).getSelfStaticLinks("device"));
+        
+        return HttpResponseBuilder.buildException(
+                exception.getMessage(),
+                links,
+                HttpStatus.BAD_REQUEST);
+    }
 }

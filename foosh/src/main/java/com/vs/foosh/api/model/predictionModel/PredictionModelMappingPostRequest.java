@@ -7,6 +7,7 @@ import java.util.UUID;
 import java.util.Map.Entry;
 
 import com.vs.foosh.api.exceptions.predictionModel.MalformedParameterMappingException;
+import com.vs.foosh.api.exceptions.predictionModel.ParameterMappingDeviceException;
 import com.vs.foosh.api.services.IdService;
 import com.vs.foosh.api.services.ListService;
 
@@ -34,8 +35,6 @@ public class PredictionModelMappingPostRequest {
             parameterCounter.put(mapping.getParameter(), parameterCounter.get(mapping.getParameter()) + 1);
         }
 
-        System.out.println(parameterCounter);
-
         for (Entry<String, Integer> parameterCount: parameterCounter.entrySet()) {
             if (parameterCount.getValue() > 1) {
                 throw new MalformedParameterMappingException(modelId, "You assigned parameter '" + parameterCount.getKey() + "' multiple times. You can only assign each parameter once!");
@@ -43,14 +42,16 @@ public class PredictionModelMappingPostRequest {
         }
 
 
-        AbstractPredictionModel model = ListService.getPredictionModelList().getThing(modelId);
+        AbstractPredictionModel model = ListService.getPredictionModelList().getThing(modelId.toString());
 
         // Validate entries.
         for (ParameterMapping mapping: mappings) {
 
-            // Is there a non-empty field called "parameter"?
+            // Parameter validation
             String parameter = mapping.getParameter();
-            if (parameter == null || parameter.trim().isEmpty()) {
+            if (parameter == null) {
+                throw new MalformedParameterMappingException(modelId, "A field called 'parameter' is missing!");
+            } else if (parameter.trim().isEmpty()) {
                 throw new MalformedParameterMappingException(modelId, "The value of the field 'parameter' must not be empty!");
             }
 
@@ -58,6 +59,19 @@ public class PredictionModelMappingPostRequest {
                 throw new MalformedParameterMappingException(modelId, "The model does not have a parameter called '" + parameter + "'!");
             }
 
+            // Device-ID validation
+            String deviceId = mapping.getDeviceId();
+            if (deviceId == null) {
+                throw new MalformedParameterMappingException(modelId, "A field called 'deviceId' is missing!");
+            } else if (deviceId.trim().isEmpty()) {
+                throw new MalformedParameterMappingException(modelId, "The value of the field 'deviceId' must not be empty!");
+            }
+
+            UUID deviceUuid = IdService.isUuid(deviceId).orElseThrow(() -> new MalformedParameterMappingException(modelId, "The given deviceId '" + deviceId + "' is not a valid UUID!"));
+
+            if (!ListService.getVariableList().getThing(variableId.toString()).getDeviceIds().contains(deviceUuid)) {
+                throw new ParameterMappingDeviceException(modelId, variableId, deviceUuid);
+            }
         }
     }
 
