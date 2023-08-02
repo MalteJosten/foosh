@@ -121,7 +121,9 @@ public class VariableController {
         }
 
         // Is the name an UUID?
-        IdService.isUuid(request.getName()).orElseThrow(() -> new VariableCreationException("Cannot create variable! Variables must not be an UUID."));
+        if (IdService.isUuid(request.getName()).isPresent()) {
+            throw new VariableCreationException("Cannot create variable! Variables must not be an UUID.");
+        }
 
         // Check for duplicates
         if (!ListService.getVariableList().isUniqueName(request.getName(), null)) {
