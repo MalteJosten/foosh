@@ -9,6 +9,7 @@ import java.util.Map;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
 import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
@@ -127,6 +128,30 @@ public class LinkBuilder {
             .build();
 
         return uri.toUri();
+    }
+
+    public static URI getPredictionModelMappingLink (String identifier) {
+        UriComponents uri = UriComponentsBuilder
+            .newInstance()
+            .scheme("http")
+            .host(host)
+            .port(port)
+            .path("api/")
+            .path("models/")
+            .path(identifier + "/")
+            .path("mapping")
+            .build();
+
+        return uri.toUri();
+    }
+
+    public static List<LinkEntry> getPredictionModelLinkBlock (String id) {
+        AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
+
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(model.getSelfLinks());
+
+        return links;
     }
 
     public static Map<String, Object> getJSONLinkBlock(Map<String, String> linkMapping) {

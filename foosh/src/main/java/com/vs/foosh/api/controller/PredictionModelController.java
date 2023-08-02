@@ -21,7 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
 import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
-import com.vs.foosh.api.model.predictionModel.ParameterMapping;
+import com.vs.foosh.api.model.predictionModel.PredictionModelMappingPostRequest;
+import com.vs.foosh.api.model.predictionModel.VariableParameterMapping;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.ListService;
 
@@ -127,36 +128,50 @@ public class PredictionModelController {
     ///
 
     // TODO: Implement Paging
-    @GetMapping(value = "/{id}/mapping/",
+    @GetMapping(value = "/{id}/mapping",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getModelDevices(@PathVariable("id") String id) {
+    public ResponseEntity<Object> getModelMapping(@PathVariable("id") String id) {
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
 
-        List<ParameterMapping> mapping = model.getMapping();
+        List<VariableParameterMapping> mapping = model.getAllMappings();
 
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(model.getSelfLinks());
         links.addAll(model.getDeviceLinks());
+        links.addAll(model.getVariableLinks());
         Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("mapping", mapping);
+        responseBody.put("mappings", mapping);
         responseBody.put("_links", links);
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
     // TODO: Implement Paging
-    @PostMapping(value = "/{id}/mapping/",
+    @PostMapping(value = "/{id}/mapping",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> postModelDevices(@PathVariable("id") String id) {
-        throw new HttpMappingNotAllowedException(
-                "Not implemented",
-                ListService.getPredictionModelList().getLinks("self"));
+    public ResponseEntity<Object> postModelMapping(@PathVariable("id") String id, @RequestBody PredictionModelMappingPostRequest request) {
+        AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
 
+        request.validate(id, ListService.getVariableList().getThing(request.getVariableId().toString()).getDeviceIds());
+
+        model.setMapping(request.getVariableId(), request.getMappings()); 
+        model.updateLinks();
+
+        VariableParameterMapping mapping = model.getParameterMapping(request.getVariableId());
+
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(model.getSelfLinks());
+        links.addAll(model.getDeviceLinks());
+        links.addAll(ListService.getVariableList().getThing(request.getVariableId().toString()).getSelfStaticLinks("variable"));
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("mapping", mapping);
+        responseBody.put("_links", links);
+        return new ResponseEntity<>(responseBody, HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/{id}/mapping/",
+    @PutMapping(value = "/{id}/mapping",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> putModelDevices(@PathVariable("id") String id) {
+    public ResponseEntity<Object> putModelMapping(@PathVariable("id") String id) {
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
 
         List<LinkEntry> links = new ArrayList<>();
@@ -164,22 +179,22 @@ public class PredictionModelController {
         links.addAll(model.getDeviceLinks());
 
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /models/{id}/mapping/! Use DELETE and POST to replace the current mapping.",
+                "You cannot use PUT on /models/{id}/mapping! Use DELETE and POST to replace the current mapping.",
                 links);
     }
     
     // TODO: (Implement custom Json Patch)
-    @PatchMapping(value = "/{id}/mapping/",
+    @PatchMapping(value = "/{id}/mapping",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> patchModelDevices(@PathVariable("id") String id, @RequestBody List<Map<String, String>> patchMappings) {
+    public ResponseEntity<Object> patchModelMapping(@PathVariable("id") String id, @RequestBody List<Map<String, String>> patchMappings) {
         throw new HttpMappingNotAllowedException(
                 "Not implemented",
                 ListService.getPredictionModelList().getLinks("self"));
     }
 
-    @DeleteMapping(value = "/{id}/mapping/",
+    @DeleteMapping(value = "/{id}/mapping",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> deleteModelDevices(@PathVariable("id") String id) {
+    public ResponseEntity<Object> deleteModelMapping(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
                 "Not implemented",
                 ListService.getPredictionModelList().getLinks("self"));

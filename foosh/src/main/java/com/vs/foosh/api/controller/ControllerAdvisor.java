@@ -28,6 +28,8 @@ import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
 import com.vs.foosh.api.exceptions.misc.IdIsNoValidUUIDException;
 import com.vs.foosh.api.exceptions.misc.SaveFileNotFoundException;
 import com.vs.foosh.api.exceptions.misc.SavingToFileIOException;
+import com.vs.foosh.api.exceptions.predictionModel.CouldNotFindVariableParameterMappingException;
+import com.vs.foosh.api.exceptions.predictionModel.MalformedParameterMappingException;
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeAccessException;
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeIOException;
 import com.vs.foosh.api.exceptions.variable.VariableCreationException;
@@ -38,6 +40,7 @@ import com.vs.foosh.api.exceptions.variable.VariableNameIsNullException;
 import com.vs.foosh.api.exceptions.variable.VariableNameMustNotBeAnUuidException;
 import com.vs.foosh.api.exceptions.variable.VariableNotFoundException;
 import com.vs.foosh.api.exceptions.variable.VariablePatchException;
+import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.HttpResponseBuilder;
 import com.vs.foosh.api.services.LinkBuilder;
@@ -170,6 +173,30 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
                 LinkBuilder.getVariableLinkBlock(exception.getId().toString()),
+                HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * PredictionModel
+     */
+
+    @ExceptionHandler(MalformedParameterMappingException.class)
+    public ResponseEntity<Object> handleMalformedParameterMappingException(MalformedParameterMappingException exception, WebRequest request) {
+        return HttpResponseBuilder.buildException(
+                exception.getMessage(),
+                LinkBuilder.getPredictionModelLinkBlock(exception.getId().toString()),
+                HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CouldNotFindVariableParameterMappingException.class)
+    public ResponseEntity<Object> handleCouldNotFindVariableParameterMappingException(CouldNotFindVariableParameterMappingException exception, WebRequest request) {
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(LinkBuilder.getPredictionModelLinkBlock(exception.getId().toString()));
+        links.add(new LinkEntry("devices", LinkBuilder.getDeviceListLink(), HttpAction.GET, List.of()));
+        
+        return HttpResponseBuilder.buildException(
+                exception.getMessage(),
+                LinkBuilder.getPredictionModelLinkBlock(exception.getId().toString()),
                 HttpStatus.BAD_REQUEST);
     }
 

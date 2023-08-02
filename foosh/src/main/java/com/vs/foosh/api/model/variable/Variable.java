@@ -94,6 +94,18 @@ public class Variable extends Thing implements IThingListObserver {
         return this.links;
     }
 
+    public List<LinkEntry> getSelfStaticLinks(String label) {
+        List<LinkEntry> links = new ArrayList<>();
+       
+        for(LinkEntry link: getSelfLinks()) {
+            if (link.getRelation().equals("selfStatic")) {
+                links.add(new LinkEntry(label, link.getLink(), link.getAction(), link.getTypes()));
+            }
+        }
+
+        return links;
+    }
+
     public List<LinkEntry> getExtLinks() {
         return this.extLinks;
     }
@@ -168,6 +180,7 @@ public class Variable extends Thing implements IThingListObserver {
         return builder.toString();
     }
 
+    // TODO: delete
     public List<String> getModifiedFields(Variable old) {
         List<String> modifications = new ArrayList<>();
         if (!this.id.equals(old.getId()))                   modifications.add("id");
