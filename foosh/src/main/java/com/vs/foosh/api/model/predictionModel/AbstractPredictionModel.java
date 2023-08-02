@@ -12,6 +12,7 @@ import com.vs.foosh.api.services.LinkBuilder;
 import com.vs.foosh.api.services.ListService;
 
 public abstract class AbstractPredictionModel extends Thing {
+    private List<String> parameters = new ArrayList<>();
     private List<ParameterMapping> parameterMapping = new ArrayList<>();
 
     protected List<LinkEntry> links = new ArrayList<>();
@@ -21,6 +22,14 @@ public abstract class AbstractPredictionModel extends Thing {
     /// Needs to be overwritten!
     public List<SmartHomeInstruction> makePrediction(String value) {
         return new ArrayList<>();
+    }
+
+    public List<String> getParameters() {
+        return this.parameters;
+    }
+
+    protected void setParameters(List<String> parameters) {
+        this.parameters = parameters;
     }
 
     public List<ParameterMapping> getMapping() {
