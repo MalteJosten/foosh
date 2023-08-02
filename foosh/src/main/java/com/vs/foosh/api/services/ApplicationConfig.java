@@ -158,4 +158,12 @@ public class ApplicationConfig {
     public static Path getDeleteVariablePath() {
         return Paths.get(SAVE_DIR_PATH.toString() + "/variables.old");
     }
+
+    public static Path getPredictionModelSavePath() {
+        return Paths.get(SAVE_DIR_PATH.toString() + "/models.json");
+    }
+
+    public static Path getDeletePredictionModelPath() {
+        return Paths.get(SAVE_DIR_PATH.toString() + "/models.old");
+    }
 }
