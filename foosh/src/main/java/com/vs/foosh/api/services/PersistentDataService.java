@@ -14,12 +14,14 @@ import com.vs.foosh.api.exceptions.misc.SaveFileNotFoundException;
 import com.vs.foosh.api.exceptions.misc.SavingToFileIOException;
 import com.vs.foosh.api.model.device.DeviceList;
 import com.vs.foosh.api.model.misc.ReadSaveFileResult;
+import com.vs.foosh.api.model.predictionModel.PredictionModelList;
 import com.vs.foosh.api.model.variable.VariableList;
 
 public class PersistentDataService {
     public static void saveAll() {
         saveDeviceList();
         saveVariableList();
+        savePredictionModelList();
     }
     
     public static void saveDeviceList() {
@@ -95,4 +97,34 @@ public class PersistentDataService {
             throw new CouldNotDeleteCollectionException();
         }
     }
+
+    public static void savePredictionModelList() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ApplicationConfig.getPredictionModelSavePath().toFile()))) {
+            oos.writeObject(ListService.getPredictionModelList());
+        } catch (FileNotFoundException e) {
+            throw new SaveFileNotFoundException("predictionModels");
+        } catch (IOException e) {
+            System.err.println(e);
+            throw new SavingToFileIOException("predictionModels");
+        }
+    } 
+
+    // TODO: Implement
+    public static ReadSaveFileResult<PredictionModelList> hasSavedPredictionModelList() {
+        ReadSaveFileResult<PredictionModelList> result = new ReadSaveFileResult<>();
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ApplicationConfig.getPredictionModelSavePath().toFile()))) {
+            PredictionModelList list = (PredictionModelList) ois.readObject();
+            result.setData(list);
+            result.setSuccess(true);
+        } catch (IOException e) {
+            result.setSuccess(false);
+        } catch (ClassNotFoundException e) {
+            result.setSuccess(false);
+        } catch (ClassCastException e) {
+            result.setSuccess(false);
+        }
+
+        return result;
+    }
+
 }
