@@ -193,7 +193,7 @@ public class VariableController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> putVar(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /vars/{id}! Either use PATCH to update or DELETE and POST to replace a variable.",
+                "You cannot use PUT on /vars/" + id.replace(" ", "%20") +  "! Either use PATCH to update or DELETE and POST to replace a variable.",
                 ListService.getVariableList().getThing(id).getSelfLinks());
     }
 
@@ -331,7 +331,7 @@ public class VariableController {
         links.addAll(variable.getDeviceLinks());
 
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /vars/{id}/devices/! Either use PATCH to update or DELETE and POST to replace the list of associated devices.",
+                "You cannot use PUT on /vars/" + id.replace(" ", "%20") +  "/devices/! Either use PATCH to update or DELETE and POST to replace the list of associated devices.",
                 links);
     }
     
@@ -388,7 +388,7 @@ public class VariableController {
                     throw new FooSHJsonPatchIllegalOperationException(patch.getOperation());
             }
             if (!patch.hasPath(pathSegments.toArray(new String[0]), true)) {
-                throw new FooSHJsonPatchIllegalArgumentException("You can only add a device under '/' and/or replace/remove a device using its UUID with '/<uuid>'!");
+                throw new FooSHJsonPatchIllegalArgumentException("You can only add a device under '/' and/or replace/remove a device using its UUID with '/{id}'!");
             }
 
             // Execute operation

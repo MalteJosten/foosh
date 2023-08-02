@@ -176,7 +176,7 @@ public abstract class AbstractDeviceController {
         links.add(new LinkEntry("devices", LinkBuilder.getDeviceListLink(), HttpAction.POST, List.of("application/json")));
 
         throw new HttpMappingNotAllowedException(
-                "You cannot use POST on /devices/{id}! Please use POST on /devices/ instead.",
+                "You cannot use POST on /devices/" + id.replace(" ", "%20") +  "! Please use POST on /devices/ instead.",
                 links);
     }
 
@@ -184,7 +184,7 @@ public abstract class AbstractDeviceController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicePut(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /devices/{id}! Either use PATCH to update or DELETE and POST to replace a device.",
+                "You cannot use PUT on /devices/" + id.replace(" ", "%20") +  "! Either use PATCH to update or DELETE and POST to replace a device.",
                 ListService.getDeviceList().getThing(id).getSelfLinks());
     }
 
@@ -224,7 +224,7 @@ public abstract class AbstractDeviceController {
             return new ResponseEntity<>(responseBody, HttpStatus.OK);
 
         } else {
-            return new ResponseEntity<Object>("Could not patch name for device '" + id + "' !'", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<Object>("Could not patch name for device '" + id.replace(" ", "%20") +  "' !'", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

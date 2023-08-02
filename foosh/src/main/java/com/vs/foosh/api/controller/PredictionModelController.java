@@ -43,11 +43,10 @@ public class PredictionModelController {
     }
 
     @PostMapping(value = "/",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modelsPost() {
         throw new HttpMappingNotAllowedException(
-                "Not implemented",
+                "You cannot use POST on /models/! You can only use the pre-defined models.",
                 ListService.getPredictionModelList().getLinks("self"));
     }
 
@@ -55,15 +54,16 @@ public class PredictionModelController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modelsPut() {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /devices/! Use DELETE and POST to replace the list of devices.",
+                "You cannot use PUT on /models/! Use PATCH instead, to edit the parameter mapping(s).",
                 ListService.getPredictionModelList().getLinks("self"));
     }
 
     @PatchMapping(value = "/",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modelsPatch() {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PATCH on /devices/! Either use PATCH on /devices/{id} to update the device's name or DELETE and POST to replace the list of devices.",
+                "Not yet implemented",
                 ListService.getPredictionModelList().getLinks("self"));
     }
 
@@ -71,7 +71,7 @@ public class PredictionModelController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modelsDelete() {
         throw new HttpMappingNotAllowedException(
-                "Not implemented",
+                "You cannot use DELETE on /models/! Use PATCH instead, to edit the parameter mapping(s).",
                 ListService.getPredictionModelList().getLinks("self"));
     }
 
@@ -94,15 +94,15 @@ public class PredictionModelController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modelPost(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
-                "Not implemented",
-                ListService.getPredictionModelList().getLinks("self"));
+                "You cannot use POST on /models/" + id.replace(" ", "%20") +  "! Use PATCH instead, to edit the parameter mapping(s).",
+                ListService.getPredictionModelList().getThing(id).getSelfLinks());
     }
 
     @PutMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modelPut(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /devices/{id}! Either use PATCH to update or DELETE and POST to replace a device.",
+                "You cannot use PUT on /models/" + id.replace(" ", "%20") +  "! Use PATCH instead, to edit the parameter mapping(s).",
                 ListService.getPredictionModelList().getThing(id).getSelfLinks());
     }
 
@@ -119,7 +119,7 @@ public class PredictionModelController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> modelDelete(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
-                "Not implemented",
+                "You cannot use DELETE on /models/" + id.replace(" ", "%20") +  "! Use PATCH instead, to edit the parameter mapping(s).",
                 ListService.getPredictionModelList().getLinks("self"));
     }
     
@@ -152,6 +152,7 @@ public class PredictionModelController {
     public ResponseEntity<Object> postModelMapping(@PathVariable("id") String id, @RequestBody PredictionModelMappingPostRequest request) {
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
 
+        // TODO: Add Observer so we can update stuff when variable(s) and/or device(s) change.
         request.validate(id, ListService.getVariableList().getThing(request.getVariableId().toString()).getDeviceIds());
 
         model.setMapping(request.getVariableId(), request.getMappings()); 
@@ -169,6 +170,7 @@ public class PredictionModelController {
         return new ResponseEntity<>(responseBody, HttpStatus.CREATED);
     }
 
+    // TODO: Add /models/{id}/mapping links to linkBlock
     @PutMapping(value = "/{id}/mapping",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> putModelMapping(@PathVariable("id") String id) {
@@ -179,7 +181,7 @@ public class PredictionModelController {
         links.addAll(model.getDeviceLinks());
 
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /models/{id}/mapping! Use DELETE and POST to replace the current mapping.",
+                "You cannot use PUT on /models/" + id.replace(" ", "%20") +  "/mapping! Use either PATCH to edit or DELETE and POST to replace the current mapping.",
                 links);
     }
     
