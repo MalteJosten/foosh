@@ -16,7 +16,7 @@ import com.vs.foosh.api.services.LinkBuilder;
 import com.vs.foosh.api.services.ListService;
 
 public abstract class AbstractPredictionModel extends Thing {
-    private List<UUID> variableIds = new ArrayList<>();
+    private List<UUID> variableIds  = new ArrayList<>();
     private List<String> parameters = new ArrayList<>();
 
     private List<VariableParameterMapping> parameterMappings = new ArrayList<>();

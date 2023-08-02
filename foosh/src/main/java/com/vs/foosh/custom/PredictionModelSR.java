@@ -13,9 +13,7 @@ public class PredictionModelSR extends AbstractPredictionModel {
         this.id   = UUID.randomUUID();
         this.name = "Symbolic Regression Model";
 
-        setParameters(List.of("x1")); 
-        
-        updateLinks();
+        setParameters(List.of("x1", "x2")); 
     }
 
     @Override
