@@ -41,6 +41,7 @@ import com.vs.foosh.api.services.LinkBuilder;
 import com.vs.foosh.api.services.ListService;
 import com.vs.foosh.api.services.PersistentDataService;
 import com.vs.foosh.api.services.ApplicationConfig;
+import com.vs.foosh.api.services.IdService;
 
 // TODO: Extract logic into dedicated service(s)
 @RequestMapping(value="/api/devices")
@@ -192,15 +193,7 @@ public abstract class AbstractDeviceController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicePatch(@PathVariable("id") String id, @RequestBody Map<String, String> requestBody) {
-        UUID uuid;
-
-        // TODO: Use IdService
-        // Is the provided id a valid UUID?
-        try {
-            uuid = UUID.fromString(id);
-        } catch (IllegalArgumentException e) {
-            throw new IdIsNoValidUUIDException(id);
-        }
+        UUID uuid = IdService.isUuid(id).orElseThrow(() -> new IdIsNoValidUUIDException(id));
 
         // check whether there is a device with the given id
         ListService.getDeviceList().checkIfIdIsPresent(id);
