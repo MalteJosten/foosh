@@ -127,10 +127,6 @@ public class FooSHJsonPatch {
     public boolean hasPath(String[] desiredPath, boolean includeLast) {
         String[] pathSegments = this.path.split("/");
 
-        for(String s: pathSegments) {
-            System.out.println(s);
-        }
-
         if (includeLast) {
             if (pathSegments.length != desiredPath.length) {
                 System.err.println("not the same length");

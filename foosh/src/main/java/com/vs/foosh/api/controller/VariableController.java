@@ -387,7 +387,7 @@ public class VariableController {
                 default:
                     throw new FooSHJsonPatchIllegalOperationException(patch.getOperation());
             }
-            if (!patch.hasPath(pathSegments.toArray(new String[0]), false)) {
+            if (!patch.hasPath(pathSegments.toArray(new String[0]), true)) {
                 throw new FooSHJsonPatchIllegalArgumentException("You can only add a device under '/' and/or replace/remove a device using its UUID with '/<uuid>'!");
             }
 
@@ -424,6 +424,11 @@ public class VariableController {
         }
 
         List<DeviceResponseObject> devices = new ArrayList<>();
+
+        for (UUID deviceId: variable.getDeviceIds()) {
+            devices.add(ListService.getDeviceList().getThing(deviceId.toString()).getDisplayRepresentation().getDevice());
+        }
+
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(variable.getSelfLinks());
         links.addAll(variable.getDeviceLinks());
