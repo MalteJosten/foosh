@@ -28,10 +28,10 @@ public class SmartHomeInstruction {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("<< SmartHomeInstruction >>");
+        StringBuilder builder = new StringBuilder("<< SmartHomeInstruction >>\n");
         builder.append("Device-ID:\t" + deviceId  + "\n");
         builder.append("Value:\t"     + value     + "\n");
-        builder.append("URI:\t"       + deviceUri +  "\n");
+        builder.append("URI:\t"       + deviceUri + "\n");
     
         return builder.toString();
     }

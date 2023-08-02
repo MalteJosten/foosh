@@ -123,7 +123,7 @@ public class FooSHJsonPatch {
         this.value = value;
     }
 
-    // TODO: Fix lenght bzw. Vergleich
+    // TODO: Fix length bzw. Vergleich
     public boolean hasPath(String[] desiredPath, boolean includeLast) {
         String[] pathSegments = this.path.split("/");
 

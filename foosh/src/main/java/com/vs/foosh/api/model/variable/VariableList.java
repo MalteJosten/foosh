@@ -121,7 +121,6 @@ public class VariableList implements Serializable, IThingList<Variable, Variable
         throw new VariableNotFoundException(identifier);
     }
 
-
     public List<LinkEntry> getLinks(String label) {
         LinkEntry get    = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.GET, List.of());
         LinkEntry post   = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.POST, List.of("application/json"));

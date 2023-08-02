@@ -17,7 +17,7 @@ public class VariablePostRequest {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("<< VariablePostRequest >>");
+        builder.append("<< VariablePostRequest >>\n");
         builder.append("name: \t" + name + "\n");
 
         return builder.toString();

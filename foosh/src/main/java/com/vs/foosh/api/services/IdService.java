@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import com.vs.foosh.api.model.misc.Thing;
 
-// TODO: Add method to check whether String is an UUID
 public class IdService {
     public static Optional<UUID> isUuid(String id) {
         UUID uuid;
