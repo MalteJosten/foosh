@@ -120,12 +120,8 @@ public class VariableController {
             throw new VariableCreationException("Cannot create variable without a name! The field 'name' is empty.");
         }
 
-        // TODO: Use IdService
-        // Does this field contain an UUID?
-        try {
-            UUID.fromString(request.getName());
-            throw new VariableCreationException("Cannot create variable! Variables must not be an UUID.");
-        } catch (IllegalArgumentException e) { }
+        // Is the name an UUID?
+        IdService.isUuid(request.getName()).orElseThrow(() -> new VariableCreationException("Cannot create variable! Variables must not be an UUID."));
 
         // Check for duplicates
         if (!ListService.getVariableList().isUniqueName(request.getName(), null)) {

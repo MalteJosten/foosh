@@ -2,7 +2,6 @@ package com.vs.foosh.api.exceptions.predictionModel;
 
 import java.util.UUID;
 
-// TODO: Add to ControllerAdvisor
 public class CouldNotFindVariableParameterMappingException extends RuntimeException {
     private UUID id;
     

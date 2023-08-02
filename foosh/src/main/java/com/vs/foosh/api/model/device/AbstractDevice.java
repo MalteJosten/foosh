@@ -117,10 +117,9 @@ public abstract class AbstractDevice extends Thing {
         return new DeviceDisplayRepresentation(this);
     }
 
-    // TODO: Add Variable Header
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder("<< Device >>\n");
         builder.append("Device: " + id + "\n");
         builder.append("Device-Name: " + deviceName + "\n");
         builder.append("Query-Name: " + name + "\n");
