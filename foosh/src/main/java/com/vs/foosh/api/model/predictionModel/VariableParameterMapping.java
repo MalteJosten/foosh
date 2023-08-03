@@ -1,9 +1,10 @@
 package com.vs.foosh.api.model.predictionModel;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
-public class VariableParameterMapping {
+public class VariableParameterMapping implements Serializable {
     private UUID variableId;
     private List<ParameterMapping> mappings;
 

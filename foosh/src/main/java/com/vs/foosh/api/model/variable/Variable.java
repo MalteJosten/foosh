@@ -4,15 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.vs.foosh.api.model.misc.AbstractModification;
 import com.vs.foosh.api.model.misc.IThingListObserver;
-import com.vs.foosh.api.model.misc.ListModification;
+import com.vs.foosh.api.model.misc.IThingListSubject;
+import com.vs.foosh.api.model.misc.ModificationType;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilder;
 import com.vs.foosh.api.services.ListService;
 
-public class Variable extends Thing implements IThingListObserver {
+public class Variable extends Thing implements IThingListObserver, IThingListSubject {
     private List<UUID> models  = new ArrayList<>();
     private List<UUID> devices = new ArrayList<>();
 
@@ -20,6 +22,8 @@ public class Variable extends Thing implements IThingListObserver {
     private List<LinkEntry> deviceLinks = new ArrayList<>();
     private List<LinkEntry> links       = new ArrayList<>();
     private List<LinkEntry> extLinks    = new ArrayList<>();
+
+    private List<IThingListObserver> observers = new ArrayList<>();
 
     public Variable(String name, List<UUID> modelIds, List<UUID> deviceIds) {
         this.id      = UUID.randomUUID();
@@ -58,7 +62,7 @@ public class Variable extends Thing implements IThingListObserver {
     }
 
     public void clearDevices() {
-       unregister();
+       unregisterFromSubject();
        this.devices.clear();
        updateDeviceLinks(); 
     }
@@ -66,14 +70,14 @@ public class Variable extends Thing implements IThingListObserver {
     public void setDevices(List<UUID> deviceIDs) {
         this.devices = deviceIDs;
         updateDeviceLinks();
-        register();
+        registerToSubject();
     }
 
     public void addDevice(UUID deviceID) {
         if (!this.devices.contains(deviceID)) {
             this.devices.add(deviceID);
             updateDeviceLinks();
-            register();
+            registerToSubject();
         }
     }
 
@@ -180,22 +184,46 @@ public class Variable extends Thing implements IThingListObserver {
         return builder.toString();
     }
 
-    public void register() {
+    public void registerToSubject() {
         ListService.getDeviceList().attach(this);
     }
 
     // TODO: Needs to be called after DELETE vars/{id} and DELETE vars/{id}/devices
-    public void unregister() {
+    public void unregisterFromSubject() {
         ListService.getDeviceList().detach(this);
     }
 
     @Override
-    public void update(ListModification modification) {
-        if (modification == ListModification.DELETION) {
+    public void update(AbstractModification modification) {
+        if (modification.getModificationType() == ModificationType.DELETION) {
             devices.clear();
         }
 
         updateLinks();
+    }
+
+    @Override
+    public void attach(IThingListObserver observer) {
+        if (!observers.contains(observer)) {
+            observers.add(observer);
+        }
+    }
+
+    @Override
+    public void detach(IThingListObserver observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers(AbstractModification modification) {
+        for(IThingListObserver observer: observers) {
+            observer.update(modification);
+        }
+
+        if (modification.getModificationType() == ModificationType.DELETION) {
+            observers.clear();
+        }
+
     }
 
 }

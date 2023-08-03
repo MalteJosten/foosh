@@ -9,6 +9,7 @@ import com.vs.foosh.api.exceptions.variable.VariableNameIsNotUniqueException;
 import com.vs.foosh.api.exceptions.variable.VariableNameMustNotBeAnUuidException;
 import com.vs.foosh.api.exceptions.variable.VariableNotFoundException;
 import com.vs.foosh.api.model.misc.IThingList;
+import com.vs.foosh.api.model.misc.ModificationType;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
@@ -46,7 +47,8 @@ public class VariableList implements Serializable, IThingList<Variable, Variable
 
     public void clearList() {
         for(Variable variable: this.variables) {
-            variable.unregister();
+            variable.unregisterFromSubject();
+            variable.notifyObservers(new VariableModification(ModificationType.DELETION, variable.getId()));
         }
 
         this.variables.clear();
@@ -79,6 +81,7 @@ public class VariableList implements Serializable, IThingList<Variable, Variable
     public void deleteThing(String identifier) {
         for (Variable variable: getList()) {
             if (variable.getId().toString().equals(identifier) || variable.getName().equalsIgnoreCase(identifier)) {
+                variable.notifyObservers(new VariableModification(ModificationType.DELETION, variable.getId()));
                 getList().remove(variable);
                 return;
             }

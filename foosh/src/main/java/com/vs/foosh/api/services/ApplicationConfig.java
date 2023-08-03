@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vs.foosh.api.model.device.DeviceList;
 import com.vs.foosh.api.model.misc.ReadSaveFileResult;
+import com.vs.foosh.api.model.predictionModel.PredictionModelList;
 import com.vs.foosh.api.model.variable.VariableList;
 import com.vs.foosh.api.model.web.SmartHomeCredentials;
 import com.vs.foosh.custom.PredictionModelSR;
@@ -32,7 +33,6 @@ public class ApplicationConfig {
     private static void setup() {
         readInApplicationProperties();
         tryToLoadSaveFiles();
-        setupPredictionModels();
     }
 
     private static void readInApplicationProperties() {
@@ -133,10 +133,16 @@ public class ApplicationConfig {
             ListService.setVariableList(variablesResult.getData());
             System.out.println("[INFO] Found and loaded variables save file.");
         }
-    }
 
-    private static void setupPredictionModels() {
-        ListService.getPredictionModelList().addThing(new PredictionModelSR());
+        ReadSaveFileResult<PredictionModelList> modelResult = PersistentDataService.hasSavedPredictionModelList();
+        if (modelResult.getSuccess()) {
+            ListService.setPredictionModelList(modelResult.getData());
+            System.out.println("[INFO] Found and loaded predictionModel save file.");
+        } else {
+            ListService.getPredictionModelList().addThing(new PredictionModelSR());
+            PersistentDataService.savePredictionModelList();
+            System.out.println("[INFO] Did not found predictionModel save file. Created predictionModels from source.");
+        }
     }
 
     public static SmartHomeCredentials getSmartHomeCredentials() {

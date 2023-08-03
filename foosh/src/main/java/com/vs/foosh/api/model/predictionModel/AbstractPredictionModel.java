@@ -2,20 +2,26 @@ package com.vs.foosh.api.model.predictionModel;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 import com.vs.foosh.api.exceptions.predictionModel.CouldNotFindVariableParameterMappingException;
+import com.vs.foosh.api.model.misc.AbstractModification;
+import com.vs.foosh.api.model.misc.IThingListObserver;
+import com.vs.foosh.api.model.misc.ModificationType;
 import com.vs.foosh.api.model.misc.Thing;
+import com.vs.foosh.api.model.variable.VariableModification;
 import com.vs.foosh.api.model.web.FooSHJsonPatch;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.model.web.SmartHomeInstruction;
 import com.vs.foosh.api.services.LinkBuilder;
 import com.vs.foosh.api.services.ListService;
+import com.vs.foosh.api.services.PersistentDataService;
 
-public abstract class AbstractPredictionModel extends Thing {
+public abstract class AbstractPredictionModel extends Thing implements IThingListObserver {
     private List<UUID> variableIds  = new ArrayList<>();
     private List<String> parameters = new ArrayList<>();
 
@@ -80,6 +86,8 @@ public abstract class AbstractPredictionModel extends Thing {
 
         }
         
+        // TODO: Subscribe to variable subject as observer
+        ListService.getVariableList().getThing(variableId.toString()).attach(this);
         parameterMappings.add(new VariableParameterMapping(variableId, mappings));
         udpateVariableIds();
     }
@@ -101,8 +109,10 @@ public abstract class AbstractPredictionModel extends Thing {
         }
 
         // Check which variable IDs got removed but still are stored in the variableIds list
-        for (UUID variableId: variableIds) {
+        for (Iterator<UUID> iterator = variableIds.iterator(); iterator.hasNext();) {
+            UUID variableId = iterator.next();
             boolean present = false;
+            
             for (VariableParameterMapping varParamMapping: parameterMappings) {
                 if (varParamMapping.getVariableId().equals(variableId)) {
                     present = true;
@@ -111,7 +121,7 @@ public abstract class AbstractPredictionModel extends Thing {
             }
 
             if (!present) {
-                variableIds.remove(variableId);
+                iterator.remove();
             }
         }
     }
@@ -203,5 +213,30 @@ public abstract class AbstractPredictionModel extends Thing {
 
     public PredictionModelDisplayRepresentation getDisplayRepresentation() {
         return new PredictionModelDisplayRepresentation(this);
+    }
+
+    @Override
+    public void update(AbstractModification modification) {
+        VariableModification variableModification = (VariableModification) modification;
+        if (modification.getModificationType() == ModificationType.DELETION) {
+            for (Iterator<VariableParameterMapping> iterator = parameterMappings.iterator(); iterator.hasNext();) {
+                VariableParameterMapping varParamMapping = iterator.next();
+                if (varParamMapping.getVariableId().equals(variableModification.getVariableId())) {
+                    iterator.remove();
+                }
+            }
+
+            udpateVariableIds();
+            updateVariableLinks();
+            updateDeviceLinks();
+
+            return;
+        }
+
+        if (modification.getModificationType() == ModificationType.NAME_CHANGED) {
+
+        }
+
+        PersistentDataService.savePredictionModelList();
     }
 }

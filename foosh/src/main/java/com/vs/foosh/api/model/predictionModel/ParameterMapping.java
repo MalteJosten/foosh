@@ -1,6 +1,8 @@
 package com.vs.foosh.api.model.predictionModel;
 
-public class ParameterMapping {
+import java.io.Serializable;
+
+public class ParameterMapping implements Serializable {
     private String parameter;
     private String deviceId;
 

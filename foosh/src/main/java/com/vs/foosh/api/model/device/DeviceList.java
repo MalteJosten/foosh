@@ -8,10 +8,12 @@ import java.util.UUID;
 import com.vs.foosh.api.exceptions.device.CouldNotFindUniqueDeviceNameException;
 import com.vs.foosh.api.exceptions.device.DeviceIdNotFoundException;
 import com.vs.foosh.api.exceptions.device.DeviceNameIsNotUniqueException;
+import com.vs.foosh.api.model.misc.AbstractModification;
 import com.vs.foosh.api.model.misc.IThingList;
 import com.vs.foosh.api.model.misc.IThingListObserver;
 import com.vs.foosh.api.model.misc.IThingListSubject;
 import com.vs.foosh.api.model.misc.ListModification;
+import com.vs.foosh.api.model.misc.ModificationType;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
@@ -65,7 +67,7 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
     }
 
     public void clearList() {
-        notifyObservers(ListModification.DELETION);
+        notifyObservers(new ListModification(ModificationType.DELETION)); 
         this.devices.clear();
     }
 
@@ -202,12 +204,12 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
     }
 
     @Override
-    public void notifyObservers(ListModification modification) {
+    public void notifyObservers(AbstractModification modification) {
         for(IThingListObserver observer: observers) {
             observer.update(modification);
         }
 
-        if (modification == ListModification.DELETION) {
+        if (modification.getModificationType() == ModificationType.DELETION) {
             observers.clear();
         }
     }

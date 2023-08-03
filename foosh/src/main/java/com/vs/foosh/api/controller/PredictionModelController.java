@@ -25,6 +25,7 @@ import com.vs.foosh.api.model.predictionModel.PredictionModelMappingPostRequest;
 import com.vs.foosh.api.model.predictionModel.VariableParameterMapping;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.ListService;
+import com.vs.foosh.api.services.PersistentDataService;
 
 @RestController
 @RequestMapping(value = "/api/models")
@@ -157,6 +158,8 @@ public class PredictionModelController {
 
         model.setMapping(request.getVariableId(), request.getMappings()); 
         model.updateLinks();
+
+        PersistentDataService.saveAll();
 
         VariableParameterMapping mapping = model.getParameterMapping(request.getVariableId());
 

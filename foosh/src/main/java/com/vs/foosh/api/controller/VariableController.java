@@ -156,6 +156,8 @@ public class VariableController {
     public ResponseEntity<Object> deleteVars() {
         ListService.getVariableList().clearList();
 
+        PersistentDataService.saveAll();
+
         Map<String, String> linkBlock = new HashMap<>();
         linkBlock.put("self", LinkBuilder.getVariableListLink().toString());
 
@@ -233,6 +235,7 @@ public class VariableController {
     @DeleteMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteVar(@PathVariable("id") String id) {
+        ListService.getVariableList().getThing(id).unregisterFromSubject();
         ListService.getVariableList().deleteThing(id);
 
         PersistentDataService.saveVariableList();
@@ -415,9 +418,9 @@ public class VariableController {
                     throw new FooSHJsonPatchIllegalOperationException(patch.getOperation());
             }
 
-            variable.unregister();
+            variable.unregisterFromSubject();
             variable.setDevices(devices);
-            variable.register();
+            variable.registerToSubject();
             variable.updateLinks();
 
             PersistentDataService.saveAll();
@@ -441,11 +444,11 @@ public class VariableController {
     @DeleteMapping(value = "/{id}/devices/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteVarDevices(@PathVariable("id") String id) {
-        ListService.getVariableList().getThing(id).clearDevices();
+        Variable variable = ListService.getVariableList().getThing(id);
+        variable.unregisterFromSubject();
 
         PersistentDataService.saveAll();
 
-        Variable variable = ListService.getVariableList().getThing(id);
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(variable.getSelfLinks());
         links.addAll(variable.getDeviceLinks());

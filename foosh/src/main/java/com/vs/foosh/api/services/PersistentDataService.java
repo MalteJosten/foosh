@@ -27,6 +27,7 @@ public class PersistentDataService {
     public static void saveDeviceList() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ApplicationConfig.getDeviceSavePath().toFile()))) {
             oos.writeObject(ListService.getDeviceList());
+            System.out.println("[INFO] Saved device list");
         } catch (FileNotFoundException e) {
             throw new SaveFileNotFoundException("devices");
         } catch (IOException e) {
@@ -64,6 +65,7 @@ public class PersistentDataService {
     public static void saveVariableList() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ApplicationConfig.getVariableSavePath().toFile()))) {
             oos.writeObject(ListService.getVariableList());
+            System.out.println("[INFO] Saved variable list");
         } catch (FileNotFoundException e) {
             throw new SaveFileNotFoundException("variables");
         } catch (IOException e) {
@@ -101,6 +103,7 @@ public class PersistentDataService {
     public static void savePredictionModelList() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ApplicationConfig.getPredictionModelSavePath().toFile()))) {
             oos.writeObject(ListService.getPredictionModelList());
+            System.out.println("[INFO] Saved predictionModel list");
         } catch (FileNotFoundException e) {
             throw new SaveFileNotFoundException("predictionModels");
         } catch (IOException e) {
