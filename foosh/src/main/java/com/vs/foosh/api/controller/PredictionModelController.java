@@ -172,7 +172,6 @@ public class PredictionModelController {
         return new ResponseEntity<>(responseBody, HttpStatus.CREATED);
     }
 
-    // TODO: Add /models/{id}/mappings/ links to linkBlock
     @PutMapping(value = "/{id}/mappings/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> putModelMapping(@PathVariable("id") String id) {
@@ -180,7 +179,7 @@ public class PredictionModelController {
 
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(model.getSelfLinks());
-        links.addAll(model.getDeviceLinks());
+        links.addAll(model.getMappingLinks());
 
         throw new HttpMappingNotAllowedException(
                 "You cannot use PUT on /models/" + id.replace(" ", "%20") +  "/mappings/! Use either PATCH to edit or DELETE and POST to replace the current mapping.",
