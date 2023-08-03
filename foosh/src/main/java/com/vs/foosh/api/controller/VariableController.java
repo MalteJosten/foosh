@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.vs.foosh.api.exceptions.device.DeviceIdNotFoundException;
 import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchIllegalArgumentException;
 import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchIllegalOperationException;
 import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
@@ -400,11 +401,18 @@ public class VariableController {
             switch (patch.getOperation()) {
                 case ADD:
                     if (!devices.contains(UUID.fromString(value))) {
+                        if (!IdService.isIdentifierInList(value, ListService.getDeviceList().getList())) {
+                            throw new DeviceIdNotFoundException(value);
+                        }
+
                         devices.add(UUID.fromString(value));
                     }
                     break;
                 case REPLACE:
                     if (!devices.contains(UUID.fromString(value))) {
+                        if (!IdService.isIdentifierInList(value, ListService.getDeviceList().getList())) {
+                            throw new DeviceIdNotFoundException(value);
+                        }
                         throw new FooSHJsonPatchIllegalArgumentException("Could not replace device since it is not part of the device collection.");
                     }
 
