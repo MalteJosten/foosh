@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.vs.foosh.api.exceptions.predictionModel.CouldNotFindVariableParameterMappingException;
-import com.vs.foosh.api.model.device.AbstractDevice;
 import com.vs.foosh.api.model.misc.AbstractModification;
 import com.vs.foosh.api.model.misc.IThingListObserver;
 import com.vs.foosh.api.model.misc.ModificationType;
