@@ -185,9 +185,9 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
     }
 
     protected void updateMappingLinks() {
-        LinkEntry getMapping    = new LinkEntry("mapping", LinkBuilder.getPredictionModelMappingLink(this.id.toString()), HttpAction.GET, List.of());
-        LinkEntry postMapping   = new LinkEntry("mapping", LinkBuilder.getPredictionModelMappingLink(this.id.toString()), HttpAction.POST, List.of("application/json"));
-        LinkEntry deleteMapping = new LinkEntry("mapping", LinkBuilder.getPredictionModelMappingLink(this.id.toString()), HttpAction.DELETE, List.of());
+        LinkEntry getMapping    = new LinkEntry("mappings", LinkBuilder.getPredictionModelMappingLink(this.id.toString()), HttpAction.GET, List.of());
+        LinkEntry postMapping   = new LinkEntry("mappings", LinkBuilder.getPredictionModelMappingLink(this.id.toString()), HttpAction.POST, List.of("application/json"));
+        LinkEntry deleteMapping = new LinkEntry("mappings", LinkBuilder.getPredictionModelMappingLink(this.id.toString()), HttpAction.DELETE, List.of());
 
         if (mappingLinks != null || !mappingLinks.isEmpty()) {
             mappingLinks.clear();

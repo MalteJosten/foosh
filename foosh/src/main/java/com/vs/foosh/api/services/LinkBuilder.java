@@ -139,7 +139,7 @@ public class LinkBuilder {
             .path("api/")
             .path("models/")
             .path(identifier + "/")
-            .path("mapping")
+            .path("mappings/")
             .build();
 
         return uri.toUri();

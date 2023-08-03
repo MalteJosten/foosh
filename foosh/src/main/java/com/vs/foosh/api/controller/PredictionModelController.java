@@ -34,7 +34,7 @@ public class PredictionModelController {
     @GetMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modelsGet() {
-        AbstractMap.SimpleEntry<String, Object> result = new AbstractMap.SimpleEntry<String, Object>("prediction_models", ListService.getPredictionModelList().getDisplayListRepresentation());
+        AbstractMap.SimpleEntry<String, Object> result = new AbstractMap.SimpleEntry<String, Object>("predictionModels", ListService.getPredictionModelList().getDisplayListRepresentation());
 
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put(result.getKey(), result.getValue());
@@ -129,25 +129,25 @@ public class PredictionModelController {
     ///
 
     // TODO: Implement Paging
-    @GetMapping(value = "/{id}/mapping",
+    @GetMapping(value = "/{id}/mappings/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getModelMapping(@PathVariable("id") String id) {
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
 
-        List<VariableParameterMapping> mapping = model.getAllMappings();
+        List<VariableParameterMapping> mappings = model.getAllMappings();
 
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(model.getSelfLinks());
         links.addAll(model.getDeviceLinks());
         links.addAll(model.getVariableLinks());
         Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("mappings", mapping);
+        responseBody.put("mappings", mappings);
         responseBody.put("_links", links);
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
     // TODO: Implement Paging
-    @PostMapping(value = "/{id}/mapping",
+    @PostMapping(value = "/{id}/mappings/",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> postModelMapping(@PathVariable("id") String id, @RequestBody PredictionModelMappingPostRequest request) {
@@ -172,8 +172,8 @@ public class PredictionModelController {
         return new ResponseEntity<>(responseBody, HttpStatus.CREATED);
     }
 
-    // TODO: Add /models/{id}/mapping links to linkBlock
-    @PutMapping(value = "/{id}/mapping",
+    // TODO: Add /models/{id}/mappings/ links to linkBlock
+    @PutMapping(value = "/{id}/mappings/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> putModelMapping(@PathVariable("id") String id) {
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
@@ -183,12 +183,12 @@ public class PredictionModelController {
         links.addAll(model.getDeviceLinks());
 
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /models/" + id.replace(" ", "%20") +  "/mapping! Use either PATCH to edit or DELETE and POST to replace the current mapping.",
+                "You cannot use PUT on /models/" + id.replace(" ", "%20") +  "/mappings/! Use either PATCH to edit or DELETE and POST to replace the current mapping.",
                 links);
     }
     
     // TODO: (Implement custom Json Patch)
-    @PatchMapping(value = "/{id}/mapping",
+    @PatchMapping(value = "/{id}/mappings/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> patchModelMapping(@PathVariable("id") String id, @RequestBody List<Map<String, String>> patchMappings) {
         throw new HttpMappingNotAllowedException(
@@ -196,7 +196,7 @@ public class PredictionModelController {
                 ListService.getPredictionModelList().getLinks("self"));
     }
 
-    @DeleteMapping(value = "/{id}/mapping",
+    @DeleteMapping(value = "/{id}/mappings/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteModelMapping(@PathVariable("id") String id) {
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
@@ -205,14 +205,14 @@ public class PredictionModelController {
 
         PersistentDataService.savePredictionModelList();
 
-        List<VariableParameterMapping> mapping = model.getAllMappings();
+        List<VariableParameterMapping> mappings = model.getAllMappings();
 
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(model.getSelfLinks());
         links.addAll(model.getDeviceLinks());
         links.addAll(model.getVariableLinks());
         Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("mappings", mapping);
+        responseBody.put("mappings", mappings);
         responseBody.put("_links", links);
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
