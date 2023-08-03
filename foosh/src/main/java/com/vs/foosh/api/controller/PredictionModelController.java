@@ -203,6 +203,8 @@ public class PredictionModelController {
 
         model.deleteMapping();
 
+        PersistentDataService.savePredictionModelList();
+
         List<VariableParameterMapping> mapping = model.getAllMappings();
 
         List<LinkEntry> links = new ArrayList<>();
