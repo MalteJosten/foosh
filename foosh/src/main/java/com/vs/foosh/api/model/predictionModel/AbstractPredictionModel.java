@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.vs.foosh.api.exceptions.predictionModel.CouldNotFindVariableParameterMappingException;
+import com.vs.foosh.api.model.device.AbstractDevice;
 import com.vs.foosh.api.model.misc.AbstractModification;
 import com.vs.foosh.api.model.misc.IThingListObserver;
 import com.vs.foosh.api.model.misc.ModificationType;
@@ -233,8 +234,17 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
             return;
         }
 
-        if (modification.getModificationType() == ModificationType.NAME_CHANGED) {
+        if (modification.getModificationType() == ModificationType.DEPENDENCIES_CHANGED) {
+            for (Iterator<VariableParameterMapping> iterator = parameterMappings.iterator(); iterator.hasNext();) {
+                VariableParameterMapping varParamMapping = iterator.next();
+                if (varParamMapping.getVariableId().equals(variableModification.getVariableId())) {
+                    varParamMapping.clearMappings();
+                }
+            }
 
+            updateDeviceLinks();
+
+            return;
         }
 
         PersistentDataService.savePredictionModelList();

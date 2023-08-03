@@ -200,6 +200,8 @@ public class Variable extends Thing implements IThingListObserver, IThingListSub
         }
 
         updateLinks();
+
+        notifyObservers(new VariableModification(ModificationType.DEPENDENCIES_CHANGED, this.id));
     }
 
     @Override

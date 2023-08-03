@@ -15,6 +15,10 @@ public class VariableParameterMapping implements Serializable {
         this.mappings   = mappings;
     }
 
+    public void clearMappings() {
+        this.mappings.clear();
+    }
+
     public UUID getVariableId() {
         return this.variableId;
     }
