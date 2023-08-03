@@ -153,7 +153,6 @@ public class PredictionModelController {
     public ResponseEntity<Object> postModelMapping(@PathVariable("id") String id, @RequestBody PredictionModelMappingPostRequest request) {
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
 
-        // TODO: Add Observer so we can update stuff when variable(s) and/or device(s) change.
         request.validate(id, ListService.getVariableList().getThing(request.getVariableId().toString()).getDeviceIds());
 
         model.setMapping(request.getVariableId(), request.getMappings()); 
@@ -200,9 +199,20 @@ public class PredictionModelController {
     @DeleteMapping(value = "/{id}/mapping",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteModelMapping(@PathVariable("id") String id) {
-        throw new HttpMappingNotAllowedException(
-                "Not implemented",
-                ListService.getPredictionModelList().getLinks("self"));
+        AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
+
+        model.deleteMapping();
+
+        List<VariableParameterMapping> mapping = model.getAllMappings();
+
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(model.getSelfLinks());
+        links.addAll(model.getDeviceLinks());
+        links.addAll(model.getVariableLinks());
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("mappings", mapping);
+        responseBody.put("_links", links);
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
 }

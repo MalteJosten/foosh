@@ -89,7 +89,7 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
         // TODO: Subscribe to variable subject as observer
         ListService.getVariableList().getThing(variableId.toString()).attach(this);
         parameterMappings.add(new VariableParameterMapping(variableId, mappings));
-        udpateVariableIds();
+        updateVariableIds();
     }
 
     public void patchMapping(FooSHJsonPatch patch) {
@@ -97,10 +97,14 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
     }
 
     public void deleteMapping() {
-        // TODO: Implement
+        parameterMappings.clear();
+
+        updateVariableIds();
+        updateVariableLinks();
+        updateDeviceLinks();
     }
 
-    protected void udpateVariableIds() {
+    protected void updateVariableIds() {
         // Check which variable IDs are not yet stored in the variableIds list
         for (VariableParameterMapping varParamMapping: parameterMappings) {
             if (!variableIds.contains(varParamMapping.getVariableId())) {
@@ -226,7 +230,7 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
                 }
             }
 
-            udpateVariableIds();
+            updateVariableIds();
             updateVariableLinks();
             updateDeviceLinks();
 

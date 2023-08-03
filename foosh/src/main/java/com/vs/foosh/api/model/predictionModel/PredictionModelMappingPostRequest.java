@@ -23,7 +23,6 @@ public class PredictionModelMappingPostRequest {
     }
 
     public void validate(String modelId, List<UUID> validDeviceIds) {
-        // Validate that the provided variableId is actually a valid variable id.
         IdService.isUuidInList(variableId, ListService.getVariableList().getList());
 
         // Detect and remove duplicates
