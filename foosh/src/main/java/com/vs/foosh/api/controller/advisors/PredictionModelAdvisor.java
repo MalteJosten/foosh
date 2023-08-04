@@ -59,7 +59,7 @@ public class PredictionModelAdvisor extends ResponseEntityExceptionHandler {
     @ExceptionHandler(PredictionModelNotFoundException.class)
     public ResponseEntity<Object> handlePredictionModelNotFoundException(PredictionModelNotFoundException exception, WebRequest request) {
         List<LinkEntry> links = new ArrayList<>();
-        links.addAll(LinkBuilder.getPredictionModelLinkBlock("models"));
+        links.addAll(ListService.getPredictionModelList().getLinks("models"));
         
         return HttpResponseBuilder.buildException(
                 "Could not find prediction model with identifier '" + exception.getId() + "'!",

@@ -25,6 +25,7 @@ import com.vs.foosh.api.exceptions.device.DeviceIdNotFoundException;
 import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchIllegalArgumentException;
 import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchIllegalOperationException;
 import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
+import com.vs.foosh.api.exceptions.variable.MalformedVariableModelPostRequestException;
 import com.vs.foosh.api.exceptions.variable.VariableCreationException;
 import com.vs.foosh.api.exceptions.variable.VariableDevicePostException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsEmptyException;
@@ -520,7 +521,15 @@ public class VariableController {
         Variable variable = ListService.getVariableList().getThing(id);
 
         // Check whether the user provided a valid predictionModel identifier
-        ListService.getPredictionModelList().getThing(request.getModelId().toString());
+        AbstractPredictionModel linkToModel = ListService.getPredictionModelList().getThing(request.getModelId().toString());
+
+        // Check if we already have a model with the same ID
+        if (variable.getModelIds().contains(request.getModelId())) {
+            throw new MalformedVariableModelPostRequestException(
+                id,
+                "The model '" + linkToModel.getName() + "' (" + linkToModel.getId() + ") is already linked to the variable '" + variable.getName() + "' (" + variable.getId() + ")."
+            );
+        }
 
         // Rewrite post request to be able to forward it to the PredictionModelService.postMappings(...)
         // It is going to be handled as if the user did a POST /models/{modelId}/mappings/

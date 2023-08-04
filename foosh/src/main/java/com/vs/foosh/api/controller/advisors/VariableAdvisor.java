@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.vs.foosh.api.exceptions.variable.MalformedVariableModelPostRequestException;
 import com.vs.foosh.api.exceptions.variable.VariableCreationException;
 import com.vs.foosh.api.exceptions.variable.VariableDevicePostException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsEmptyException;
@@ -106,4 +107,15 @@ public class VariableAdvisor extends ResponseEntityExceptionHandler {
                 HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(MalformedVariableModelPostRequestException.class)
+    public ResponseEntity<Object> handleMalformedVariableModelPostRequestException(MalformedVariableModelPostRequestException exception, WebRequest request) {
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(LinkBuilder.getVariableLinkBlock(exception.getId()));
+        links.addAll(ListService.getVariableList().getThing(exception.getId()).getVarModelLinks());
+
+        return HttpResponseBuilder.buildException(
+                exception.getMessage(),
+                links,
+                HttpStatus.BAD_REQUEST);
+    }
 }

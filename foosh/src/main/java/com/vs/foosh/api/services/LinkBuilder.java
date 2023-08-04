@@ -118,6 +118,21 @@ public class LinkBuilder {
         return uri.toUri();
     }
 
+    public static URI getVariableModelsLink(String identifier) {
+        UriComponents uri = UriComponentsBuilder
+            .newInstance()
+            .scheme("http")
+            .host(host)
+            .port(port)
+            .path("api/")
+            .path("vars/")
+            .path(identifier + "/")
+            .path("models/")
+            .build();
+
+        return uri.toUri();
+    }
+
     public static URI getPredictionModelListLink() {
         UriComponents uri = UriComponentsBuilder
             .newInstance()

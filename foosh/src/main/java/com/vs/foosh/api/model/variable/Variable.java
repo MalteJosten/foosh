@@ -24,6 +24,7 @@ public class Variable extends Thing implements IThingListObserver, IThingListSub
     private List<LinkEntry> links          = new ArrayList<>();
     private List<LinkEntry> extLinks       = new ArrayList<>();
     private List<LinkEntry> varDeviceLinks = new ArrayList<>();
+    private List<LinkEntry> varModelLinks  = new ArrayList<>();
 
     private List<IThingListObserver> observers = new ArrayList<>();
 
@@ -72,6 +73,7 @@ public class Variable extends Thing implements IThingListObserver, IThingListSub
     public void clearModels() {
         notifyObservers(new VariableModification(ModificationType.DELETION, this.id));
         this.models.clear();
+        updateVarModelLinks();
     }
 
     public void setDevices(List<UUID> deviceIDs) {
@@ -123,6 +125,10 @@ public class Variable extends Thing implements IThingListObserver, IThingListSub
 
     public List<LinkEntry> getVarDeviceLinks() {
         return this.varDeviceLinks;
+    }
+
+    public List<LinkEntry> getVarModelLinks() {
+        return this.varModelLinks;
     }
 
     public List<LinkEntry> getAllLinks() {
@@ -191,7 +197,6 @@ public class Variable extends Thing implements IThingListObserver, IThingListSub
         extLinks.addAll(ListService.getVariableList().getLinks("variables"));
     }
 
-
     private void updateVarDeviceLinks() {
         LinkEntry get    = new LinkEntry("devices", LinkBuilder.getVariableDevicesLink(this.id.toString()), HttpAction.GET, List.of());
         LinkEntry post   = new LinkEntry("devices", LinkBuilder.getVariableDevicesLink(this.id.toString()), HttpAction.POST, List.of("application/json"));
@@ -207,6 +212,23 @@ public class Variable extends Thing implements IThingListObserver, IThingListSub
             varDeviceLinks.addAll(List.of(get, post, patch));
         } else {
             varDeviceLinks.addAll(List.of(get, patch, delete));
+        }
+    }
+
+    private void updateVarModelLinks() {
+        LinkEntry get    = new LinkEntry("models", LinkBuilder.getVariableModelsLink(this.id.toString()), HttpAction.GET, List.of());
+        LinkEntry post   = new LinkEntry("models", LinkBuilder.getVariableModelsLink(this.id.toString()), HttpAction.POST, List.of("application/json"));
+        LinkEntry patch  = new LinkEntry("models", LinkBuilder.getVariableModelsLink(this.id.toString()), HttpAction.PATCH, List.of("application/json"));
+        LinkEntry delete = new LinkEntry("models", LinkBuilder.getVariableModelsLink(this.id.toString()), HttpAction.DELETE, List.of());
+
+
+        if (varModelLinks != null || !varModelLinks.isEmpty()) {
+            varModelLinks.clear();
+        }
+
+        varModelLinks.addAll(List.of(get, post, patch));
+        if (!varModelLinks.isEmpty()) {
+            varModelLinks.add(delete);
         }
     }
 

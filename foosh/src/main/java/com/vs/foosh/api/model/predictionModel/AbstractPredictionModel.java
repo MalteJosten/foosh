@@ -86,7 +86,6 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
 
         }
         
-        // TODO: Subscribe to variable subject as observer
         ListService.getVariableList().getThing(variableId.toString()).attach(this);
         parameterMappings.add(new VariableParameterMapping(variableId, mappings));
         updateVariableIds();
