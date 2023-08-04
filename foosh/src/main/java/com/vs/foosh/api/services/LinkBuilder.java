@@ -79,7 +79,7 @@ public class LinkBuilder {
         return uri.toUri();
     }
 
-    public static List<LinkEntry> getVariableLinkBlock (String id) {
+    public static List<LinkEntry> getVariableLinkBlock(String id) {
         Variable variable = ListService.getVariableList().getThing(id);
 
         List<LinkEntry> links = new ArrayList<>();
@@ -98,6 +98,21 @@ public class LinkBuilder {
             .path("api/")
             .path("vars/")
             .path(identifier)
+            .build();
+
+        return uri.toUri();
+    }
+
+    public static URI getVariableDevicesLink(String identifier) {
+        UriComponents uri = UriComponentsBuilder
+            .newInstance()
+            .scheme("http")
+            .host(host)
+            .port(port)
+            .path("api/")
+            .path("vars/")
+            .path(identifier + "/")
+            .path("devices/")
             .build();
 
         return uri.toUri();

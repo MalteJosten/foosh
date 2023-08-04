@@ -18,10 +18,11 @@ public class Variable extends Thing implements IThingListObserver, IThingListSub
     private List<UUID> models  = new ArrayList<>();
     private List<UUID> devices = new ArrayList<>();
 
-    private List<LinkEntry> modelLinks  = new ArrayList<>();
-    private List<LinkEntry> deviceLinks = new ArrayList<>();
-    private List<LinkEntry> links       = new ArrayList<>();
-    private List<LinkEntry> extLinks    = new ArrayList<>();
+    private List<LinkEntry> modelLinks     = new ArrayList<>();
+    private List<LinkEntry> deviceLinks    = new ArrayList<>();
+    private List<LinkEntry> links          = new ArrayList<>();
+    private List<LinkEntry> extLinks       = new ArrayList<>();
+    private List<LinkEntry> varDeviceLinks = new ArrayList<>();
 
     private List<IThingListObserver> observers = new ArrayList<>();
 
@@ -114,6 +115,10 @@ public class Variable extends Thing implements IThingListObserver, IThingListSub
         return this.extLinks;
     }
 
+    public List<LinkEntry> getVarDeviceLinks() {
+        return this.varDeviceLinks;
+    }
+
     public List<LinkEntry> getAllLinks() {
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(getSelfLinks());
@@ -132,6 +137,7 @@ public class Variable extends Thing implements IThingListObserver, IThingListSub
         updateDeviceLinks();
         updateModelLinks();
         updateExtLinks();
+        updateVarDeviceLinks();
     }
     
     private void updateSelfLinks() {
@@ -171,6 +177,25 @@ public class Variable extends Thing implements IThingListObserver, IThingListSub
         }
 
         extLinks.addAll(ListService.getVariableList().getLinks("variables"));
+    }
+
+
+    private void updateVarDeviceLinks() {
+        LinkEntry get    = new LinkEntry("devices", LinkBuilder.getVariableDevicesLink(this.id.toString()), HttpAction.GET, List.of());
+        LinkEntry post   = new LinkEntry("devices", LinkBuilder.getVariableDevicesLink(this.id.toString()), HttpAction.POST, List.of("application/json"));
+        LinkEntry patch  = new LinkEntry("devices", LinkBuilder.getVariableDevicesLink(this.id.toString()), HttpAction.PATCH, List.of("application/json"));
+        LinkEntry delete = new LinkEntry("devices", LinkBuilder.getVariableDevicesLink(this.id.toString()), HttpAction.DELETE, List.of());
+
+
+        if (varDeviceLinks != null || !varDeviceLinks.isEmpty()) {
+            varDeviceLinks.clear();
+        }
+
+        if (varDeviceLinks.isEmpty()) {
+            varDeviceLinks.addAll(List.of(get, post, patch));
+        } else {
+            varDeviceLinks.addAll(List.of(get, patch, delete));
+        }
     }
 
     @Override

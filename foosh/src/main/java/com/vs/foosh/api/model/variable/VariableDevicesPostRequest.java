@@ -5,16 +5,16 @@ import java.util.UUID;
 
 // TODO: @Override toString()
 public class VariableDevicesPostRequest {
-    private List<UUID> devices;
+    private List<UUID> deviceIds;
 
     public VariableDevicesPostRequest() {}
 
-    public VariableDevicesPostRequest(List<UUID> devices) {
-        this.devices = devices;
+    public VariableDevicesPostRequest(List<UUID> deviceIds) {
+        this.deviceIds = deviceIds;
     }
 
-    public List<UUID> getDevices() {
-        return this.devices;
+    public List<UUID> getDeviceIds() {
+        return this.deviceIds;
     }
     
 }

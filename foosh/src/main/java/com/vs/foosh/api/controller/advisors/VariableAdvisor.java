@@ -88,9 +88,13 @@ public class VariableAdvisor extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(VariableDevicePostException.class)
     public ResponseEntity<Object> handleVariableDevicePostException(VariableDevicePostException exception, WebRequest request) {
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(ListService.getVariableList().getThing(exception.getVariableId()).getSelfLinks());
+        links.addAll(ListService.getVariableList().getThing(exception.getVariableId()).getVarDeviceLinks());
+
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
-                ListService.getVariableList().getThing(exception.getVariableId().toString()).getDeviceLinks(),
+                links,
                 exception.getStatus());
     }
 

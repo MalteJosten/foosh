@@ -298,8 +298,21 @@ public class VariableController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> postVarDevices(@PathVariable("id") String id, @RequestBody VariableDevicesPostRequest request) {
+        Variable variable = ListService.getVariableList().getThing(id);
+
+        // Do we already have stored devices?
+        // If so, we don't allow the use of POST.
+        if (!variable.getDeviceIds().isEmpty()) {
+            List<LinkEntry> links = new ArrayList<>();
+            links.addAll(variable.getSelfLinks());
+            links.addAll(variable.getVarDeviceLinks());
+            throw new HttpMappingNotAllowedException(
+                "The variable '" + variable.getName() + "' (" + variable.getId() + ") already has devices set as dependencies. Use PATCH instead to edit the dependencies.",
+                links);
+        }
+
         // Remove duplicates
-        List<UUID> deviceIds = new ArrayList<>(new HashSet<>(request.getDevices()));
+        List<UUID> deviceIds = new ArrayList<>(new HashSet<>(request.getDeviceIds()));
 
         for (UUID deviceId: deviceIds) {
             if(!IdService.isUuidInList(deviceId, ListService.getDeviceList().getList())) {
@@ -312,9 +325,8 @@ public class VariableController {
             }
         }
 
-        Variable variable = ListService.getVariableList().getThing(id);
-
         variable.setDevices(deviceIds);
+        variable.updateLinks();
 
         PersistentDataService.saveAll();
 
