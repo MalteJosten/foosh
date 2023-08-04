@@ -26,6 +26,7 @@ import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchIllegalArgumentException;
 import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchIllegalOperationException;
 import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
 import com.vs.foosh.api.exceptions.variable.MalformedVariableModelPostRequestException;
+import com.vs.foosh.api.exceptions.variable.MalformedVariablePredictionRequest;
 import com.vs.foosh.api.exceptions.variable.VariableCreationException;
 import com.vs.foosh.api.exceptions.variable.VariableDevicePostException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsEmptyException;
@@ -39,6 +40,7 @@ import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.variable.VariableDevicesPostRequest;
 import com.vs.foosh.api.model.variable.VariableModelPostRequest;
 import com.vs.foosh.api.model.variable.VariablePostRequest;
+import com.vs.foosh.api.model.variable.VariablePredictionRequest;
 import com.vs.foosh.api.model.web.FooSHJsonPatch;
 import com.vs.foosh.api.model.web.FooSHPatchOperation;
 import com.vs.foosh.api.model.web.LinkEntry;
@@ -193,7 +195,14 @@ public class VariableController {
     @PostMapping(value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> postVar() {
+    public ResponseEntity<Object> postVar(@PathVariable("id") String id, @RequestBody VariablePredictionRequest request) {
+        Variable variable = ListService.getVariableList().getThing(id);
+
+        if (!variable.getModelIds().contains(request.getModelId())) {
+            throw new MalformedVariablePredictionRequest(
+                id,
+                "The model with ID '" + request.getModelId() + "' is not yet linked to the variable '" + variable.getName() + "' (" + variable.getId() + ")!");
+        }
         // TODO: Start prediction.
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
