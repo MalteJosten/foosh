@@ -33,8 +33,10 @@ import com.vs.foosh.api.exceptions.variable.VariableNamePatchRequest;
 import com.vs.foosh.api.model.device.DeviceResponseObject;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
+import com.vs.foosh.api.model.predictionModel.PredictionModelMappingPostRequest;
 import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.variable.VariableDevicesPostRequest;
+import com.vs.foosh.api.model.variable.VariableModelPostRequest;
 import com.vs.foosh.api.model.variable.VariablePostRequest;
 import com.vs.foosh.api.model.web.FooSHJsonPatch;
 import com.vs.foosh.api.model.web.FooSHPatchOperation;
@@ -43,6 +45,7 @@ import com.vs.foosh.api.services.IdService;
 import com.vs.foosh.api.services.LinkBuilder;
 import com.vs.foosh.api.services.ListService;
 import com.vs.foosh.api.services.PersistentDataService;
+import com.vs.foosh.api.services.PredictionModelService;
 
 // TODO: Extract logic into dedicated service(s)
 @RestController
@@ -513,8 +516,34 @@ public class VariableController {
     @PostMapping(value = "/{id}/models/",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> postVarModels(@PathVariable("id") String id) {
-        throw new HttpMappingNotAllowedException("Not yet implemented!");
+    public ResponseEntity<Object> postVarModels(@PathVariable("id") String id, @RequestBody VariableModelPostRequest request) {
+        Variable variable = ListService.getVariableList().getThing(id);
+
+        // Check whether the user provided a valid predictionModel identifier
+        ListService.getPredictionModelList().getThing(request.getModelId().toString());
+
+        // Rewrite post request to be able to forward it to the PredictionModelService.postMappings(...)
+        // It is going to be handled as if the user did a POST /models/{modelId}/mappings/
+        PredictionModelService.postMappings(request.getModelId().toString(), new PredictionModelMappingPostRequest(variable.getId(), request.getMappings()));
+
+        List<Thing> models = new ArrayList<>();
+        for (UUID modelId: variable.getModelIds()) {
+            for (AbstractPredictionModel model: ListService.getPredictionModelList().getList()) {
+                if (model.getId().equals(modelId)) {
+                    models.add(model.getDisplayRepresentation().getModel());
+                }
+            }
+        }
+
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(variable.getSelfLinks());
+        links.addAll(variable.getModelLinks());
+
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("models", models);
+        responseBody.put("_links", links);
+
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
     @PutMapping(value = "/{id}/models/",
             produces = MediaType.APPLICATION_JSON_VALUE)
