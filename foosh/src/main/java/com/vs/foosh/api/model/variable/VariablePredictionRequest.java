@@ -1,17 +1,17 @@
 package com.vs.foosh.api.model.variable;
 
-import java.util.UUID;
-
 public class VariablePredictionRequest {
-    private UUID modelId;
+    private String modelId;
     private String value;
+    private boolean execute;
 
-    public VariablePredictionRequest(UUID modelId, String value) {
+    public VariablePredictionRequest(String modelId, String value, boolean execute) {
         this.modelId = modelId;
         this.value   = value;
+        this.execute = execute;
     }
 
-    public UUID getModelId() {
+    public String getModelId() {
         return this.modelId;
     }
 
@@ -19,11 +19,16 @@ public class VariablePredictionRequest {
         return this.value;
     }
 
+    public boolean getExecute() {
+        return this.execute;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder("<< VariablePredictionRequest >>\n");
         builder.append("Model: " + modelId + "\n");
-        builder.append("Value: " + value);
+        builder.append("Value: " + value   + "\n");
+        builder.append("Execute Instructions: " + execute);
 
         return builder.toString();
     }

@@ -1,5 +1,6 @@
 package com.vs.foosh.api.controller;
 
+import java.time.Duration;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +25,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import com.vs.foosh.api.exceptions.device.DeviceIdNotFoundException;
 import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchIllegalArgumentException;
@@ -44,6 +50,8 @@ import com.vs.foosh.api.model.variable.VariablePredictionRequest;
 import com.vs.foosh.api.model.web.FooSHJsonPatch;
 import com.vs.foosh.api.model.web.FooSHPatchOperation;
 import com.vs.foosh.api.model.web.LinkEntry;
+import com.vs.foosh.api.model.web.SmartHomeInstruction;
+import com.vs.foosh.api.model.web.SmartHomePostResult;
 import com.vs.foosh.api.services.IdService;
 import com.vs.foosh.api.services.LinkBuilder;
 import com.vs.foosh.api.services.ListService;
@@ -192,19 +200,45 @@ public class VariableController {
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
+    // TODO: Start prediction.
     @PostMapping(value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> postVar(@PathVariable("id") String id, @RequestBody VariablePredictionRequest request) {
         Variable variable = ListService.getVariableList().getThing(id);
+        AbstractPredictionModel model = ListService.getPredictionModelList().getThing(request.getModelId());
 
-        if (!variable.getModelIds().contains(request.getModelId())) {
+        if (!variable.getModelIds().contains(model.getId())) {
             throw new MalformedVariablePredictionRequest(
                 id,
                 "The model with ID '" + request.getModelId() + "' is not yet linked to the variable '" + variable.getName() + "' (" + variable.getId() + ")!");
         }
-        // TODO: Start prediction.
-        return new ResponseEntity<Object>(HttpStatus.OK);
+
+
+        List<SmartHomeInstruction> smartHomeInstructions = model.makePrediction(variable.getId(), request.getValue());
+
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("variable", variable.getName());
+        responseBody.put("value", request.getValue());
+        responseBody.put("instructions", smartHomeInstructions);
+
+        if (request.getExecute()) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.TEXT_PLAIN);
+
+            List<SmartHomePostResult> responses = new ArrayList<>();
+
+            for (SmartHomeInstruction instruction: smartHomeInstructions) {
+                HttpEntity<String> postRequest = new HttpEntity<String>(instruction.getPayload(), headers);
+                RestTemplate restTemplate = new RestTemplateBuilder().setConnectTimeout(Duration.ofSeconds(5)).setReadTimeout(Duration.ofSeconds(5)).build();
+                ResponseEntity<Object> response = restTemplate.exchange(instruction.getUri(), HttpMethod.POST, postRequest, Object.class);
+                responses.add(new SmartHomePostResult(instruction.getIndex(), response.getStatusCode()));
+            }
+
+            responseBody.put("responses", responses);
+        }
+
+        return new ResponseEntity<Object>(responseBody, HttpStatus.OK);
     }
 
     @PutMapping(value = "/{id}",

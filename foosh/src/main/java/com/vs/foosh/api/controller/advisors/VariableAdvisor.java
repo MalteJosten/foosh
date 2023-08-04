@@ -20,6 +20,7 @@ import com.vs.foosh.api.exceptions.variable.VariableNameIsNullException;
 import com.vs.foosh.api.exceptions.variable.VariableNameMustNotBeAnUuidException;
 import com.vs.foosh.api.exceptions.variable.VariableNotFoundException;
 import com.vs.foosh.api.exceptions.variable.VariablePatchException;
+import com.vs.foosh.api.exceptions.variable.VariablePredictionException;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.HttpResponseBuilder;
 import com.vs.foosh.api.services.LinkBuilder;
@@ -129,5 +130,16 @@ public class VariableAdvisor extends ResponseEntityExceptionHandler {
                 exception.getMessage(),
                 links,
                 HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(VariablePredictionException.class)
+    public ResponseEntity<Object> handleVariablePredictionException(VariablePredictionException exception, WebRequest request) {
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(LinkBuilder.getVariableLinkBlock(exception.getId().toString()));
+
+        return HttpResponseBuilder.buildException(
+                exception.getMessage(),
+                links,
+                HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

@@ -4,22 +4,28 @@ import java.net.URI;
 import java.util.UUID;
 
 public class SmartHomeInstruction {
+    private int index;
     private UUID deviceId;
-    private String value;
+    private String payload;
     private URI deviceUri;
 
-    public SmartHomeInstruction(UUID id, String value, URI uri) {
-        this.deviceId  = id;
-        this.value     = value;
+    public SmartHomeInstruction(int index, UUID deviceId, String payload, URI uri) {
+        this.index     = index;
+        this.deviceId  = deviceId;
+        this.payload   = payload;
         this.deviceUri = uri;
+    }
+
+    public int getIndex() {
+        return this.index;
     }
 
     public UUID getDeviceId() {
         return this.deviceId;
     }
 
-    public String getValue() {
-        return this.value;
+    public String getPayload() {
+        return this.payload;
     }
 
     public URI getUri() {
@@ -29,9 +35,10 @@ public class SmartHomeInstruction {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder("<< SmartHomeInstruction >>\n");
-        builder.append("Device-ID:\t" + deviceId  + "\n");
-        builder.append("Value:\t"     + value     + "\n");
-        builder.append("URI:\t"       + deviceUri + "\n");
+        builder.append("Index:     " + index     + "\n");
+        builder.append("Device-ID: " + deviceId  + "\n");
+        builder.append("Payload:   " + payload   + "\n");
+        builder.append("URI:       " + deviceUri + "\n");
     
         return builder.toString();
     }

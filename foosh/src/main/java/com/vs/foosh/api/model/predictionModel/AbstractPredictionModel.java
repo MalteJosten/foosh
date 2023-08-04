@@ -34,7 +34,7 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
 
     /// This is a default implementation.
     /// Needs to be overwritten!
-    public List<SmartHomeInstruction> makePrediction(String value) {
+    public List<SmartHomeInstruction> makePrediction(UUID variableId, String value) {
         return new ArrayList<>();
     }
 
