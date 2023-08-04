@@ -31,6 +31,8 @@ import com.vs.foosh.api.exceptions.variable.VariableNameIsEmptyException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsNullException;
 import com.vs.foosh.api.exceptions.variable.VariableNamePatchRequest;
 import com.vs.foosh.api.model.device.DeviceResponseObject;
+import com.vs.foosh.api.model.misc.Thing;
+import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
 import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.variable.VariableDevicesPostRequest;
 import com.vs.foosh.api.model.variable.VariablePostRequest;
@@ -461,6 +463,7 @@ public class VariableController {
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
+    // TODO: Fix. It is not working!
     @DeleteMapping(value = "/{id}/devices/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteVarDevices(@PathVariable("id") String id) {
@@ -481,4 +484,83 @@ public class VariableController {
     ///
     /// Models
     ///
+
+    @GetMapping(value = "/{id}/models/",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getVarModels(@PathVariable("id") String id) {
+        Variable variable = ListService.getVariableList().getThing(id);
+
+        List<Thing> models = new ArrayList<>();
+        for (UUID modelId: variable.getModelIds()) {
+            for (AbstractPredictionModel model: ListService.getPredictionModelList().getList()) {
+                if (model.getId().equals(modelId)) {
+                    models.add(model.getDisplayRepresentation().getModel());
+                }
+            }
+        }
+
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(variable.getSelfLinks());
+        links.addAll(variable.getModelLinks());
+
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("models", models);
+        responseBody.put("_links", links);
+
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/{id}/models/",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> postVarModels(@PathVariable("id") String id) {
+        throw new HttpMappingNotAllowedException("Not yet implemented!");
+    }
+    @PutMapping(value = "/{id}/models/",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> putVarModels(@PathVariable("id") String id) {
+        Variable variable = ListService.getVariableList().getThing(id);
+        
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(variable.getSelfLinks());
+        links.addAll(variable.getModelLinks());
+
+        throw new HttpMappingNotAllowedException(
+                "You cannot use PUT on /vars/" + id + "/models/! Use DELETE and POST instead.",
+                links);
+    }
+
+    @PatchMapping(value = "/{id}/models/",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> patchVarModels(@PathVariable("id") String id) {
+        throw new HttpMappingNotAllowedException("Not yet implemented!");
+    }
+
+    @DeleteMapping(value = "/{id}/models/",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> deleteVarModels(@PathVariable("id") String id) {
+        Variable variable = ListService.getVariableList().getThing(id);
+
+        variable.clearModels();
+
+        List<Thing> models = new ArrayList<>();
+        for (UUID modelId: variable.getModelIds()) {
+            for (AbstractPredictionModel model: ListService.getPredictionModelList().getList()) {
+                if (model.getId().equals(modelId)) {
+                    models.add(model.getDisplayRepresentation().getModel());
+                }
+            }
+        }
+
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(variable.getSelfLinks());
+        links.addAll(variable.getModelLinks());
+
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("models", models);
+        responseBody.put("_links", links);
+
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
+    }
 }

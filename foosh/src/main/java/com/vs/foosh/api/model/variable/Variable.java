@@ -9,6 +9,7 @@ import com.vs.foosh.api.model.misc.IThingListObserver;
 import com.vs.foosh.api.model.misc.IThingListSubject;
 import com.vs.foosh.api.model.misc.ModificationType;
 import com.vs.foosh.api.model.misc.Thing;
+import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilder;
@@ -66,6 +67,11 @@ public class Variable extends Thing implements IThingListObserver, IThingListSub
        unregisterFromSubject();
        this.devices.clear();
        updateDeviceLinks(); 
+    }
+
+    public void clearModels() {
+        notifyObservers(new VariableModification(ModificationType.DELETION, this.id));
+        this.models.clear();
     }
 
     public void setDevices(List<UUID> deviceIDs) {
@@ -168,7 +174,13 @@ public class Variable extends Thing implements IThingListObserver, IThingListSub
 
     // TODO: Needs to be called after PATCH
     private void updateModelLinks() {
+        if (modelLinks != null || !modelLinks.isEmpty()) {
+            modelLinks.clear();
+        }
 
+        for (UUID modelId: models) {
+            modelLinks.addAll(ListService.getPredictionModelList().getThing(modelId.toString()).getSelfStaticLinks("model"));
+        }
     }
 
     private void updateExtLinks() {
@@ -233,12 +245,20 @@ public class Variable extends Thing implements IThingListObserver, IThingListSub
     public void attach(IThingListObserver observer) {
         if (!observers.contains(observer)) {
             observers.add(observer);
+            AbstractPredictionModel model = (AbstractPredictionModel) observer;
+            models.add(model.getId());
         }
+
+        updateModelLinks();
     }
 
     @Override
     public void detach(IThingListObserver observer) {
         observers.remove(observer);
+        AbstractPredictionModel model = (AbstractPredictionModel) observer;
+        models.remove(model.getId());
+
+        updateModelLinks();
     }
 
     @Override
