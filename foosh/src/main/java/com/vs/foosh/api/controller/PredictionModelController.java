@@ -153,19 +153,19 @@ public class PredictionModelController {
     public ResponseEntity<Object> postModelMapping(@PathVariable("id") String id, @RequestBody PredictionModelMappingPostRequest request) {
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
 
-        request.validate(id, ListService.getVariableList().getThing(request.getVariableId().toString()).getDeviceIds());
+        request.validate(id, ListService.getVariableList().getThing(request.getThingId().toString()).getDeviceIds());
 
-        model.setMapping(request.getVariableId(), request.getMappings()); 
+        model.setMapping(request.getThingId(), request.getMappings()); 
         model.updateLinks();
 
         PersistentDataService.saveAll();
 
-        VariableParameterMapping mapping = model.getParameterMapping(request.getVariableId());
+        VariableParameterMapping mapping = model.getParameterMapping(request.getThingId());
 
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(model.getSelfLinks());
         links.addAll(model.getDeviceLinks());
-        links.addAll(ListService.getVariableList().getThing(request.getVariableId().toString()).getSelfStaticLinks("variable"));
+        links.addAll(ListService.getVariableList().getThing(request.getThingId().toString()).getSelfStaticLinks("variable"));
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("mapping", mapping);
         responseBody.put("_links", links);
