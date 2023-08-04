@@ -1,37 +1,33 @@
-package com.vs.foosh.api.model.misc;
+package com.vs.foosh.api.model.variable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import com.vs.foosh.api.model.predictionModel.ParameterMapping;
 
-public abstract class AbstractMappingPostRequest {
-    protected UUID thingId;
-    protected List<ParameterMapping> mappings = new ArrayList<>();
+public class VariableModelPostRequest {
+    private UUID modelId;
+    private List<ParameterMapping> mappings;
 
-    public AbstractMappingPostRequest() {}
+    public VariableModelPostRequest() {}
 
-    public AbstractMappingPostRequest(UUID thingId, List<ParameterMapping> mappings) {
-        this.thingId  = thingId;
+    public VariableModelPostRequest(UUID modelId, List<ParameterMapping> mappings) {
+        this.modelId  = modelId;
         this.mappings = mappings;
     }
 
-    public abstract void validate(String parentId, List<UUID> validDeviceIds);
-
-    public UUID getThingId() {
-        return this.thingId;
+    public UUID getModelId() {
+        return this.modelId;
     }
 
     public List<ParameterMapping> getMappings() {
         return this.mappings;
     }
-
-
+    
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("<< MappingPostRequest >>\n");
-        builder.append("Thing-ID: " + thingId + "\n");
+        StringBuilder builder = new StringBuilder("<< VariableModelPostRequest >>\n");
+        builder.append("Model-Id: " + modelId + "\n");
         builder.append("Mappings:");
 
         for(ParameterMapping mapping: mappings) {
@@ -43,8 +39,8 @@ public abstract class AbstractMappingPostRequest {
     }
 
     public String toString(String prefix) {
-        StringBuilder builder = new StringBuilder(prefix + "<< MappingPostRequest >>\n");
-        builder.append(prefix + "Thing-ID:\t" + thingId + "\n");
+        StringBuilder builder = new StringBuilder(prefix + "<< VariableModelPostRequest >>\n");
+        builder.append("Model-Id: " + modelId + "\n");
         builder.append(prefix + "Mappings:");
 
         for(ParameterMapping mapping: mappings) {

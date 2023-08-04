@@ -1,5 +1,6 @@
 package com.vs.foosh.api.model.predictionModel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -7,13 +8,22 @@ import java.util.Map.Entry;
 
 import com.vs.foosh.api.exceptions.predictionModel.MalformedParameterMappingException;
 import com.vs.foosh.api.exceptions.predictionModel.ParameterMappingDeviceException;
-import com.vs.foosh.api.model.misc.AbstractMappingPostRequest;
 import com.vs.foosh.api.services.IdService;
 import com.vs.foosh.api.services.ListService;
 
-public class PredictionModelMappingPostRequest extends AbstractMappingPostRequest {
+public class PredictionModelMappingPostRequest {
+    private UUID variableId;
+    protected List<ParameterMapping> mappings = new ArrayList<>();
+
+    public PredictionModelMappingPostRequest() {}
+
+    public PredictionModelMappingPostRequest(UUID variableId, List<ParameterMapping> mappings) {
+        this.variableId = variableId;
+        this.mappings   = mappings;
+    }
+
     public void validate(String modelId, List<UUID> validDeviceIds) {
-        IdService.isUuidInList(thingId, ListService.getVariableList().getList());
+        IdService.isUuidInList(variableId, ListService.getVariableList().getList());
 
         // Detect and remove duplicates
         HashMap<String, Integer> parameterCounter = new HashMap<>();
@@ -58,10 +68,45 @@ public class PredictionModelMappingPostRequest extends AbstractMappingPostReques
 
             UUID deviceUuid = IdService.isUuid(deviceId).orElseThrow(() -> new MalformedParameterMappingException(modelId, "The given deviceId '" + deviceId + "' is not a valid UUID!"));
 
-            if (!ListService.getVariableList().getThing(thingId.toString()).getDeviceIds().contains(deviceUuid)) {
-                throw new ParameterMappingDeviceException(modelId, thingId, deviceUuid);
+            if (!ListService.getVariableList().getThing(variableId.toString()).getDeviceIds().contains(deviceUuid)) {
+                throw new ParameterMappingDeviceException(modelId, variableId, deviceUuid);
             }
         }
+    }
+
+    public UUID getVariableId() {
+        return this.variableId;
+    }
+
+    public List<ParameterMapping> getMappings() {
+        return this.mappings;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("<< PredictionModelMappingPostRequest >>\n");
+        builder.append("Variable-Id: " + variableId + "\n");
+        builder.append("Mappings:");
+
+        for(ParameterMapping mapping: mappings) {
+            builder.append("\n");
+            builder.append(mapping.toString("\t"));
+        }
+
+        return builder.toString();
+    }
+
+    public String toString(String prefix) {
+        StringBuilder builder = new StringBuilder(prefix + "<< PredictionModelMappingPostRequest >>\n");
+        builder.append("Variable-Id: " + variableId + "\n");
+        builder.append(prefix + "Mappings:");
+
+        for(ParameterMapping mapping: mappings) {
+            builder.append("\n");
+            builder.append(prefix + mapping.toString(prefix + "\t"));
+        }
+
+        return builder.toString();
     }
 
 }
