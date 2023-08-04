@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.vs.foosh.api.exceptions.variable.VariableNotFoundException;
+import com.vs.foosh.api.exceptions.predictionModel.PredictionModelNotFoundException;
 import com.vs.foosh.api.model.misc.IThingList;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.HttpAction;
@@ -57,7 +57,7 @@ public class PredictionModelList implements Serializable, IThingList<AbstractPre
             }
         }
 
-        throw new VariableNotFoundException(identifier);
+        throw new PredictionModelNotFoundException(identifier);
     }
 
     @Override

@@ -13,6 +13,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.vs.foosh.api.exceptions.predictionModel.CouldNotFindVariableParameterMappingException;
 import com.vs.foosh.api.exceptions.predictionModel.MalformedParameterMappingException;
 import com.vs.foosh.api.exceptions.predictionModel.ParameterMappingDeviceException;
+import com.vs.foosh.api.exceptions.predictionModel.PredictionModelNotFoundException;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.HttpResponseBuilder;
@@ -51,6 +52,17 @@ public class PredictionModelAdvisor extends ResponseEntityExceptionHandler {
         
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
+                links,
+                HttpStatus.BAD_REQUEST);
+    }
+    
+    @ExceptionHandler(PredictionModelNotFoundException.class)
+    public ResponseEntity<Object> handlePredictionModelNotFoundException(PredictionModelNotFoundException exception, WebRequest request) {
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(LinkBuilder.getPredictionModelLinkBlock("models"));
+        
+        return HttpResponseBuilder.buildException(
+                "Could not find prediction model with identifier '" + exception.getId() + "'!",
                 links,
                 HttpStatus.BAD_REQUEST);
     }
