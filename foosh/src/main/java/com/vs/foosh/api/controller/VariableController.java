@@ -128,26 +128,26 @@ public class VariableController {
     private Variable processPostRequest(VariablePostRequest request) {
         // Name validation
         // Is there a field called 'name'?
-        if (request.getName() == null) {
+        if (request.name() == null) {
             throw new VariableCreationException("Cannot create variable without a name! Please provide a field 'name'.");
         }
 
         // Is this field not empty?
-        if (request.getName().trim().isEmpty()) {
+        if (request.name().trim().isEmpty()) {
             throw new VariableCreationException("Cannot create variable without a name! The field 'name' is empty.");
         }
 
         // Is the name an UUID?
-        if (IdService.isUuid(request.getName()).isPresent()) {
+        if (IdService.isUuid(request.name()).isPresent()) {
             throw new VariableCreationException("Cannot create variable! Variables must not be an UUID.");
         }
 
         // Check for duplicates
-        if (!ListService.getVariableList().isUniqueName(request.getName(), null)) {
-            throw new VariableCreationException("Cannot create variable(s)! The name '" + request.getName() + "' is already taken.");
+        if (!ListService.getVariableList().isUniqueName(request.name(), null)) {
+            throw new VariableCreationException("Cannot create variable(s)! The name '" + request.name() + "' is already taken.");
         }
 
-        String name = request.getName().toLowerCase();
+        String name = request.name().toLowerCase();
 
         return new Variable(name, new ArrayList<>(), new ArrayList<>());
     }
