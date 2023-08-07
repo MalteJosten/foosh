@@ -361,7 +361,7 @@ public class VariableController {
         }
 
         // Remove duplicates
-        List<UUID> deviceIds = new ArrayList<>(new HashSet<>(request.getDeviceIds()));
+        List<UUID> deviceIds = new ArrayList<>(new HashSet<>(request.deviceIds()));
 
         for (UUID deviceId: deviceIds) {
             if(!IdService.isUuidInList(deviceId, ListService.getDeviceList().getList())) {
