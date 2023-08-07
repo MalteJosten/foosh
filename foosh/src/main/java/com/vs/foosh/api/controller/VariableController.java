@@ -206,23 +206,23 @@ public class VariableController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> postVar(@PathVariable("id") String id, @RequestBody VariablePredictionRequest request) {
         Variable variable = ListService.getVariableList().getThing(id);
-        AbstractPredictionModel model = ListService.getPredictionModelList().getThing(request.getModelId());
+        AbstractPredictionModel model = ListService.getPredictionModelList().getThing(request.modelId());
 
         if (!variable.getModelIds().contains(model.getId())) {
             throw new MalformedVariablePredictionRequest(
                 id,
-                "The model with ID '" + request.getModelId() + "' is not yet linked to the variable '" + variable.getName() + "' (" + variable.getId() + ")!");
+                "The model with ID '" + request.modelId() + "' is not yet linked to the variable '" + variable.getName() + "' (" + variable.getId() + ")!");
         }
 
 
-        List<SmartHomeInstruction> smartHomeInstructions = model.makePrediction(variable.getId(), request.getValue());
+        List<SmartHomeInstruction> smartHomeInstructions = model.makePrediction(variable.getId(), request.value());
 
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("variable", variable.getName());
-        responseBody.put("value", request.getValue());
+        responseBody.put("value", request.value());
         responseBody.put("instructions", smartHomeInstructions);
 
-        if (request.getExecute()) {
+        if (request.execute()) {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.TEXT_PLAIN);
 
