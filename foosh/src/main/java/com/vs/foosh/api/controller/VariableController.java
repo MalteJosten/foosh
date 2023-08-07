@@ -229,10 +229,10 @@ public class VariableController {
             List<SmartHomePostResult> responses = new ArrayList<>();
 
             for (SmartHomeInstruction instruction: smartHomeInstructions) {
-                HttpEntity<String> postRequest = new HttpEntity<String>(instruction.getPayload(), headers);
+                HttpEntity<String> postRequest = new HttpEntity<String>(instruction.payload(), headers);
                 RestTemplate restTemplate = new RestTemplateBuilder().setConnectTimeout(Duration.ofSeconds(5)).setReadTimeout(Duration.ofSeconds(5)).build();
-                ResponseEntity<Object> response = restTemplate.exchange(instruction.getUri(), HttpMethod.POST, postRequest, Object.class);
-                responses.add(new SmartHomePostResult(instruction.getIndex(), response.getStatusCode()));
+                ResponseEntity<Object> response = restTemplate.exchange(instruction.deviceUri(), HttpMethod.POST, postRequest, Object.class);
+                responses.add(new SmartHomePostResult(instruction.index(), response.getStatusCode()));
             }
 
             responseBody.put("responses", responses);
