@@ -564,10 +564,10 @@ public class VariableController {
         Variable variable = ListService.getVariableList().getThing(id);
 
         // Check whether the user provided a valid predictionModel identifier
-        AbstractPredictionModel linkToModel = ListService.getPredictionModelList().getThing(request.getModelId().toString());
+        AbstractPredictionModel linkToModel = ListService.getPredictionModelList().getThing(request.modelId().toString());
 
         // Check if we already have a model with the same ID
-        if (variable.getModelIds().contains(request.getModelId())) {
+        if (variable.getModelIds().contains(request.modelId())) {
             throw new MalformedVariableModelPostRequestException(
                 id,
                 "The model '" + linkToModel.getName() + "' (" + linkToModel.getId() + ") is already linked to the variable '" + variable.getName() + "' (" + variable.getId() + ")."
@@ -576,7 +576,7 @@ public class VariableController {
 
         // Rewrite post request to be able to forward it to the PredictionModelService.postMappings(...)
         // It is going to be handled as if the user did a POST /models/{modelId}/mappings/
-        PredictionModelService.postMappings(request.getModelId().toString(), new PredictionModelMappingPostRequest(variable.getId(), request.getMappings()));
+        PredictionModelService.postMappings(request.modelId().toString(), new PredictionModelMappingPostRequest(variable.getId(), request.mappings()));
 
         List<Thing> models = new ArrayList<>();
         for (UUID modelId: variable.getModelIds()) {

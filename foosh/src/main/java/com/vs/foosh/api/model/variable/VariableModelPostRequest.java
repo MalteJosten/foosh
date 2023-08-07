@@ -5,24 +5,7 @@ import java.util.UUID;
 
 import com.vs.foosh.api.model.predictionModel.ParameterMapping;
 
-public class VariableModelPostRequest {
-    private UUID modelId;
-    private List<ParameterMapping> mappings;
-
-    public VariableModelPostRequest() {}
-
-    public VariableModelPostRequest(UUID modelId, List<ParameterMapping> mappings) {
-        this.modelId  = modelId;
-        this.mappings = mappings;
-    }
-
-    public UUID getModelId() {
-        return this.modelId;
-    }
-
-    public List<ParameterMapping> getMappings() {
-        return this.mappings;
-    }
+public record VariableModelPostRequest(UUID modelId, List<ParameterMapping> mappings) {
     
     @Override
     public String toString() {
