@@ -8,7 +8,7 @@ public class DeviceNamePatchRequest {
 
     public DeviceNamePatchRequest(UUID id, String name) {
         this.id   = id;
-        this.name = name.toLowerCase();
+        this.name = name;
     }
 
     public UUID getId() {

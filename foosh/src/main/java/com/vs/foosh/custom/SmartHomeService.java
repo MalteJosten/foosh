@@ -6,22 +6,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.vs.foosh.api.controller.AbstractDeviceController;
 import com.vs.foosh.api.model.device.AbstractDevice;
 import com.vs.foosh.api.model.device.FetchDeviceResponse;
 import com.vs.foosh.api.model.web.SmartHomeCredentials;
+import com.vs.foosh.api.services.AbstractSmartHomeService;
 import com.vs.foosh.api.services.ApplicationConfig;
 
-@RestController
-public class DeviceController extends AbstractDeviceController {
+public class SmartHomeService extends AbstractSmartHomeService {
 
     @Override
-    protected FetchDeviceResponse fetchDevicesFromSmartHomeAPI() throws ResourceAccessException, IOException {
+    public FetchDeviceResponse fetchDevicesFromSmartHomeAPI() throws ResourceAccessException, IOException {
         RestTemplate restTemplate = new RestTemplateBuilder().setConnectTimeout(Duration.ofSeconds(5)).setReadTimeout(Duration.ofSeconds(5)).build();
         List<AbstractDevice> devices = new ArrayList<>();
 
@@ -40,7 +38,7 @@ public class DeviceController extends AbstractDeviceController {
     /// For this scenario, no authentication is needed.
     /// Therefore we ignore any input and just forward the request to the non-credential-using method.
     @Override
-    protected FetchDeviceResponse fetchDevicesFromSmartHomeAPI(SmartHomeCredentials credentials) throws ResourceAccessException, IOException {
+    public FetchDeviceResponse fetchDevicesFromSmartHomeAPI(SmartHomeCredentials credentials) throws ResourceAccessException, IOException {
         return fetchDevicesFromSmartHomeAPI();
     }
     
