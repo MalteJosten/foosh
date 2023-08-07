@@ -128,7 +128,6 @@ public class VariableController {
         return VariableService.getVariableDevices(id);
     }
 
-    // TODO: Implement Paging
     @PostMapping(value = "/{id}/devices/",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -150,14 +149,12 @@ public class VariableController {
                 links);
     }
     
-    // TODO: (Implement custom Json Patch)
     @PatchMapping(value = "/{id}/devices/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> patchVarDevices(@PathVariable("id") String id, @RequestBody List<Map<String, String>> patchMappings) {
         return VariableService.patchVariableDevices(id, patchMappings);
     }
 
-    // TODO: Fix. It is not working!
     @DeleteMapping(value = "/{id}/devices/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteVarDevices(@PathVariable("id") String id) {
@@ -178,7 +175,7 @@ public class VariableController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> postVarModels(@PathVariable("id") String id, @RequestBody VariableModelPostRequest request) {
-        return VariableService.postVariableModels(id, request);
+        return VariableService.addVariableModel(id, request);
     }
     @PutMapping(value = "/{id}/models/",
             produces = MediaType.APPLICATION_JSON_VALUE)

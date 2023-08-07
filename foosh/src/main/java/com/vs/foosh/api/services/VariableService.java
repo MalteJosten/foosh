@@ -253,6 +253,7 @@ public class VariableService {
         return respondWithVariableAndDevices(variable);
     }
 
+    // TODO: Implement Paging
     public static ResponseEntity<Object> postVariableDevices(String id, VariableDevicesPostRequest request) {
         Variable variable = ListService.getVariableList().getThing(id);
 
@@ -412,6 +413,7 @@ public class VariableService {
         Variable variable = ListService.getVariableList().getThing(id);
 
         variable.unregisterFromSubject();
+        variable.clearDevices();
 
         PersistentDataService.saveAll();
     
@@ -439,7 +441,7 @@ public class VariableService {
         return respondWithVariableAndModels(variable);
     }
 
-    public static ResponseEntity<Object> postVariableModels(String id, VariableModelPostRequest request) {
+    public static ResponseEntity<Object> addVariableModel(String id, VariableModelPostRequest request) {
         Variable variable = ListService.getVariableList().getThing(id);
 
         // Check whether the user provided a valid predictionModel identifier
