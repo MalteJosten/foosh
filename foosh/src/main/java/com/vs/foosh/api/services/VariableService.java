@@ -146,8 +146,7 @@ public class VariableService {
         responseBody.put("instructions", smartHomeInstructions);
 
         if (request.execute()) {
-            SmartHomeService smartHomeService = new SmartHomeService();
-            List<SmartHomePostResult> responses = smartHomeService.sendAndExecuteSmartHomeInstructions(smartHomeInstructions);
+            List<SmartHomePostResult> responses = SmartHomeService.sendAndExecuteSmartHomeInstructions(smartHomeInstructions);
 
             responseBody.put("responses", responses);
         }

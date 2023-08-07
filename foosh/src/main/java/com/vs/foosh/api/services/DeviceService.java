@@ -26,7 +26,6 @@ import com.vs.foosh.api.model.web.SmartHomeCredentials;
 import com.vs.foosh.custom.SmartHomeService;
 
 public class DeviceService {
-    private static SmartHomeService smartHomeService = new SmartHomeService();    
 
     public static ResponseEntity<Object> getDevices() {
         return respondWithDevices(HttpStatus.OK);
@@ -52,9 +51,9 @@ public class DeviceService {
 
         try {
             if (credentials == null) {
-                apiResponse = smartHomeService.fetchDevicesFromSmartHomeAPI();
+                apiResponse = SmartHomeService.fetchDevicesFromSmartHomeAPI();
             } else {
-                apiResponse = smartHomeService.fetchDevicesFromSmartHomeAPI(credentials);
+                apiResponse = SmartHomeService.fetchDevicesFromSmartHomeAPI(credentials);
             }
 
             ListService.getDeviceList().setList(apiResponse.getDevices());
