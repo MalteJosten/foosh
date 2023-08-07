@@ -81,6 +81,10 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
         return displayRepresentation;
     }
 
+    public boolean isListEmpty() {
+        return (devices == null || devices.isEmpty());
+    }
+
     ///
     /// Let the client search for a device by
     ///   (1) it's ID,

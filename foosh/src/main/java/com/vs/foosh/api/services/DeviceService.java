@@ -1,7 +1,6 @@
 package com.vs.foosh.api.services;
 
 import java.io.IOException;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,11 +18,9 @@ import com.vs.foosh.api.exceptions.misc.IdIsNoValidUUIDException;
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeAccessException;
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeIOException;
 import com.vs.foosh.api.model.device.AbstractDevice;
-import com.vs.foosh.api.model.device.DeviceList;
 import com.vs.foosh.api.model.device.DeviceNamePatchRequest;
 import com.vs.foosh.api.model.device.FetchDeviceResponse;
 import com.vs.foosh.api.model.device.PatchDeviceNameValidationData;
-import com.vs.foosh.api.model.misc.ReadSaveFileResult;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.model.web.SmartHomeCredentials;
 import com.vs.foosh.custom.SmartHomeService;
@@ -32,53 +29,43 @@ public class DeviceService {
     private static SmartHomeService smartHomeService = new SmartHomeService();    
 
     public static ResponseEntity<Object> getDevices() {
-        AbstractMap.SimpleEntry<String, Object> result = new AbstractMap.SimpleEntry<String, Object>("devices", ListService.getDeviceList().getDisplayListRepresentation());
-
-        Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put(result.getKey(), result.getValue());
-        responseBody.put("_links", ListService.getDeviceList().getLinks("self"));
-
-        return new ResponseEntity<>(responseBody, HttpStatus.OK);
+        return respondWithDevices(HttpStatus.OK);
     }
 
     public static ResponseEntity<Object> postDevices(SmartHomeCredentials credentials) {
-        if (ListService.getDeviceList().getList() == null || !ListService.getDeviceList().getList().isEmpty()) {
-
+        if (ListService.getDeviceList().isListEmpty()) {
             String message = "There are already registered devices! Please use PUT/PATCH on /devices/ to update the list.";
+
             Map<String, Object> responseBody = new HashMap<>();
             responseBody.put("message", message);
             responseBody.put("_links", ListService.getDeviceList().getLinks("self"));
             return new ResponseEntity<>(responseBody, HttpStatus.CONFLICT);
         }
 
+        fetchDevices(credentials);
+
+        return respondWithDevices(HttpStatus.CREATED);
+    }
+
+    private static void fetchDevices(SmartHomeCredentials credentials) {
         FetchDeviceResponse apiResponse;
-        ReadSaveFileResult<DeviceList> readResult = PersistentDataService.hasSavedDeviceList();
-        if (readResult.getSuccess()) {
-            ListService.setDeviceList(readResult.getData());
-        } else {
-            try {
-                if (credentials == null) {
-                    apiResponse = smartHomeService.fetchDevicesFromSmartHomeAPI();
-                } else {
-                    apiResponse = smartHomeService.fetchDevicesFromSmartHomeAPI(credentials);
-                }
 
-                ListService.getDeviceList().setList(apiResponse.getDevices());
-                ListService.getDeviceList().updateLinks();
-
-                PersistentDataService.saveDeviceList();
-            } catch (ResourceAccessException rAccessException) {
-                throw new SmartHomeAccessException(ApplicationConfig.getSmartHomeCredentials().getUri() + "/api/devices/");
-            } catch (IOException ioException) {
-                throw new SmartHomeIOException(ApplicationConfig.getSmartHomeCredentials().getUri() + "/api/devices/");
+        try {
+            if (credentials == null) {
+                apiResponse = smartHomeService.fetchDevicesFromSmartHomeAPI();
+            } else {
+                apiResponse = smartHomeService.fetchDevicesFromSmartHomeAPI(credentials);
             }
-        }
 
-        AbstractMap.SimpleEntry<String, Object> result = new AbstractMap.SimpleEntry<String, Object>("devices", ListService.getDeviceList().getDisplayListRepresentation());
-        Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put(result.getKey(), result.getValue());
-        responseBody.put("_links", ListService.getDeviceList().getLinks("self"));
-        return new ResponseEntity<>(responseBody, HttpStatus.CREATED);
+            ListService.getDeviceList().setList(apiResponse.getDevices());
+            ListService.getDeviceList().updateLinks();
+
+            PersistentDataService.saveDeviceList();
+        } catch (ResourceAccessException rAccessException) {
+            throw new SmartHomeAccessException(ApplicationConfig.getSmartHomeCredentials().getUri() + "/api/devices/");
+        } catch (IOException ioException) {
+            throw new SmartHomeIOException(ApplicationConfig.getSmartHomeCredentials().getUri() + "/api/devices/");
+        }
     }
 
     public static ResponseEntity<Object> deleteDevices() {
@@ -87,28 +74,21 @@ public class DeviceService {
         PersistentDataService.deleteDeviceListSave();
         PersistentDataService.saveVariableList();
 
-        List<LinkEntry> links = ListService.getDeviceList().getLinks("self");
+        return respondWithDevices(HttpStatus.OK);
+    }
 
+    private static ResponseEntity<Object> respondWithDevices(HttpStatus status) {
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("devices", ListService.getDeviceList().getDisplayListRepresentation());
-        responseBody.put("_links", links);
+        responseBody.put("_links", ListService.getDeviceList().getLinks("self"));
 
-        return new ResponseEntity<>(responseBody, HttpStatus.OK);
+        return new ResponseEntity<>(responseBody, status);
     }
 
     public static ResponseEntity<Object> getDevice(String id) {
         AbstractDevice device = ListService.getDeviceList().getThing(id);
 
-        List<LinkEntry> links = new ArrayList<>();
-        links.addAll(device.getSelfLinks());
-        links.addAll(device.getExtLinks());
-
-        Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("device", device.getDisplayRepresentation().getDevice());
-        responseBody.put("_links", links);
-
-        return new ResponseEntity<>(responseBody, HttpStatus.OK);
-
+        return respondWithDevice(device, HttpStatus.OK);
     }
 
     public static PatchDeviceNameValidationData validatePatchDeviceRequest(String id, Map<String, String> requestBody) {
@@ -137,13 +117,8 @@ public class DeviceService {
             PersistentDataService.saveDeviceList();
 
             AbstractDevice device = ListService.getDeviceList().getThing(validationData.uuid().toString());
-            List<LinkEntry> links = new ArrayList<>();
-            links.addAll(device.getSelfLinks());
-            links.addAll(device.getExtLinks());
-            Map<String, Object> responseBody = new HashMap<>();
-            responseBody.put("device", device.getDisplayRepresentation().getDevice());
-            responseBody.put("_links", links);
-            return new ResponseEntity<>(responseBody, HttpStatus.OK);
+
+            return respondWithDevice(device, HttpStatus.OK);
 
         } else {
             return new ResponseEntity<Object>("Could not patch name for device '" + validationData.identifier().replace(" ", "%20") +  "' !'", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -169,4 +144,16 @@ public class DeviceService {
             throw new DeviceNameIsNotUniqueException(request);
         }
     }
+
+    private static ResponseEntity<Object> respondWithDevice(AbstractDevice device, HttpStatus status) {
+            List<LinkEntry> links = new ArrayList<>();
+            links.addAll(device.getSelfLinks());
+            links.addAll(device.getExtLinks());
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("device", device.getDisplayRepresentation().getDevice());
+            responseBody.put("_links", links);
+            return new ResponseEntity<>(responseBody, status);
+
+    }
+
 }
