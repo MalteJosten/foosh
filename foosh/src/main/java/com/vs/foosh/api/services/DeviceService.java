@@ -127,12 +127,12 @@ public class DeviceService {
     }
 
     private static boolean patchDeviceName(DeviceNamePatchRequest request) {
-        String name = request.getName().toLowerCase();
-        UUID id     = request.getId();
+        String name = request.name().toLowerCase();
+        UUID id     = request.id();
 
         // Does the field contain any letters, i.e., is it not empty?
         if (name.trim().isEmpty()) {
-            throw new DeviceNameIsEmptyException(request.getId(), request.getName());
+            throw new DeviceNameIsEmptyException(request.id(), request.name());
         }
 
         // Is the name provided by the field unique?

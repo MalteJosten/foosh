@@ -156,8 +156,8 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
     /// appending incrementing numbers to deviceName.
     ///
     public String findUniqueName(DeviceNamePatchRequest request) {
-        StringBuilder name = new StringBuilder(request.getName().toLowerCase());
-        UUID id = request.getId();
+        StringBuilder name = new StringBuilder(request.name().toLowerCase());
+        UUID id = request.id();
 
         // Does the field contain any letters, i.e., is it not empty?
         if (name.toString().trim().isEmpty()) {
