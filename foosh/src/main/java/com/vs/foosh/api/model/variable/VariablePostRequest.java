@@ -1,6 +1,5 @@
 package com.vs.foosh.api.model.variable;
 
-// TODO: @Override toString()
 public class VariablePostRequest {
     private String name;
     
@@ -16,9 +15,8 @@ public class VariablePostRequest {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("<< VariablePostRequest >>\n");
-        builder.append("name: \t" + name + "\n");
+        StringBuilder builder = new StringBuilder("<< VariablePostRequest >>\n");
+        builder.append("Name: \t" + name);
 
         return builder.toString();
     }

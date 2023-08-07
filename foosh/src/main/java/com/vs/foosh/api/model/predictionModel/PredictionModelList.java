@@ -99,4 +99,12 @@ public class PredictionModelList implements Serializable, IThingList<AbstractPre
         throw new UnsupportedOperationException("Unimplemented method 'updateLinks'");
     }
     
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("<< PredictionModelList >>\n");
+        builder.append("Models: " + models);
+
+        return builder.toString();
+    }
+    
 }

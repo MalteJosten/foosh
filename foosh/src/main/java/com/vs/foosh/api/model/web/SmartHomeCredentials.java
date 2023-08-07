@@ -35,19 +35,17 @@ public class SmartHomeCredentials {
         return (this.credentials == null || this.credentials.isEmpty());
     }
 
-    // Modify class name header
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("SmartHomeCredentials\n");
+        StringBuilder builder = new StringBuilder("<< SmartHomeCredentials >>\n");
         if (this.credentials != null) {
-            builder.append("\tCredentials:\n");
+            builder.append("Credentials:\n");
             
             this.credentials.forEach((key, value) -> {
-                builder.append("\t\t" + key + ": " + value + "\n");    
+                builder.append("\t" + key + ": " + value + "\n");    
             });
         } else {
-            builder.append("\t(- empty -)");
+            builder.append("(- empty -)");
         }
 
         return builder.toString();

@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import com.vs.foosh.api.model.misc.Thing;
 
-// TODO: @Override toString()
 public class PredictionModelResponseObject extends Thing {
     private List<UUID> variableIds;
     private List<String> parameters;
@@ -29,6 +28,18 @@ public class PredictionModelResponseObject extends Thing {
 
     public List<VariableParameterMapping> getMappings() {
         return this.mappings;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("<< PredictionModelResponseObject >>\n");
+        builder.append("ID:           " + id + "\n");
+        builder.append("Name:         " + name + "\n");
+        builder.append("Variable-IDs: " + variableIds + "\n");
+        builder.append("Parameters:   " + parameters + "\n");
+        builder.append("Mappings:     " + mappings);
+
+        return builder.toString();
     }
 
 }

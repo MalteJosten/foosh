@@ -2,7 +2,6 @@ package com.vs.foosh.api.model.device;
 
 import java.util.List;
 
-// TODO: @Override toString()
 public class FetchDeviceResponse {
     private String message;
     private List<AbstractDevice> devices;
@@ -19,9 +18,26 @@ public class FetchDeviceResponse {
         this.success = success;
     }
 
-    public String getMessage() { return this.message; }
+    public String getMessage() {
+        return this.message;
+    }
 
-    public List<AbstractDevice> getDevices() { return this.devices; }
+    public List<AbstractDevice> getDevices() {
+        return this.devices;
+    }
 
-    public boolean getSucess() { return this.success; }
+    public boolean getSucess() {
+        return this.success;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("<< FetchDeviceResponse >>\n");
+        builder.append("Message: " + message + "\n");
+        builder.append("Devices: " + devices + "\n");
+        builder.append("Success: " + success);
+
+        return builder.toString();
+    }
+
 }

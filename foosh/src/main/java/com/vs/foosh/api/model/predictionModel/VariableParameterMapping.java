@@ -26,4 +26,13 @@ public class VariableParameterMapping implements Serializable {
     public List<ParameterMapping> getMappings() {
         return this.mappings;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("<< VariableParameterMapping >>\n");
+        builder.append("Variable-ID: " + variableId + "\n");
+        builder.append("Mappings: " + mappings);
+
+        return builder.toString();
+    }
 }

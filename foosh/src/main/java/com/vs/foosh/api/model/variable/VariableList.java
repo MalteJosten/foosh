@@ -15,7 +15,6 @@ import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilder;
 
-// TODO: @Override toString()
 public class VariableList implements Serializable, IThingList<Variable, VariableDisplayRepresentation> {
     private List<Variable> variables;
     
@@ -141,6 +140,14 @@ public class VariableList implements Serializable, IThingList<Variable, Variable
         for(Variable variable: getList()) {
             variable.updateLinks();
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("<< VariableList >>\n");
+        builder.append("Variables: " + variables);
+
+        return builder.toString();
     }
 
 }

@@ -120,23 +120,23 @@ public abstract class AbstractDevice extends Thing {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder("<< Device >>\n");
-        builder.append("Device: " + id + "\n");
+        builder.append("Device:      " + id + "\n");
         builder.append("Device-Name: " + deviceName + "\n");
-        builder.append("Query-Name: " + name + "\n");
-        builder.append("Type: " + type + "\n");
+        builder.append("Query-Name:  " + name + "\n");
+        builder.append("Type:        " + type + "\n");
         builder.append("SelfLinks:\n");
         for(LinkEntry link: links) {
-            builder.append("\trelation:\t" + link.getRelation() + "\n");
-            builder.append("\tlink:\t\t"   + link.getLink() + "\n");
-            builder.append("\taction:\t\t" + link.getAction() + "\n");
-            builder.append("\ttypes:\t\t"  + link.getTypes() + "\n");
+            builder.append("\trelation: " + link.getRelation() + "\n");
+            builder.append("\tlink:     " + link.getLink() + "\n");
+            builder.append("\taction:   " + link.getAction() + "\n");
+            builder.append("\ttypes:    " + link.getTypes() + "\n");
         }
         builder.append("ExtLinks:\n");
         for(LinkEntry link: extLinks) {
-            builder.append("\trelation:\t" + link.getRelation() + "\n");
-            builder.append("\tlink:\t\t"   + link.getLink() + "\n");
-            builder.append("\taction:\t\t" + link.getAction() + "\n");
-            builder.append("\ttypes:\t\t"  + link.getTypes() + "\n");
+            builder.append("\trelation: " + link.getRelation() + "\n");
+            builder.append("\tlink:     " + link.getLink() + "\n");
+            builder.append("\taction:   " + link.getAction() + "\n");
+            builder.append("\ttypes:    " + link.getTypes() + "\n");
         }
 
         return builder.toString();

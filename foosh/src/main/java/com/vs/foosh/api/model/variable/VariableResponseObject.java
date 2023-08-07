@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import com.vs.foosh.api.model.misc.Thing;
 
-// TODO: @Override toString()
 public class VariableResponseObject extends Thing {
     private List<UUID> models;
     private List<UUID> devices;
@@ -24,6 +23,17 @@ public class VariableResponseObject extends Thing {
 
     public List<UUID> getDevices() {
         return this.devices;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("<< VariableResponseObject >>\n");
+        builder.append("ID:   " + id + "\n");
+        builder.append("Name: " + name + "\n");
+        builder.append("Model-IDs:  " + models + "\n");
+        builder.append("Device-IDs: " + devices);
+        
+        return builder.toString();
     }
 
 }

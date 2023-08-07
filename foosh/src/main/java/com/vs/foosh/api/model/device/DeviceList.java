@@ -19,8 +19,8 @@ import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilder;
 
-// TODO: @Override toString()
 public class DeviceList implements IThingListSubject, IThingList<AbstractDevice, DeviceDisplayRepresentation>, Serializable {
+
     private List<AbstractDevice> devices;
     private final int UNIQUE_QUERY_NAME_TIMEOUT = 25;
 
@@ -212,5 +212,14 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
         if (modification.getModificationType() == ModificationType.DELETION) {
             observers.clear();
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("<< DeviceList >>\n");
+        builder.append("Devices:   " + devices + "\n");
+        builder.append("Observers: " + observers);
+
+        return builder.toString();
     }
 }

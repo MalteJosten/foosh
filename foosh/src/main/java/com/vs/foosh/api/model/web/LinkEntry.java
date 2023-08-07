@@ -38,17 +38,13 @@ public class LinkEntry implements Serializable {
         return types;
     }
 
-    // Add class name header
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("relation:\t" + relation + "\n");
-        builder.append("link:\t" + link + "\n");
-        builder.append("action:\t" + action.toString() + "\n");
-        builder.append("types:\n");
-        for (String type: types) {
-            builder.append("\t\t" + type);
-        }
+        StringBuilder builder = new StringBuilder("<< LinkEntry >>\n");
+        builder.append("Relation: " + relation + "\n");
+        builder.append("Link:     " + link + "\n");
+        builder.append("Action:   " + action.toString() + "\n");
+        builder.append("Types:    " + types);
 
         return builder.toString();
     }

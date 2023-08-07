@@ -16,5 +16,14 @@ public class VariableModification extends AbstractModification {
     public UUID getVariableId() {
         return this.variableId;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("<< VariableModification >>\n");
+        builder.append("Variable-ID:  " + variableId + "\n");
+        builder.append("Modification: " + modificationType);
+
+        return builder.toString();
+    }
     
 }

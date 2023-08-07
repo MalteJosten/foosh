@@ -16,4 +16,13 @@ public class Thing implements Serializable {
     public String getName() {
         return this.name;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("<< Thing >>\n");
+        builder.append("ID   : " + id + "\n");
+        builder.append("Name : " + name);
+
+        return builder.toString();
+    }
 }

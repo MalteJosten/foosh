@@ -172,9 +172,9 @@ public class FooSHJsonPatch {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder("<< FooSHJsonPatch >>\n");
-        builder.append("operation:\t" + operation + "\n");
-        builder.append("path:\t\t"    + path + "\n");
-        builder.append("value:\t\t"   + value);
+        builder.append("Operation: " + operation + "\n");
+        builder.append("Path:      " + path + "\n");
+        builder.append("Value:     " + value);
 
         return builder.toString();
     }

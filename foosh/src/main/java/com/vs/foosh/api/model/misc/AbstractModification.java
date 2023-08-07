@@ -10,4 +10,12 @@ public abstract class AbstractModification {
     public ModificationType getModificationType() {
         return this.modificationType;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("<< Modification >>\n");
+        builder.append("ModificationType: " + modificationType);
+
+        return builder.toString();
+    }
 }

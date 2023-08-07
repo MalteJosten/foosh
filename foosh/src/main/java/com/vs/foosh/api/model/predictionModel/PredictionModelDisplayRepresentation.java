@@ -25,9 +25,9 @@ public class PredictionModelDisplayRepresentation {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("<< AbstractPredictionModelDisplayRepresentation >>\n");
-        builder.append("model:\t" + model + "\n");
-        builder.append("links:\t" + links);
+        StringBuilder builder = new StringBuilder("<< PredictionModelDisplayRepresentation >>\n");
+        builder.append("Model:\t" + model + "\n");
+        builder.append("Links:\t" + links);
         
         return builder.toString();
     }

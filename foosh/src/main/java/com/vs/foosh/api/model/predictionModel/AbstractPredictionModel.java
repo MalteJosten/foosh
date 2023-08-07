@@ -263,4 +263,19 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
 
         PersistentDataService.savePredictionModelList();
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("<< PredictionModel >>\n");
+        builder.append("Variable-IDs:       " + variableIds + "\n");
+        builder.append("Parameters:         " + parameters + "\n");
+        builder.append("Parameter Mappings: " + parameterMappings + "\n");
+        builder.append("Selflinks:          " + links + "\n");
+        builder.append("Variable Links:     " + variableLinks + "\n");
+        builder.append("Mapping Links:      " + mappingLinks + "\n");
+        builder.append("Device Links:       " + deviceLinks);
+
+        return builder.toString();
+    }
+
 }

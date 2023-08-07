@@ -5,7 +5,6 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vs.foosh.api.model.web.LinkEntry;
 
-// TODO: @Override toString()
 public class VariableDisplayRepresentation {
     private VariableResponseObject variable;
     private List<LinkEntry> links;
@@ -22,5 +21,14 @@ public class VariableDisplayRepresentation {
     @JsonProperty("_links")
     public List<LinkEntry> getLinks() {
         return this.links;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("<< VariableDisplayRepresentation >>\n");
+        builder.append("Variable: " + variable + "\n");
+        builder.append("Links: " + links);
+
+        return builder.toString();
     }
 }

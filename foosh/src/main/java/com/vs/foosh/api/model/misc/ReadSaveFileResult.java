@@ -1,6 +1,5 @@
 package com.vs.foosh.api.model.misc;
 
-// TODO: @Override toString()
 public class ReadSaveFileResult<T> {
     private T data;
     private boolean success;
@@ -21,5 +20,14 @@ public class ReadSaveFileResult<T> {
 
     public boolean getSuccess() {
         return this.success;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("<< ReadSaveFileResult >>\n");
+        builder.append("Data:    " + data + "\n");
+        builder.append("Success: " + success);
+
+        return builder.toString();
     }
 }
