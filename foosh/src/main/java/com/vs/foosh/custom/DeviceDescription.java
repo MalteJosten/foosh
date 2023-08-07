@@ -22,23 +22,19 @@ public class DeviceDescription extends AbstractDeviceDescription {
         properties.put("label",    description.get("label").asText());
         properties.put("category", description.get("category").asText());
 
-        JsonNode tagNode = description.get("tags");
-        Iterator<JsonNode> tagIter = tagNode.elements();
-        List<String> tags = new ArrayList<>();
+        setMap("tags", description);
+        setMap("groups", description);
+    }
 
-        while (tagIter.hasNext()) {
-            tags.add(tagIter.next().asText());
+    private void setMap(String name, JsonNode description) {
+        JsonNode node = description.get(name);
+        Iterator<JsonNode> iter = node.elements();
+        List<String> collection = new ArrayList<>();
+
+        while (iter.hasNext()) {
+            collection.add(iter.next().asText());
         }
-        properties.put("tags", tags);
-
-        JsonNode groupNode = description.get("groupNames");
-        Iterator<JsonNode> groupIter = groupNode.elements();
-        List<String> groups = new ArrayList<>();
-
-        while (groupIter.hasNext()) {
-            groups.add(groupIter.next().asText());
-        }
-        properties.put("groups", groups);
+        properties.put(name, collection);
     }
 
     public Map<String, Object> getProperties() {
