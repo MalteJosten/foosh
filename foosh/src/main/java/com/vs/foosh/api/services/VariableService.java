@@ -1,6 +1,5 @@
 package com.vs.foosh.api.services;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,14 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 import com.vs.foosh.api.exceptions.device.DeviceIdNotFoundException;
 import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchIllegalArgumentException;
@@ -41,8 +34,10 @@ import com.vs.foosh.api.model.web.FooSHPatchOperation;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.model.web.SmartHomeInstruction;
 import com.vs.foosh.api.model.web.SmartHomePostResult;
+import com.vs.foosh.custom.SmartHomeService;
 
 public class VariableService {
+
     ///
     /// Variable Collection
     ///
@@ -51,7 +46,7 @@ public class VariableService {
         return respondWithVariables(HttpStatus.OK);
     }
 
-    public static ResponseEntity<Object> postMultipleVariables(List<VariablePostRequest> requests) {
+    public static ResponseEntity<Object> addVariables(List<VariablePostRequest> requests) {
         if (requests == null || requests.isEmpty()) {
             throw new VariableCreationException("Cannot create variables! Please provide a collection of variable names.");
         }
@@ -70,7 +65,7 @@ public class VariableService {
 
     }
 
-    public static ResponseEntity<Object> postSingleVariable(VariablePostRequest request) {
+    public static ResponseEntity<Object> addVariable(VariablePostRequest request) {
         ListService.getVariableList().addThing(processPostRequest(request));
         ListService.getVariableList().updateLinks();
 
@@ -143,7 +138,6 @@ public class VariableService {
                 "The model with ID '" + request.modelId() + "' is not yet linked to the variable '" + variable.getName() + "' (" + variable.getId() + ")!");
         }
 
-
         List<SmartHomeInstruction> smartHomeInstructions = model.makePrediction(variable.getId(), request.value());
 
         Map<String, Object> responseBody = new HashMap<>();
@@ -152,17 +146,8 @@ public class VariableService {
         responseBody.put("instructions", smartHomeInstructions);
 
         if (request.execute()) {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.TEXT_PLAIN);
-
-            List<SmartHomePostResult> responses = new ArrayList<>();
-
-            for (SmartHomeInstruction instruction: smartHomeInstructions) {
-                HttpEntity<String> postRequest = new HttpEntity<String>(instruction.payload(), headers);
-                RestTemplate restTemplate = new RestTemplateBuilder().setConnectTimeout(Duration.ofSeconds(5)).setReadTimeout(Duration.ofSeconds(5)).build();
-                ResponseEntity<Object> response = restTemplate.exchange(instruction.deviceUri(), HttpMethod.POST, postRequest, Object.class);
-                responses.add(new SmartHomePostResult(instruction.index(), response.getStatusCode()));
-            }
+            SmartHomeService smartHomeService = new SmartHomeService();
+            List<SmartHomePostResult> responses = smartHomeService.sendAndExecuteSmartHomeInstructions(smartHomeInstructions);
 
             responseBody.put("responses", responses);
         }
@@ -258,7 +243,7 @@ public class VariableService {
         Variable variable = ListService.getVariableList().getThing(id);
 
         // Do we already have stored devices?
-        // If so, we don't allow the use of POST.
+        // If that's the case, we disallow POST
         if (!variable.getDeviceIds().isEmpty()) {
             List<LinkEntry> links = new ArrayList<>();
             links.addAll(variable.getSelfLinks());
@@ -271,6 +256,7 @@ public class VariableService {
         // Remove duplicates
         List<UUID> deviceIds = new ArrayList<>(new HashSet<>(request.deviceIds()));
 
+        // Check whether the given device IDs match actual device IDs
         for (UUID deviceId: deviceIds) {
             if(!IdService.isUuidInList(deviceId, ListService.getDeviceList().getList())) {
                 throw new VariableDevicePostException(
@@ -287,10 +273,7 @@ public class VariableService {
 
         PersistentDataService.saveAll();
 
-        Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("variable", variable.getDisplayRepresentation().getVariable());
-        responseBody.put("_links", variable.getAllLinks());
-        return new ResponseEntity<>(responseBody, HttpStatus.OK);
+        return respondWithVariableAndDevices(variable);
     }
 
     public static ResponseEntity<Object> patchVariableDevices(String id, List<Map<String, String>> patchMappings) {
@@ -299,9 +282,13 @@ public class VariableService {
         // Convert patchMappings to FooSHJsonPatches
         List<FooSHJsonPatch> patches = convertPatchMappings(patchMappings);
 
+        // To comply with RFC 6902, we need to make sure, that all instructions are valid.
+        // Otherwise, we must not execute any patch instruction.
         for (FooSHJsonPatch patch : patches) {
             checkForCorrectPatchPath(patch);
+        }
 
+        for (FooSHJsonPatch patch: patches) {
             executePatch(variable, patch);
 
             List<UUID> devices = variable.getDeviceIds();
@@ -356,11 +343,11 @@ public class VariableService {
                 pathSegments = List.of();
                 break;
             case REPLACE:
-                // use "uuid" as a placeholder for checking path
+                // use "uuid" as a placeholder
                 pathSegments = List.of("uuid");
                 break;
             case REMOVE:
-                // use "uuid" as a placeholder for checking path
+                // use "uuid" as a placeholder
                 pathSegments = List.of("uuid");
                 break;
             default:
@@ -425,9 +412,11 @@ public class VariableService {
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(variable.getSelfLinks());
         links.addAll(variable.getDeviceLinks());
+
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("variable", variable.getDisplayRepresentation().getVariable());
         responseBody.put("_links", links);
+
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
@@ -455,7 +444,7 @@ public class VariableService {
             );
         }
 
-        // Rewrite post request to be able to forward it to the PredictionModelService.postMappings(...)
+        // Rewriting post request to be able to forward it to the PredictionModelService.postMappings(...)
         // It is going to be handled as if the user did a POST /models/{modelId}/mappings/
         PredictionModelService.postMappings(request.modelId().toString(), new PredictionModelMappingPostRequest(variable.getId(), request.mappings()));
 

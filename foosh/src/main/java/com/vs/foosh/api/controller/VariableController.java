@@ -46,7 +46,7 @@ public class VariableController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> postMulitpleVar(@RequestBody List<VariablePostRequest> requests) {
-        return VariableService.postMultipleVariables(requests);
+        return VariableService.addVariables(requests);
     }
 
     @PostMapping(value = "/",
@@ -54,7 +54,7 @@ public class VariableController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> postSingleVar(@RequestBody VariablePostRequest request) {
-        return VariableService.postSingleVariable(request);
+        return VariableService.addVariable(request);
     }
 
 
