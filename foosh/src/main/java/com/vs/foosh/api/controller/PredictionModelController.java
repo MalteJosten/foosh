@@ -45,7 +45,7 @@ public class PredictionModelController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modelsPut() {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /models/! Use PATCH instead, to edit the parameter mapping(s).",
+                "You cannot use PUT on /models/! Use PATCH on /models/{id} instead, to edit the parameter mapping(s).",
                 ListService.getPredictionModelList().getLinks("self"));
     }
 
@@ -54,7 +54,7 @@ public class PredictionModelController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modelsPatch() {
         throw new HttpMappingNotAllowedException(
-                "Not yet implemented",
+                "You cannot use PATCH on /models/! Use PATCH on /models/{id} instead, to edit the parameter mapping(s).",
                 ListService.getPredictionModelList().getLinks("self"));
     }
 

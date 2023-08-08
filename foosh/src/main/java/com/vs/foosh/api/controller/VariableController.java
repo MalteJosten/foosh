@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
-import com.vs.foosh.api.exceptions.variable.VariableNamePatchRequest;
 import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.variable.VariableDevicesPostRequest;
 import com.vs.foosh.api.model.variable.VariableModelPostRequest;
@@ -68,9 +67,9 @@ public class VariableController {
 
     @PatchMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> patchVars(@RequestBody List<VariableNamePatchRequest> request) {
+    public ResponseEntity<Object> patchVars() {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PATCH on /vars/! Either use PATCH on /vars/{id} to update the variable's name or DELETE and POST to replace the list of variables.",
+                "You cannot use PATCH on /vars/! Either use PATCH on /vars/{id} to update the variable's name or DELETE and POST on /vars/ to replace the list of variables.",
                 ListService.getVariableList().getLinks("self"));
     }
 

@@ -62,7 +62,6 @@ public class DeviceController {
                 ListService.getDeviceList().getLinks("self"));
     }
 
-    // TODO: Allow patching? What is the correct path? How do we address the device we want to update, since we have no index but only its ID?
     @PatchMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesPatch(@RequestBody List<DeviceNamePatchRequest> request) {
