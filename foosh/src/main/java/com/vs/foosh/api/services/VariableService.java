@@ -172,7 +172,6 @@ public class VariableService {
                 throw new FooSHJsonPatchIllegalArgumentException(variable.getId().toString(), "You can only edit the field 'name'!");
             }
 
-            // TODO: give Var instead of id
             patchVariableName(id, patch.getValue());
         }
 

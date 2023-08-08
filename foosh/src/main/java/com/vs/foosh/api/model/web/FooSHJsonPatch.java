@@ -39,7 +39,6 @@ public class FooSHJsonPatch {
 
     public void validateRequest(List<FooSHPatchOperation> allowedOperations) {
         String operationField = request.get("op");
-        System.out.println(operationField);
 
         // Does the Patch contain a valid operation?
         try {
