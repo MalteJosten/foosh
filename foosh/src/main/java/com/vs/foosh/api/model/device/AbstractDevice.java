@@ -87,8 +87,8 @@ public abstract class AbstractDevice extends Thing {
         LinkEntry selfGet   = new LinkEntry("selfStatic", LinkBuilder.getDeviceLink(this.id.toString()), HttpAction.GET, List.of());
         LinkEntry selfPatch = new LinkEntry("selfStatic", LinkBuilder.getDeviceLink(this.id.toString()), HttpAction.PATCH, List.of("application/json"));
 
-        LinkEntry queryGet   = new LinkEntry("selfQuery",  LinkBuilder.getDeviceLink(this.name), HttpAction.GET, List.of());
-        LinkEntry queryPatch = new LinkEntry("selfQuery",  LinkBuilder.getDeviceLink(this.name), HttpAction.PATCH, List.of("application/json"));
+        LinkEntry queryGet   = new LinkEntry("selfName",  LinkBuilder.getDeviceLink(this.name), HttpAction.GET, List.of());
+        LinkEntry queryPatch = new LinkEntry("selfName",  LinkBuilder.getDeviceLink(this.name), HttpAction.PATCH, List.of("application/json"));
 
         return new ArrayList<>(List.of(selfGet, selfPatch, queryGet, queryPatch));
     }
@@ -105,7 +105,7 @@ public abstract class AbstractDevice extends Thing {
 
     public URI getQueryLink() {
         for (LinkEntry entry: links) {
-            if (entry.getRelation().equals("selfQuery")) {
+            if (entry.getRelation().equals("selfName")) {
                 return entry.getLink();
             }
         }
