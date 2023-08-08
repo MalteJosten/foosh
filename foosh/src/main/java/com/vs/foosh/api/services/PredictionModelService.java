@@ -35,13 +35,15 @@ public class PredictionModelService {
         return respondWithModel(id);
     }
 
+    // TODO: Also allow patching of mappings?
     public static ResponseEntity<Object> patchModel(String id, List<Map<String, String>> patchMappings) {
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
 
         List<FooSHJsonPatch> patches = new ArrayList<>();
         for (Map<String, String> patchMapping: patchMappings) {
             FooSHJsonPatch patch = new FooSHJsonPatch(patchMapping);
-            patch.validateRequest(List.of(FooSHPatchOperation.ADD));
+            patch.validateRequest(List.of(FooSHPatchOperation.REPLACE));
+            patch.validateReplace(String.class);
 
             patches.add(patch);
         }    

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.UUID;
 
 import com.vs.foosh.api.exceptions.predictionModel.PredictionModelNotFoundException;
+import com.vs.foosh.api.exceptions.predictionModel.PredictionModelNameMustNotBeAnUuidException;
+import com.vs.foosh.api.exceptions.predictionModel.PredictionModelNameIsNotUniqueException;
 import com.vs.foosh.api.model.misc.IThingList;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.HttpAction;
@@ -75,8 +77,27 @@ public class PredictionModelList implements Serializable, IThingList<AbstractPre
 
     @Override
     public boolean isUniqueName(String name, UUID id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isUniqueName'");
+        try {
+            // Check whether the provided 'name' could be an UUID.
+            // Names in form of an UUID are disallowed.
+            UUID.fromString(name);
+            throw new PredictionModelNameMustNotBeAnUuidException(id);
+        } catch (IllegalArgumentException e) {
+            for (AbstractPredictionModel model : this.models) {
+                // Check whether the name is already used
+                if (model.getName().equalsIgnoreCase(name)) {
+                    // If it's already used, check whether it's the same variable.
+                    if (model.getId().equals(id)) {
+                        return true;
+                    }
+
+                    throw new PredictionModelNameIsNotUniqueException(id, name);
+                }
+
+            }
+        }
+
+        return true;
     }
 
     @Override
