@@ -97,10 +97,8 @@ public class PredictionModelController {
     @PatchMapping(value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> modelPatch(@PathVariable("id") String id, @RequestBody Map<String, String> requestBody) {
-        throw new HttpMappingNotAllowedException(
-                "Not implemented",
-                ListService.getPredictionModelList().getLinks("self"));
+    public ResponseEntity<Object> modelPatch(@PathVariable("id") String id, @RequestBody List<Map<String, String>> patchMappings) {
+        return PredictionModelService.patchModel(id, patchMappings);
     }
 
     @DeleteMapping("/{id}")

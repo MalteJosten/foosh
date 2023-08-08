@@ -38,6 +38,11 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
         return new ArrayList<>();
     }
 
+    public void setName(String name) {
+        this.name = name;
+        updateLinks();
+    }
+
     public List<UUID> getVariableIds() {
         return this.variableIds;
     }
