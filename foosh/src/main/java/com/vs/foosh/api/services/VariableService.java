@@ -168,8 +168,8 @@ public class VariableService {
         }    
 
         for (FooSHJsonPatch patch: patches) {
-            List<String> pathSegments = List.of("name");
-            if (!patch.hasPath(pathSegments.toArray(new String[0]), true)) {
+            List<String> pathSegments = List.of("/name");
+            if (!patch.isValidPath(pathSegments)) {
                 throw new FooSHJsonPatchIllegalArgumentException("You can only edit the field 'name'!");
             }
 
@@ -192,8 +192,6 @@ public class VariableService {
             throw new VariableNameIsEmptyException(uuid);
         }
 
-        // check whether there is a variable with the given id
-        ListService.getVariableList().checkIfIdIsPresent(id);
         if (ListService.getVariableList().isUniqueName(patchName, uuid)) {
             ListService.getVariableList().getThing(id).setName(patchName);
             return true;
@@ -352,7 +350,7 @@ public class VariableService {
                 throw new FooSHJsonPatchIllegalOperationException(patch.getOperation());
         }
 
-        if (!patch.hasPath(pathSegments.toArray(new String[0]), true)) {
+        if (!patch.isValidPath(pathSegments)) {
             throw new FooSHJsonPatchIllegalArgumentException(
                     "You can only add a device under '/' and/or replace/remove a device using its UUID with '/{id}'!");
         }

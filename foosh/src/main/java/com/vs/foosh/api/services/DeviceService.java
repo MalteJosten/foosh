@@ -14,13 +14,15 @@ import org.springframework.web.client.ResourceAccessException;
 import com.vs.foosh.api.exceptions.device.DeviceNameIsEmptyException;
 import com.vs.foosh.api.exceptions.device.DeviceNameIsNotUniqueException;
 import com.vs.foosh.api.exceptions.device.DeviceNameIsNullException;
+import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchIllegalArgumentException;
 import com.vs.foosh.api.exceptions.misc.IdIsNoValidUUIDException;
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeAccessException;
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeIOException;
 import com.vs.foosh.api.model.device.AbstractDevice;
-import com.vs.foosh.api.model.device.DeviceNamePatchRequest;
 import com.vs.foosh.api.model.device.FetchDeviceResponse;
 import com.vs.foosh.api.model.device.PatchDeviceNameValidationData;
+import com.vs.foosh.api.model.web.FooSHJsonPatch;
+import com.vs.foosh.api.model.web.FooSHPatchOperation;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.model.web.SmartHomeCredentials;
 
@@ -110,36 +112,47 @@ public class DeviceService {
         return new PatchDeviceNameValidationData(id, uuid, name);
     }
 
-    public static ResponseEntity<Object> patchDevice(PatchDeviceNameValidationData validationData) {
-        if (patchDeviceName(new DeviceNamePatchRequest(validationData.uuid(), validationData.name()))) {
-            PersistentDataService.saveDeviceList();
+    public static ResponseEntity<Object> patchDevice(String id, List<Map<String, String>> patchMappings) {
+        AbstractDevice device = ListService.getDeviceList().getThing(id);
 
-            AbstractDevice device = ListService.getDeviceList().getThing(validationData.uuid().toString());
+        List<FooSHJsonPatch> patches = new ArrayList<>();
+        for (Map<String, String> patchMapping: patchMappings) {
+            FooSHJsonPatch patch = new FooSHJsonPatch(patchMapping);
+            patch.validateRequest(List.of(FooSHPatchOperation.REPLACE));
+            patch.validateReplace(String.class);
 
-            return respondWithDevice(device, HttpStatus.OK);
+            patches.add(patch);
+        }    
 
-        } else {
-            return new ResponseEntity<Object>("Could not patch name for device '" + validationData.identifier().replace(" ", "%20") +  "' !'", HttpStatus.INTERNAL_SERVER_ERROR);
+        for (FooSHJsonPatch patch: patches) {
+            List<String> pathSegments = List.of("/name");
+            if (!patch.isValidPath(pathSegments)) {
+                throw new FooSHJsonPatchIllegalArgumentException("You can only edit the field 'name'!");
+            }
+
+            patchDeviceName(id, patch.getValue());
         }
 
+        PersistentDataService.saveAll();
+        
+        return respondWithDevice(device, HttpStatus.OK);
     }
 
-    private static boolean patchDeviceName(DeviceNamePatchRequest request) {
-        String name = request.name().toLowerCase();
-        UUID id     = request.id();
+    private static boolean patchDeviceName(String id, String patchName) {
+        UUID uuid = IdService.isUuid(id).get();
 
         // Does the field contain any letters, i.e., is it not empty?
-        if (name.trim().isEmpty()) {
-            throw new DeviceNameIsEmptyException(request.id(), request.name());
+        if (patchName.trim().isEmpty()) {
+            throw new DeviceNameIsEmptyException(uuid, patchName);
         }
 
         // Is the name provided by the field unique?
-        if (ListService.getDeviceList().isUniqueName(name, id)) {
-            ListService.getDeviceList().getThing(id.toString()).setName(name);
-
+        if (ListService.getDeviceList().isUniqueName(patchName, uuid)) {
+            AbstractDevice device = ListService.getDeviceList().getThing(id.toString());
+            device.setName(patchName);
             return true;
         } else {
-            throw new DeviceNameIsNotUniqueException(request);
+            throw new DeviceNameIsNotUniqueException(uuid, patchName);
         }
     }
 
@@ -147,11 +160,12 @@ public class DeviceService {
             List<LinkEntry> links = new ArrayList<>();
             links.addAll(device.getSelfLinks());
             links.addAll(device.getExtLinks());
+
             Map<String, Object> responseBody = new HashMap<>();
             responseBody.put("device", device.getDisplayRepresentation().getDevice());
             responseBody.put("_links", links);
-            return new ResponseEntity<>(responseBody, status);
 
+            return new ResponseEntity<>(responseBody, status);
     }
 
 }

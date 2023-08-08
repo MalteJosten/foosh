@@ -124,33 +124,16 @@ public class FooSHJsonPatch {
     }
 
     // TODO: Fix length bzw. Vergleich
-    public boolean hasPath(String[] desiredPath, boolean includeLast) {
-        String[] pathSegments = this.path.split("/");
-
-        if (includeLast) {
-            if (pathSegments.length != desiredPath.length) {
-                System.err.println("not the same length");
-                return false;
-            }
-        } else {
-            if ((pathSegments.length - 1) != desiredPath.length) {
-                System.err.println("not the same length");
-                return false;
+    public boolean isValidPath(List<String> validPaths) {
+        boolean isValid = false;
+        for (String validPath: validPaths) {
+            if (path.equalsIgnoreCase(validPath)) {
+                isValid = true;
+                break;
             }
         }
 
-        int lastIndex = pathSegments.length - 1;
-        if (!includeLast) {
-            lastIndex--;
-        }
-
-        for(int i = 0; i <= lastIndex; i++) {
-            if (!pathSegments[i].equalsIgnoreCase(desiredPath[i])) {
-                return false;
-            }
-        }
-
-        return true;
+        return isValid;
     }
 
     public FooSHPatchOperation getOperation() {

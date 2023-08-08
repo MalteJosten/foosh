@@ -17,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
-import com.vs.foosh.api.model.device.PatchDeviceNameValidationData;
 import com.vs.foosh.api.model.device.DeviceNamePatchRequest;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
@@ -109,10 +108,8 @@ public class DeviceController {
     @PatchMapping(value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> devicePatch(@PathVariable("id") String id, @RequestBody Map<String, String> requestBody) {
-        PatchDeviceNameValidationData validationData = DeviceService.validatePatchDeviceRequest(id, requestBody);
-
-        return DeviceService.patchDevice(validationData);
+    public ResponseEntity<Object> devicePatch(@PathVariable("id") String id, @RequestBody List<Map<String, String>> patchMappings) {
+        return DeviceService.patchDevice(id, patchMappings);
     }
 
     @DeleteMapping("/{id}")

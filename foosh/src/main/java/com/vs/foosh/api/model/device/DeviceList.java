@@ -104,7 +104,7 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
         if (isUniqueName(device.getName(), device.getId())) {
             this.devices.add(device);
         } else {
-            throw new DeviceNameIsNotUniqueException(new DeviceNamePatchRequest(device.getId(), device.getName()));
+            throw new DeviceNameIsNotUniqueException(device.getId(), device.getDeviceName());
         }
     }
 
@@ -131,7 +131,7 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
                         return true;
                     }
 
-                    throw new DeviceNameIsNotUniqueException(new DeviceNamePatchRequest(id, name));
+                    throw new DeviceNameIsNotUniqueException(id, name);
                 }
             
             }
