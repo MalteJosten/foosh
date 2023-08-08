@@ -20,7 +20,9 @@ import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
 import com.vs.foosh.api.exceptions.misc.SaveFileNotFoundException;
 import com.vs.foosh.api.exceptions.misc.SavingToFileIOException;
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeAccessException;
+import com.vs.foosh.api.exceptions.smarthome.SmartHomeDeviceFetcherIsNullException;
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeIOException;
+import com.vs.foosh.api.exceptions.smarthome.SmartHomeInstructionExecutorIsNullException;
 import com.vs.foosh.api.services.HttpResponseBuilder;
 
 @ControllerAdvice
@@ -39,6 +41,20 @@ public class MiscAdvisor extends ResponseEntityExceptionHandler {
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
                 HttpStatus.GATEWAY_TIMEOUT);
+    }
+
+    @ExceptionHandler(SmartHomeDeviceFetcherIsNullException.class)
+    public ResponseEntity<Object> handleSmartHomeDeviceFetcherIsNullException(SmartHomeDeviceFetcherIsNullException exception, WebRequest request) {
+        return HttpResponseBuilder.buildException(
+                exception.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(SmartHomeInstructionExecutorIsNullException.class)
+    public ResponseEntity<Object> handleSmartHomeExecutorIsNullException(SmartHomeInstructionExecutorIsNullException exception, WebRequest request) {
+        return HttpResponseBuilder.buildException(
+                exception.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(HttpMappingNotAllowedException.class)

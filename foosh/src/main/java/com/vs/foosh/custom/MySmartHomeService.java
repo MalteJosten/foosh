@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -23,10 +25,18 @@ import com.vs.foosh.api.model.web.SmartHomePostResult;
 import com.vs.foosh.api.services.ApplicationConfig;
 import com.vs.foosh.api.services.ISmartHomeDeviceFetcher;
 import com.vs.foosh.api.services.ISmartHomeInstructionExecutor;
+import com.vs.foosh.api.services.SmartHomeService;
 
-public class SmartHomeService implements ISmartHomeDeviceFetcher, ISmartHomeInstructionExecutor {
+@Configuration
+public class MySmartHomeService implements ISmartHomeDeviceFetcher, ISmartHomeInstructionExecutor {
 
-    public static FetchDeviceResponse fetchDevicesFromSmartHomeAPI() throws ResourceAccessException, IOException {
+    @Bean
+    public void registerAtService() {
+        SmartHomeService.registerSmartHomeDeviceFetcher(this);
+        SmartHomeService.registerSmartHomeInstructionExecutor(this);
+    }
+
+    public FetchDeviceResponse fetchDevicesFromSmartHomeAPI() throws ResourceAccessException, IOException {
         RestTemplate restTemplate = new RestTemplateBuilder().setConnectTimeout(Duration.ofSeconds(5)).setReadTimeout(Duration.ofSeconds(5)).build();
         List<AbstractDevice> devices = new ArrayList<>();
 
@@ -44,11 +54,11 @@ public class SmartHomeService implements ISmartHomeDeviceFetcher, ISmartHomeInst
 
     /// For this scenario, no authentication is needed.
     /// Therefore we ignore any input and just forward the request to the non-credential-using method.
-    public static FetchDeviceResponse fetchDevicesFromSmartHomeAPI(SmartHomeCredentials credentials) throws ResourceAccessException, IOException {
+    public FetchDeviceResponse fetchDevicesFromSmartHomeAPI(SmartHomeCredentials credentials) throws ResourceAccessException, IOException {
         return fetchDevicesFromSmartHomeAPI();
     }
     
-    public static List<SmartHomePostResult> sendAndExecuteSmartHomeInstructions(List<SmartHomeInstruction> instructions) {
+    public List<SmartHomePostResult> sendAndExecuteSmartHomeInstructions(List<SmartHomeInstruction> instructions) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.TEXT_PLAIN);
 

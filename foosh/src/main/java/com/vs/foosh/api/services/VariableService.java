@@ -34,7 +34,6 @@ import com.vs.foosh.api.model.web.FooSHPatchOperation;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.model.web.SmartHomeInstruction;
 import com.vs.foosh.api.model.web.SmartHomePostResult;
-import com.vs.foosh.custom.SmartHomeService;
 
 public class VariableService {
 
@@ -146,7 +145,7 @@ public class VariableService {
         responseBody.put("instructions", smartHomeInstructions);
 
         if (request.execute()) {
-            List<SmartHomePostResult> responses = SmartHomeService.sendAndExecuteSmartHomeInstructions(smartHomeInstructions);
+            List<SmartHomePostResult> responses = SmartHomeService.getSmartHomeInstructionExecutor().sendAndExecuteSmartHomeInstructions(smartHomeInstructions);
 
             responseBody.put("responses", responses);
         }

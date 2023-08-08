@@ -23,7 +23,6 @@ import com.vs.foosh.api.model.device.FetchDeviceResponse;
 import com.vs.foosh.api.model.device.PatchDeviceNameValidationData;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.model.web.SmartHomeCredentials;
-import com.vs.foosh.custom.SmartHomeService;
 
 public class DeviceService {
 
@@ -51,9 +50,9 @@ public class DeviceService {
 
         try {
             if (credentials == null) {
-                apiResponse = SmartHomeService.fetchDevicesFromSmartHomeAPI();
+                apiResponse = SmartHomeService.getSmartHomeDeviceFetcher().fetchDevicesFromSmartHomeAPI();
             } else {
-                apiResponse = SmartHomeService.fetchDevicesFromSmartHomeAPI(credentials);
+                apiResponse = SmartHomeService.getSmartHomeDeviceFetcher().fetchDevicesFromSmartHomeAPI(credentials);
             }
 
             ListService.getDeviceList().setList(apiResponse.getDevices());
