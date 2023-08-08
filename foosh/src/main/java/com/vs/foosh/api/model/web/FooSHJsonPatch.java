@@ -5,11 +5,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchEmptyValueException;
-import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchFormatException;
-import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchIllegalArgumentException;
-import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchIllegalOperationException;
-import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchValueException;
+import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsEmptyException;
+import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchFormatException;
+import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalArgumentException;
+import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalOperationException;
+import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueException;
 import com.vs.foosh.api.services.IdService;
 
 public class FooSHJsonPatch {
@@ -17,6 +17,7 @@ public class FooSHJsonPatch {
     private FooSHPatchOperation operation;
     private String path;
     private String value;
+    private String parentId;
 
     public Map<String, String> getRequest() {
         return this.request;
@@ -28,14 +29,23 @@ public class FooSHJsonPatch {
         this.request = request;
     }
 
+    public void setParentId(String id) {
+        this.parentId = id;
+    }
+
+    public String getParentId() {
+        return this.parentId;
+    }
+
     public void validateRequest(List<FooSHPatchOperation> allowedOperations) {
         String operationField = request.get("op");
+        System.out.println(operationField);
 
         // Does the Patch contain a valid operation?
         try {
             operation = FooSHPatchOperation.valueOf(operationField.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new FooSHJsonPatchIllegalArgumentException("The operation '" + operationField.toLowerCase() + "' is not a valid Json Patch operation. Please visit https://www.rfc-editor.org/rfc/rfc6902#section-4 for a list of valid operations.");
+            throw new FooSHJsonPatchIllegalArgumentException(parentId, "The operation '" + operationField + "' is not a valid Json Patch operation. Please visit https://www.rfc-editor.org/rfc/rfc6902#section-4 for a list of valid operations.");
         }
 
         // Do we allow this operation?
@@ -50,7 +60,7 @@ public class FooSHJsonPatch {
         Set<String> keys = request.keySet();
 
         if (!keys.containsAll(List.of("op", "path", "value")) || keys.size() != 3) {
-            throw new FooSHJsonPatchFormatException(); 
+            throw new FooSHJsonPatchFormatException(parentId); 
         }
 
         this.path = request.get("path");
@@ -58,7 +68,7 @@ public class FooSHJsonPatch {
         String value = request.get("value");
 
         if (value.trim().isEmpty()) {
-            throw new FooSHJsonPatchEmptyValueException();
+            throw new FooSHJsonPatchValueIsEmptyException(parentId);
         }
 
         if (valueClass == String.class) {
@@ -66,7 +76,7 @@ public class FooSHJsonPatch {
         } else if (valueClass == UUID.class) {
             validateValueAsUUID(value);
         } else {
-            throw new FooSHJsonPatchValueException(valueClass);
+            throw new FooSHJsonPatchValueException(parentId, valueClass);
         }
     }
 
@@ -75,7 +85,7 @@ public class FooSHJsonPatch {
         Set<String> keys = request.keySet();
 
         if (!keys.containsAll(List.of("op", "path", "value")) || keys.size() != 3) {
-            throw new FooSHJsonPatchFormatException(); 
+            throw new FooSHJsonPatchFormatException(parentId); 
         }
 
         this.path = request.get("path");
@@ -83,7 +93,7 @@ public class FooSHJsonPatch {
         String value = request.get("value");
 
         if (value.trim().isEmpty()) {
-            throw new FooSHJsonPatchEmptyValueException();
+            throw new FooSHJsonPatchValueIsEmptyException(parentId);
         }
 
         if (valueClass == String.class) {
@@ -91,7 +101,7 @@ public class FooSHJsonPatch {
         } else if (valueClass == UUID.class) {
             validateValueAsUUID(value);
         } else {
-            throw new FooSHJsonPatchValueException(valueClass);
+            throw new FooSHJsonPatchValueException(parentId, valueClass);
         }
     }
 
@@ -100,7 +110,7 @@ public class FooSHJsonPatch {
 
         if (!keys.containsAll(List.of("op", "path", "value")) || keys.size() > 3) {
             if (!keys.containsAll(List.of("op", "path"))) {
-                throw new FooSHJsonPatchFormatException(); 
+                throw new FooSHJsonPatchFormatException(parentId); 
             }
         }
 
@@ -109,7 +119,7 @@ public class FooSHJsonPatch {
 
     private void validateValueAsString(String value) {
         if (IdService.isUuid(value).isPresent()) {
-            throw new FooSHJsonPatchValueException(String.class);
+            throw new FooSHJsonPatchValueException(parentId, String.class);
         }
 
         this.value = value;
@@ -117,7 +127,7 @@ public class FooSHJsonPatch {
 
     private void validateValueAsUUID(String value) {
         if (IdService.isUuid(value).isEmpty()) {
-            throw new FooSHJsonPatchValueException(UUID.class);
+            throw new FooSHJsonPatchValueException(parentId, UUID.class);
         }
 
         this.value = value;

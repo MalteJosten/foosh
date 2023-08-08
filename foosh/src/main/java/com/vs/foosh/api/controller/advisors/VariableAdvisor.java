@@ -14,12 +14,10 @@ import com.vs.foosh.api.exceptions.variable.MalformedVariableModelPostRequestExc
 import com.vs.foosh.api.exceptions.variable.MalformedVariablePredictionRequest;
 import com.vs.foosh.api.exceptions.variable.VariableCreationException;
 import com.vs.foosh.api.exceptions.variable.VariableDevicePostException;
-import com.vs.foosh.api.exceptions.variable.VariableNameIsEmptyException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsNotUniqueException;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsNullException;
 import com.vs.foosh.api.exceptions.variable.VariableNameMustNotBeAnUuidException;
 import com.vs.foosh.api.exceptions.variable.VariableNotFoundException;
-import com.vs.foosh.api.exceptions.variable.VariablePatchException;
 import com.vs.foosh.api.exceptions.variable.VariablePredictionException;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.HttpResponseBuilder;
@@ -52,14 +50,6 @@ public class VariableAdvisor extends ResponseEntityExceptionHandler {
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
                 LinkBuilder.getDeviceLinkWithDevices(exception.getId().toString()),
-                HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(VariableNameIsEmptyException.class)
-    public ResponseEntity<Object> handleVariableNameIsEmptyException(VariableNameIsEmptyException exception, WebRequest request) {
-        return HttpResponseBuilder.buildException(
-                exception.getMessage(),
-                LinkBuilder.getVariableLinkBlock(exception.getId().toString()),
                 HttpStatus.BAD_REQUEST);
     }
 
@@ -99,14 +89,6 @@ public class VariableAdvisor extends ResponseEntityExceptionHandler {
                 exception.getMessage(),
                 links,
                 exception.getStatus());
-    }
-
-    @ExceptionHandler(VariablePatchException.class)
-    public ResponseEntity<Object> handleVariablePatchException(VariablePatchException exception, WebRequest request) {
-        return HttpResponseBuilder.buildException(
-                exception.getMessage(),
-                LinkBuilder.getVariableLinkBlock(exception.getId().toString()),
-                HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MalformedVariableModelPostRequestException.class)

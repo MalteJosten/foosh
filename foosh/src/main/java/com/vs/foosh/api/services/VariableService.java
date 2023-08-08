@@ -10,16 +10,16 @@ import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalArgumentException;
+import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalOperationException;
+import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsEmptyException;
+import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsNullException;
 import com.vs.foosh.api.exceptions.device.DeviceIdNotFoundException;
-import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchIllegalArgumentException;
-import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchIllegalOperationException;
 import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
 import com.vs.foosh.api.exceptions.variable.MalformedVariableModelPostRequestException;
 import com.vs.foosh.api.exceptions.variable.MalformedVariablePredictionRequest;
 import com.vs.foosh.api.exceptions.variable.VariableCreationException;
 import com.vs.foosh.api.exceptions.variable.VariableDevicePostException;
-import com.vs.foosh.api.exceptions.variable.VariableNameIsEmptyException;
-import com.vs.foosh.api.exceptions.variable.VariableNameIsNullException;
 import com.vs.foosh.api.model.device.DeviceResponseObject;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
@@ -155,8 +155,7 @@ public class VariableService {
     }
 
     public static ResponseEntity<Object> patchVariable(String id, List<Map<String, String>> patchMappings) {
-        // check whether id is an UUID and whether there is a device with the given id
-        ListService.getVariableList().checkIfIdIsPresent(id);
+        Variable variable = ListService.getVariableList().getThing(id);
 
         List<FooSHJsonPatch> patches = new ArrayList<>();
         for (Map<String, String> patchMapping: patchMappings) {
@@ -170,9 +169,10 @@ public class VariableService {
         for (FooSHJsonPatch patch: patches) {
             List<String> pathSegments = List.of("/name");
             if (!patch.isValidPath(pathSegments)) {
-                throw new FooSHJsonPatchIllegalArgumentException("You can only edit the field 'name'!");
+                throw new FooSHJsonPatchIllegalArgumentException(variable.getId().toString(), "You can only edit the field 'name'!");
             }
 
+            // TODO: give Var instead of id
             patchVariableName(id, patch.getValue());
         }
 
@@ -185,11 +185,11 @@ public class VariableService {
         UUID uuid = IdService.isUuid(id).get();
 
         if (patchName == null) {
-            throw new VariableNameIsNullException(uuid);
+            throw new FooSHJsonPatchValueIsNullException(uuid);
         }
 
         if (patchName.trim().isEmpty() || patchName.equals("")) {
-            throw new VariableNameIsEmptyException(uuid);
+            throw new FooSHJsonPatchValueIsEmptyException(uuid.toString());
         }
 
         if (ListService.getVariableList().isUniqueName(patchName, uuid)) {
@@ -197,7 +197,6 @@ public class VariableService {
             return true;
         }
         return false;
-
     }
 
     public static ResponseEntity<Object> deleteVariable(String id) {
@@ -276,7 +275,7 @@ public class VariableService {
         Variable variable = ListService.getVariableList().getThing(id);
 
         // Convert patchMappings to FooSHJsonPatches
-        List<FooSHJsonPatch> patches = convertPatchMappings(patchMappings);
+        List<FooSHJsonPatch> patches = convertPatchMappings(id, patchMappings);
 
         // To comply with RFC 6902, we need to make sure, that all instructions are valid.
         // Otherwise, we must not execute any patch instruction.
@@ -305,10 +304,11 @@ public class VariableService {
         return respondWithVariableAndDevices(variable);
     }
 
-    private static List<FooSHJsonPatch> convertPatchMappings(List<Map<String, String>> patchMappings) {
+    private static List<FooSHJsonPatch> convertPatchMappings(String variableId, List<Map<String, String>> patchMappings) {
         List<FooSHJsonPatch> patches = new ArrayList<>();
         for (Map<String, String> patchMapping: patchMappings) {
             FooSHJsonPatch patch = new FooSHJsonPatch(patchMapping);
+            patch.setParentId(variableId);
             patch.validateRequest(List.of(FooSHPatchOperation.ADD));
 
             // TODO: Implement replace, remove
@@ -352,6 +352,7 @@ public class VariableService {
 
         if (!patch.isValidPath(pathSegments)) {
             throw new FooSHJsonPatchIllegalArgumentException(
+                    patch.getParentId(),
                     "You can only add a device under '/' and/or replace/remove a device using its UUID with '/{id}'!");
         }
     }
@@ -377,6 +378,7 @@ public class VariableService {
                         throw new DeviceIdNotFoundException(value);
                     }
                     throw new FooSHJsonPatchIllegalArgumentException(
+                            variable.getId().toString(),
                             "Could not replace device since it is not part of the device collection.");
                 }
 

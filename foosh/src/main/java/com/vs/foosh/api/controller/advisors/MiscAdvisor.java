@@ -10,12 +10,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsEmptyException;
+import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsNullException;
+import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchFormatException;
+import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalArgumentException;
+import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalOperationException;
+import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueException;
 import com.vs.foosh.api.exceptions.misc.CouldNotDeleteCollectionException;
-import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchEmptyValueException;
-import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchFormatException;
-import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchIllegalArgumentException;
-import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchIllegalOperationException;
-import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchValueException;
 import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
 import com.vs.foosh.api.exceptions.misc.SaveFileNotFoundException;
 import com.vs.foosh.api.exceptions.misc.SavingToFileIOException;
@@ -91,11 +92,12 @@ public class MiscAdvisor extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = {
+        FooSHJsonPatchFormatException.class,
         FooSHJsonPatchIllegalArgumentException.class,
         FooSHJsonPatchIllegalOperationException.class,
-        FooSHJsonPatchFormatException.class,
-        FooSHJsonPatchEmptyValueException.class,
-        FooSHJsonPatchValueException.class})
+        FooSHJsonPatchValueException.class,
+        FooSHJsonPatchValueIsEmptyException.class,
+        FooSHJsonPatchValueIsNullException.class})
     public ResponseEntity<Object> handleFooSHJsonPatchExceptions(RuntimeException exception,
             WebRequest request) {
         return HttpResponseBuilder.buildException(

@@ -11,10 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.ResourceAccessException;
 
+import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalArgumentException;
 import com.vs.foosh.api.exceptions.device.DeviceNameIsEmptyException;
 import com.vs.foosh.api.exceptions.device.DeviceNameIsNotUniqueException;
 import com.vs.foosh.api.exceptions.device.DeviceNameIsNullException;
-import com.vs.foosh.api.exceptions.misc.FooSHJsonPatchIllegalArgumentException;
 import com.vs.foosh.api.exceptions.misc.IdIsNoValidUUIDException;
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeAccessException;
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeIOException;
@@ -127,7 +127,7 @@ public class DeviceService {
         for (FooSHJsonPatch patch: patches) {
             List<String> pathSegments = List.of("/name");
             if (!patch.isValidPath(pathSegments)) {
-                throw new FooSHJsonPatchIllegalArgumentException("You can only edit the field 'name'!");
+                throw new FooSHJsonPatchIllegalArgumentException(id, "You can only edit the field 'name'!");
             }
 
             patchDeviceName(id, patch.getValue());

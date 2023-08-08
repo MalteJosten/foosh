@@ -1,4 +1,4 @@
-package com.vs.foosh.api.exceptions.misc;
+package com.vs.foosh.api.exceptions.FooSHJsonPatch;
 
 import com.vs.foosh.api.model.web.FooSHPatchOperation;
 
