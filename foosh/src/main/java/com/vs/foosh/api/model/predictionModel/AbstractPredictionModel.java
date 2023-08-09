@@ -14,7 +14,6 @@ import com.vs.foosh.api.model.misc.IThingListObserver;
 import com.vs.foosh.api.model.misc.ModificationType;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.variable.VariableModification;
-import com.vs.foosh.api.model.web.FooSHJsonPatch;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.model.web.SmartHomeInstruction;
@@ -101,16 +100,12 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
         if (variableIds.contains(variableId)) {
             throw new ParameterMappingAlreadyPresentException(
                 id,
-                "Using 'add', you cannot add new mappings if there are already existing ones. Use 'replace' to overwrite existing mappings.");
+                "You cannot add new parameter mappings to this variable/model. There are already variable parameter mappings. Please use PATCH instead.");
         }
 
         ListService.getVariableList().getThing(variableId.toString()).attach(this);
         parameterMappings.add(new VariableParameterMapping(variableId, mappings));
         updateVariableIds();
-    }
-
-    public void patchMapping(FooSHJsonPatch patch) {
-        // TODO: Implement
     }
 
     public void deleteMapping() {

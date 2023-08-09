@@ -111,29 +111,10 @@ public class PredictionModelService {
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
-    // TODO: Avoid overwriting existing mappings. Use PATCH to edit. Only allow POST once (if there is no existing mapping).
     public static ResponseEntity<Object> postMappings(String id, PredictionModelMappingPostRequest request) {
-        AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
+        setMappings(id, request);
 
-        request.validate(id, ListService.getVariableList().getThing(request.getVariableId().toString()).getDeviceIds());
-
-        model.setMapping(request.getVariableId(), request.getMappings()); 
-        model.updateLinks();
-
-        PersistentDataService.saveAll();
-
-        VariableParameterMapping mapping = model.getParameterMapping(request.getVariableId());
-
-        List<LinkEntry> links = new ArrayList<>();
-        links.addAll(model.getSelfLinks());
-        links.addAll(model.getDeviceLinks());
-        links.addAll(ListService.getVariableList().getThing(request.getVariableId().toString()).getSelfStaticLinks("variable"));
-
-        Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("mapping", mapping);
-        responseBody.put("_links", links);
-
-        return new ResponseEntity<>(responseBody, HttpStatus.CREATED);
+        return respondWithModel(id);
     }
 
     public static ResponseEntity<Object> patchMappings(String id, List<Map<String, Object>> patchRequest) {
