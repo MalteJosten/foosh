@@ -114,6 +114,10 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
     }
 
     public void deleteMapping() {
+        for(UUID variableId: variableIds) {
+            ListService.getVariableList().getThing(variableId.toString()).detach(this);    
+        }
+
         parameterMappings.clear();
 
         updateVariableIds();
