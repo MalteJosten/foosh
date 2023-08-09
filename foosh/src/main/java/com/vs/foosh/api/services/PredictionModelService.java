@@ -117,11 +117,30 @@ public class PredictionModelService {
         return respondWithModel(id);
     }
 
-    public static ResponseEntity<Object> patchMappings(String id, List<Map<String, Object>> patchRequest) {
+    public static ResponseEntity<Object> patchMappings(String id, List<Map<String, Object>> patchMappings) {
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
 
+        List<FooSHJsonPatch> patches = convertPatchMappings(id, patchMappings);
+
+        for (FooSHJsonPatch patch: patches) {
+            checkForCorrectPatchPath(model, patch);
+        }
+
+        for (FooSHJsonPatch patch: patches) {
+            if (patch.getPath().equals("/")) {
+                patchAllMappings(id, patch);
+            } else {
+                patchMappingEntry(id, patch);
+            }
+        }
+
+        return respondWithModel(id);
+    }
+
+    private static List<FooSHJsonPatch> convertPatchMappings(String id, List<Map<String, Object>> patchMappings) {
         List<FooSHJsonPatch> patches = new ArrayList<>();
-        for (Map<String, Object> patchMapping: patchRequest) {
+
+        for (Map<String, Object> patchMapping: patchMappings) {
             FooSHJsonPatch patch = new FooSHJsonPatch(patchMapping);
             patch.setParentId(id);
 
@@ -143,33 +162,27 @@ public class PredictionModelService {
 
             patches.add(patch);
         }
+        
+        return patches;
+    }
 
-        for (FooSHJsonPatch patch: patches) {
-            List<String> allowedPathSegments = List.of("/", "uuid");
-            if(!patch.isValidPath(allowedPathSegments)) {
-                throw new FooSHJsonPatchIllegalArgumentException(model.getId().toString(), "You can only edit the entire collection (using '/') or an individual mapping entry (using '/{uuid}')!");
-            }
-
-            if (patch.getOperation() == FooSHPatchOperation.REPLACE) {
-                Variable variable = ListService.getVariableList().getThing(patch.getDestination());
-
-                if (!model.getVariableIds().contains(variable.getId())) {
-                    throw new FooSHJsonPatchReplaceException(
-                        model.getId(),
-                        "You can only replace mappings which exist. Use the operation 'add' to add new mappings.");
-                        
-                }
-            }
-
-            if (patch.getPath().equals("/")) {
-                patchAllMappings(id, patch);
-            } else {
-                patchMappingEntry(id, patch);
-            }
-
+    private static void checkForCorrectPatchPath(AbstractPredictionModel model, FooSHJsonPatch patch) {
+        List<String> allowedPathSegments = List.of("/", "uuid");
+        if (!patch.isValidPath(allowedPathSegments)) {
+            throw new FooSHJsonPatchIllegalArgumentException(model.getId().toString(),
+                    "You can only edit the entire collection (using '/') or an individual mapping entry (using '/{uuid}')!");
         }
 
-        return respondWithModel(id);
+        if (patch.getOperation() == FooSHPatchOperation.REPLACE) {
+            Variable variable = ListService.getVariableList().getThing(patch.getDestination());
+
+            if (!model.getVariableIds().contains(variable.getId())) {
+                throw new FooSHJsonPatchReplaceException(
+                        model.getId(),
+                        "You can only replace mappings which exist. Use the operation 'add' to add new mappings.");
+
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
