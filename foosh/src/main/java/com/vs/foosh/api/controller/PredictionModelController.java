@@ -93,11 +93,11 @@ public class PredictionModelController {
                 ListService.getPredictionModelList().getThing(id).getSelfLinks());
     }
 
-    // TODO: Also allow FooSHJsonPatch for /mappings?
+    // TODO: Implement custom Json Patch
     @PatchMapping(value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> modelPatch(@PathVariable("id") String id, @RequestBody List<Map<String, Object>> patchMappings) {
+    public ResponseEntity<Object> modelPatch(@PathVariable("id") String id, @RequestBody List<Map<String, String>> patchMappings) {
         return PredictionModelService.patchModel(id, patchMappings);
     }
 
@@ -144,10 +144,9 @@ public class PredictionModelController {
     // TODO: (Implement custom Json Patch)
     @PatchMapping(value = "/{id}/mappings/",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> patchModelMapping(@PathVariable("id") String id, @RequestBody List<Map<String, Object>> patchMappings) {
-        PredictionModelService.patchMappings(id, patchMappings);
+    public ResponseEntity<Object> patchModelMapping(@PathVariable("id") String id, @RequestBody List<Map<String, String>> patchMappings) {
         throw new HttpMappingNotAllowedException(
-                "Work in Progress",
+                "Not implemented",
                 ListService.getPredictionModelList().getLinks("self"));
     }
 

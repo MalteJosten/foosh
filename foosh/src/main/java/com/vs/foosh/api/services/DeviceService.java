@@ -112,11 +112,11 @@ public class DeviceService {
         return new PatchDeviceNameValidationData(id, uuid, name);
     }
 
-    public static ResponseEntity<Object> patchDevice(String id, List<Map<String, Object>> patchMappings) {
+    public static ResponseEntity<Object> patchDevice(String id, List<Map<String, String>> patchMappings) {
         AbstractDevice device = ListService.getDeviceList().getThing(id);
 
         List<FooSHJsonPatch> patches = new ArrayList<>();
-        for (Map<String, Object> patchMapping: patchMappings) {
+        for (Map<String, String> patchMapping: patchMappings) {
             FooSHJsonPatch patch = new FooSHJsonPatch(patchMapping);
             patch.validateRequest(List.of(FooSHPatchOperation.REPLACE));
             patch.validateReplace(String.class);
@@ -130,7 +130,7 @@ public class DeviceService {
                 throw new FooSHJsonPatchIllegalArgumentException(id, "You can only edit the field 'name'!");
             }
 
-            patchDeviceName(id, (String) patch.getValue());
+            patchDeviceName(id, patch.getValue());
         }
 
         PersistentDataService.saveAll();

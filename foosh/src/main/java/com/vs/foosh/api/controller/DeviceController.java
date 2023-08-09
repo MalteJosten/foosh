@@ -60,7 +60,6 @@ public class DeviceController {
                 ListService.getDeviceList().getLinks("self"));
     }
 
-    // TODO: Remove RequestBody
     @PatchMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesPatch() {
@@ -108,7 +107,7 @@ public class DeviceController {
     @PatchMapping(value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> devicePatch(@PathVariable("id") String id, @RequestBody List<Map<String, Object>> patchMappings) {
+    public ResponseEntity<Object> devicePatch(@PathVariable("id") String id, @RequestBody List<Map<String, String>> patchMappings) {
         return DeviceService.patchDevice(id, patchMappings);
     }
 
