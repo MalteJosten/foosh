@@ -145,10 +145,7 @@ public class PredictionModelController {
     @PatchMapping(value = "/{id}/mappings/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> patchModelMapping(@PathVariable("id") String id, @RequestBody List<Map<String, Object>> patchMappings) {
-        PredictionModelService.patchMappings(id, patchMappings);
-        throw new HttpMappingNotAllowedException(
-                "Work in Progress",
-                ListService.getPredictionModelList().getLinks("self"));
+        return PredictionModelService.patchMappings(id, patchMappings);
     }
 
     @DeleteMapping(value = "/{id}/mappings/",

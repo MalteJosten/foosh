@@ -14,6 +14,8 @@ import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalArgumentE
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsEmptyException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsNullException;
 import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
+import com.vs.foosh.api.model.predictionModel.ParameterMapping;
+import com.vs.foosh.api.model.predictionModel.PredictionModelMappingPatchRequest;
 import com.vs.foosh.api.model.predictionModel.PredictionModelMappingPostRequest;
 import com.vs.foosh.api.model.predictionModel.VariableParameterMapping;
 import com.vs.foosh.api.model.web.FooSHJsonPatch;
@@ -131,14 +133,70 @@ public class PredictionModelService {
         return new ResponseEntity<>(responseBody, HttpStatus.CREATED);
     }
 
-    // TODO: Return ResponseEntity
-    public static void patchMappings(String id, List<Map<String, Object>> patchRequest) {
+    public static ResponseEntity<Object> patchMappings(String id, List<Map<String, Object>> patchRequest) {
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
 
         List<FooSHJsonPatch> patches = new ArrayList<>();
         for (Map<String, Object> patchMapping: patchRequest) {
+            FooSHJsonPatch patch = new FooSHJsonPatch(patchMapping);
+            patch.setParentId(id);
 
+            patch.validateRequest(List.of(FooSHPatchOperation.ADD, FooSHPatchOperation.REPLACE, FooSHPatchOperation.REMOVE));
+            
+            switch (patch.getOperation()) {
+                case ADD:
+                    patch.validateAdd(PredictionModelMappingPatchRequest.class);
+                    break;
+                case REPLACE:
+                    patch.validateReplace(PredictionModelMappingPatchRequest.class);
+                    break;
+                case REMOVE:
+                    patch.validateRemove();
+                    break;
+                default:
+                    break;
+            }
+
+            patches.add(patch);
         }
+
+        for (FooSHJsonPatch patch: patches) {
+            List<String> allowedPathSegments = List.of("/", "uuid");
+            if(!patch.isValidPath(allowedPathSegments)) {
+                throw new FooSHJsonPatchIllegalArgumentException(model.getId().toString(), "You can only edit the entire collection (using '/') or an individual mapping entry (using '/{uuid}')!");
+            }
+
+            if (patch.getPath().equals("/")) {
+                patchAllMappings(id, patch);
+            } else {
+                patchMappingEntry(id, patch);
+            }
+        }
+
+        return respondWithModel(id);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void patchMappingEntry(String modelId, FooSHJsonPatch patch) {
+        switch (patch.getOperation()) {
+            case ADD:
+                List<ParameterMapping> parameterMappings = new ArrayList<>();
+                for (PredictionModelMappingPatchRequest patchRequest: (List<PredictionModelMappingPatchRequest>) patch.getValue()) {
+                    parameterMappings.add(new ParameterMapping(patchRequest.getParameter(), patchRequest.getDeviceId().toString()));
+                }
+
+                PredictionModelMappingPostRequest postRequest = new PredictionModelMappingPostRequest(UUID.fromString(patch.getDestination()), parameterMappings);
+
+                postMappings(modelId, postRequest);
+                break;
+            default:
+                break;
+        }
+    }
+
+    // TODO: Implement
+    private static void patchAllMappings(String modelId, FooSHJsonPatch patch) {
+
     }
 
     public static ResponseEntity<Object> deleteMappings(String id) {

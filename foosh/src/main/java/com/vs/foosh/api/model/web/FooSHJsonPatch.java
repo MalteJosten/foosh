@@ -1,11 +1,15 @@
 package com.vs.foosh.api.model.web;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsEmptyException;
+import com.vs.foosh.api.exceptions.misc.IdIsNoValidUUIDException;
+import com.vs.foosh.api.model.predictionModel.PredictionModelMappingPatchRequest;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchFormatException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalArgumentException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalOperationException;
@@ -66,7 +70,6 @@ public class FooSHJsonPatch {
         
         Object value = request.get("value");
 
-
         if (valueClass == String.class) {
             String stringValue = (String) value;
             if (stringValue.trim().isEmpty()) {
@@ -77,6 +80,8 @@ public class FooSHJsonPatch {
         } else if (valueClass == UUID.class) {
             String uuidValue = (String) value;
             validateValueAsUUID(uuidValue);
+        } else if (valueClass == PredictionModelMappingPatchRequest.class) {
+            validateValueAsListOfPredictionModelMappingPatchRequests(value);
         } else {
             throw new FooSHJsonPatchValueException(parentId, valueClass);
         }
@@ -137,10 +142,33 @@ public class FooSHJsonPatch {
         this.value = value;
     }
 
-    // TODO: Fix length bzw. Vergleich
+    @SuppressWarnings("unchecked")
+    private void validateValueAsListOfPredictionModelMappingPatchRequests(Object value) {
+        ArrayList<Object> valueItems = (ArrayList<Object>) value;
+
+        List<PredictionModelMappingPatchRequest> patches = new ArrayList<>();
+        for (Object valueItem: valueItems) {
+            PredictionModelMappingPatchRequest patchRequest = new PredictionModelMappingPatchRequest(parentId, (HashMap<String, String>) valueItem);
+            patches.add(patchRequest);
+        }
+
+        this.value = patches;
+    }
+
     public boolean isValidPath(List<String> validPaths) {
         boolean isValid = false;
+
+        if (path.trim().isEmpty()) {
+            return isValid;
+        }
+
         for (String validPath: validPaths) {
+            if (validPath.equalsIgnoreCase("uuid")) {
+                IdService.isUuid(path.split("/")[1]).orElseThrow(() -> new IdIsNoValidUUIDException(path.split("/")[1]));
+                isValid = true;
+                break;
+            }
+
             if (path.equalsIgnoreCase(validPath)) {
                 isValid = true;
                 break;

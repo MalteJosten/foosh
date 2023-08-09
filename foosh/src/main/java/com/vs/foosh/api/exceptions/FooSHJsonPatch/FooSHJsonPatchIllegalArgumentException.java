@@ -5,7 +5,6 @@ public class FooSHJsonPatchIllegalArgumentException extends RuntimeException {
 
     public FooSHJsonPatchIllegalArgumentException(String id, String message) {
         super(message);
-        // System.out.println(operation);
         this.id = id;
     }
 
