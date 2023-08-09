@@ -67,6 +67,10 @@ public class FooSHJsonPatch {
         }
 
         this.path = (String) request.get("path");
+
+        if (path == null || path.trim().isEmpty()) {
+            throw new FooSHJsonPatchFormatException(parentId);
+        }
         
         Object value = request.get("value");
 
@@ -97,6 +101,10 @@ public class FooSHJsonPatch {
 
         this.path = (String) request.get("path");
         
+        if (path == null || path.trim().isEmpty()) {
+            throw new FooSHJsonPatchFormatException(parentId);
+        }
+
         Object value = request.get("value");
 
         if (valueClass == String.class) {
@@ -124,6 +132,10 @@ public class FooSHJsonPatch {
         }
 
         this.path = (String) request.get("path");
+
+        if (path == null || path.trim().isEmpty()) {
+            throw new FooSHJsonPatchFormatException(parentId);
+        }
     }
 
     private void validateValueAsString(String value) {
@@ -144,15 +156,20 @@ public class FooSHJsonPatch {
 
     @SuppressWarnings("unchecked")
     private void validateValueAsListOfPredictionModelMappingPatchRequests(Object value) {
-        ArrayList<Object> valueItems = (ArrayList<Object>) value;
+        try {
+            ArrayList<Object> valueItems = (ArrayList<Object>) value;
 
-        List<PredictionModelMappingPatchRequest> patches = new ArrayList<>();
-        for (Object valueItem: valueItems) {
-            PredictionModelMappingPatchRequest patchRequest = new PredictionModelMappingPatchRequest(parentId, (HashMap<String, String>) valueItem);
-            patches.add(patchRequest);
+            List<PredictionModelMappingPatchRequest> patches = new ArrayList<>();
+            for (Object valueItem: valueItems) {
+                PredictionModelMappingPatchRequest patchRequest = new PredictionModelMappingPatchRequest(parentId, (HashMap<String, String>) valueItem);
+                patches.add(patchRequest);
+            }
+
+            this.value = patches;
+        } catch (ClassCastException e) {
+            throw new FooSHJsonPatchValueException(parentId, List.class);
         }
 
-        this.value = patches;
     }
 
     public boolean isValidPath(List<String> validPaths) {
