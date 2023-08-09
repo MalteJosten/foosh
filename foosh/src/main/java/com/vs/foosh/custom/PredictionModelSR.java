@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.vs.foosh.api.exceptions.variable.CouldNotMakePredictionException;
 import com.vs.foosh.api.exceptions.variable.VariablePredictionException;
 import com.vs.foosh.api.model.device.AbstractDevice;
 import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
@@ -25,6 +26,13 @@ public class PredictionModelSR extends AbstractPredictionModel {
     @Override
     public List<SmartHomeInstruction> makePrediction(UUID variableId, String value) {
         List<ParameterMapping> mappings = getMappings(variableId);
+
+        if (mappings.isEmpty()) {
+            throw new CouldNotMakePredictionException(
+                variableId,
+                "There are no mappings for the variable '" + ListService.getVariableList().getThing(variableId.toString()).getName() + "' (" + variableId + ") " +
+                "and the model '" + this.name + "' (" + this.id + ")!"); 
+        }
 
         List<SmartHomeInstruction> instructions = new ArrayList<>();
         AbstractDevice device = ListService.getDeviceList().getThing(mappings.get(0).getDeviceId());

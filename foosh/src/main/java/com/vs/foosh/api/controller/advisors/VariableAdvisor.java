@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.vs.foosh.api.exceptions.variable.CouldNotMakePredictionException;
 import com.vs.foosh.api.exceptions.variable.MalformedVariableModelPostRequestException;
 import com.vs.foosh.api.exceptions.variable.MalformedVariablePredictionRequest;
 import com.vs.foosh.api.exceptions.variable.VariableCreationException;
@@ -118,6 +119,17 @@ public class VariableAdvisor extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleVariablePredictionException(VariablePredictionException exception, WebRequest request) {
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(LinkBuilder.getVariableLinkBlock(exception.getId().toString()));
+
+        return HttpResponseBuilder.buildException(
+                exception.getMessage(),
+                links,
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(CouldNotMakePredictionException.class)
+    public ResponseEntity<Object> handleCouldNotMakePredictionException(CouldNotMakePredictionException exception, WebRequest request) {
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(LinkBuilder.getVariableLinkBlock(exception.getVariableId().toString()));
 
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
