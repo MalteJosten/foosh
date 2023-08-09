@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalArgumentException;
+import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchReplaceException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsEmptyException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsNullException;
 import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
@@ -18,6 +19,7 @@ import com.vs.foosh.api.model.predictionModel.ParameterMapping;
 import com.vs.foosh.api.model.predictionModel.PredictionModelMappingPatchRequest;
 import com.vs.foosh.api.model.predictionModel.PredictionModelMappingPostRequest;
 import com.vs.foosh.api.model.predictionModel.VariableParameterMapping;
+import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.web.FooSHJsonPatch;
 import com.vs.foosh.api.model.web.FooSHPatchOperation;
 import com.vs.foosh.api.model.web.LinkEntry;
@@ -109,6 +111,7 @@ public class PredictionModelService {
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
+    // TODO: Avoid overwriting existing mappings. Use PATCH to edit. Only allow POST once (if there is no existing mapping).
     public static ResponseEntity<Object> postMappings(String id, PredictionModelMappingPostRequest request) {
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
 
@@ -166,11 +169,23 @@ public class PredictionModelService {
                 throw new FooSHJsonPatchIllegalArgumentException(model.getId().toString(), "You can only edit the entire collection (using '/') or an individual mapping entry (using '/{uuid}')!");
             }
 
+            if (patch.getOperation() == FooSHPatchOperation.REPLACE) {
+                Variable variable = ListService.getVariableList().getThing(patch.getDestination());
+
+                if (!model.getVariableIds().contains(variable.getId())) {
+                    throw new FooSHJsonPatchReplaceException(
+                        model.getId(),
+                        "You can only replace mappings which exist. Use the operation 'add' to add new mappings.");
+                        
+                }
+            }
+
             if (patch.getPath().equals("/")) {
                 patchAllMappings(id, patch);
             } else {
                 patchMappingEntry(id, patch);
             }
+
         }
 
         return respondWithModel(id);
@@ -178,17 +193,21 @@ public class PredictionModelService {
 
     @SuppressWarnings("unchecked")
     private static void patchMappingEntry(String modelId, FooSHJsonPatch patch) {
+        List<ParameterMapping> parameterMappings = new ArrayList<>();
+        for (PredictionModelMappingPatchRequest patchRequest: (List<PredictionModelMappingPatchRequest>) patch.getValue()) {
+            parameterMappings.add(new ParameterMapping(patchRequest.getParameter(), patchRequest.getDeviceId().toString()));
+        }
+
+        PredictionModelMappingPostRequest postRequest = new PredictionModelMappingPostRequest(UUID.fromString(patch.getDestination()), parameterMappings);
+
         switch (patch.getOperation()) {
             case ADD:
-                List<ParameterMapping> parameterMappings = new ArrayList<>();
-                for (PredictionModelMappingPatchRequest patchRequest: (List<PredictionModelMappingPatchRequest>) patch.getValue()) {
-                    parameterMappings.add(new ParameterMapping(patchRequest.getParameter(), patchRequest.getDeviceId().toString()));
-                }
-
-                PredictionModelMappingPostRequest postRequest = new PredictionModelMappingPostRequest(UUID.fromString(patch.getDestination()), parameterMappings);
-
-                postMappings(modelId, postRequest);
+                setMappings(modelId, postRequest);
                 break;
+            case REPLACE:
+                replaceMappings(modelId, postRequest);
+                break;
+
             default:
                 break;
         }
@@ -197,6 +216,28 @@ public class PredictionModelService {
     // TODO: Implement
     private static void patchAllMappings(String modelId, FooSHJsonPatch patch) {
 
+    }
+
+    private static void setMappings(String modelId, PredictionModelMappingPostRequest request) {
+        AbstractPredictionModel model = ListService.getPredictionModelList().getThing(modelId);
+
+        request.validate(modelId, ListService.getVariableList().getThing(request.getVariableId().toString()).getDeviceIds());
+
+        model.addMapping(request.getVariableId(), request.getMappings()); 
+        model.updateLinks();
+
+        PersistentDataService.saveAll();
+    }
+
+    private static void replaceMappings(String modelId, PredictionModelMappingPostRequest request) {
+        AbstractPredictionModel model = ListService.getPredictionModelList().getThing(modelId);
+
+        request.validate(modelId, ListService.getVariableList().getThing(request.getVariableId().toString()).getDeviceIds());
+
+        model.setMapping(request.getVariableId(), request.getMappings()); 
+        model.updateLinks();
+
+        PersistentDataService.saveAll();
     }
 
     public static ResponseEntity<Object> deleteMappings(String id) {

@@ -117,6 +117,8 @@ public class FooSHJsonPatch {
         } else if (valueClass == UUID.class) {
             String uuidValue = (String) value;
             validateValueAsUUID(uuidValue);
+        } else if (valueClass == PredictionModelMappingPatchRequest.class) {
+            validateValueAsListOfPredictionModelMappingPatchRequests(value);
         } else {
             throw new FooSHJsonPatchValueException(parentId, valueClass);
         }

@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.vs.foosh.api.exceptions.predictionModel.CouldNotFindVariableParameterMappingException;
+import com.vs.foosh.api.exceptions.predictionModel.ParameterMappingAlreadyPresentException;
 import com.vs.foosh.api.model.misc.AbstractModification;
 import com.vs.foosh.api.model.misc.IThingListObserver;
 import com.vs.foosh.api.model.misc.ModificationType;
@@ -91,6 +92,18 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
 
         }
         
+        ListService.getVariableList().getThing(variableId.toString()).attach(this);
+        parameterMappings.add(new VariableParameterMapping(variableId, mappings));
+        updateVariableIds();
+    }
+
+    public void addMapping(UUID variableId, List<ParameterMapping> mappings) {
+        if (variableIds.contains(variableId)) {
+            throw new ParameterMappingAlreadyPresentException(
+                id,
+                "Using 'add', you cannot add new mappings if there are already existing ones. Use 'replace' to overwrite existing mappings.");
+        }
+
         ListService.getVariableList().getThing(variableId.toString()).attach(this);
         parameterMappings.add(new VariableParameterMapping(variableId, mappings));
         updateVariableIds();
@@ -181,13 +194,16 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
 
     protected void updateSelfLinks() {
         LinkEntry getId   = new LinkEntry("selfStatic", LinkBuilder.getPredictionModelLink(this.id.toString()), HttpAction.GET, List.of());
-        LinkEntry getName = new LinkEntry("selfName", LinkBuilder.getPredictionModelLink(this.name), HttpAction.GET, List.of());
+        LinkEntry patchId = new LinkEntry("selfStatic", LinkBuilder.getPredictionModelLink(this.id.toString()), HttpAction.PATCH, List.of("application/json"));
+
+        LinkEntry getName   = new LinkEntry("selfName", LinkBuilder.getPredictionModelLink(this.name), HttpAction.GET, List.of());
+        LinkEntry patchName = new LinkEntry("selfName", LinkBuilder.getPredictionModelLink(this.name), HttpAction.PATCH, List.of("application/json"));
 
         if (links != null || !links.isEmpty()) {
             links.clear();
         }
 
-        links.addAll(List.of(getId, getName));
+        links.addAll(List.of(getId, patchId, getName, patchName));
     }
 
     protected void updateVariableLinks() {
@@ -203,6 +219,7 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
     protected void updateMappingLinks() {
         LinkEntry getMapping    = new LinkEntry("mappings", LinkBuilder.getPredictionModelMappingLink(this.id.toString()), HttpAction.GET, List.of());
         LinkEntry postMapping   = new LinkEntry("mappings", LinkBuilder.getPredictionModelMappingLink(this.id.toString()), HttpAction.POST, List.of("application/json"));
+        LinkEntry patchMapping  = new LinkEntry("mappings", LinkBuilder.getPredictionModelMappingLink(this.id.toString()), HttpAction.PATCH, List.of("application/json"));
         LinkEntry deleteMapping = new LinkEntry("mappings", LinkBuilder.getPredictionModelMappingLink(this.id.toString()), HttpAction.DELETE, List.of());
 
         if (mappingLinks != null || !mappingLinks.isEmpty()) {
@@ -210,9 +227,9 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
         }
 
         if (getAllMappings().isEmpty()) {
-            mappingLinks.addAll(List.of(getMapping, postMapping));
+            mappingLinks.addAll(List.of(getMapping, postMapping, patchMapping));
         } else {
-            mappingLinks.addAll(List.of(getMapping, deleteMapping));
+            mappingLinks.addAll(List.of(getMapping, patchMapping, deleteMapping));
         }
     }
 
