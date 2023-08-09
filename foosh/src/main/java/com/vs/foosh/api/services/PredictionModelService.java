@@ -36,11 +36,11 @@ public class PredictionModelService {
     }
 
     // TODO: Also allow patching of mappings?
-    public static ResponseEntity<Object> patchModel(String id, List<Map<String, String>> patchMappings) {
+    public static ResponseEntity<Object> patchModel(String id, List<Map<String, Object>> patchMappings) {
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
 
         List<FooSHJsonPatch> patches = new ArrayList<>();
-        for (Map<String, String> patchMapping: patchMappings) {
+        for (Map<String, Object> patchMapping: patchMappings) {
             FooSHJsonPatch patch = new FooSHJsonPatch(patchMapping);
             patch.validateRequest(List.of(FooSHPatchOperation.REPLACE));
             patch.validateReplace(String.class);
@@ -54,7 +54,7 @@ public class PredictionModelService {
                 throw new FooSHJsonPatchIllegalArgumentException(model.getId().toString(), "You can only edit the field 'name'!");
             }
 
-            patchModelName(id, patch.getValue());
+            patchModelName(id, (String) patch.getValue());
         }
 
         PersistentDataService.savePredictionModelList();
@@ -129,6 +129,16 @@ public class PredictionModelService {
         responseBody.put("_links", links);
 
         return new ResponseEntity<>(responseBody, HttpStatus.CREATED);
+    }
+
+    // TODO: Return ResponseEntity
+    public static void patchMappings(String id, List<Map<String, Object>> patchRequest) {
+        AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
+
+        List<FooSHJsonPatch> patches = new ArrayList<>();
+        for (Map<String, Object> patchMapping: patchRequest) {
+
+        }
     }
 
     public static ResponseEntity<Object> deleteMappings(String id) {

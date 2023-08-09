@@ -154,11 +154,11 @@ public class VariableService {
 
     }
 
-    public static ResponseEntity<Object> patchVariable(String id, List<Map<String, String>> patchMappings) {
+    public static ResponseEntity<Object> patchVariable(String id, List<Map<String, Object>> patchMappings) {
         Variable variable = ListService.getVariableList().getThing(id);
 
         List<FooSHJsonPatch> patches = new ArrayList<>();
-        for (Map<String, String> patchMapping: patchMappings) {
+        for (Map<String, Object> patchMapping: patchMappings) {
             FooSHJsonPatch patch = new FooSHJsonPatch(patchMapping);
             patch.validateRequest(List.of(FooSHPatchOperation.REPLACE));
             patch.validateReplace(String.class);
@@ -172,7 +172,7 @@ public class VariableService {
                 throw new FooSHJsonPatchIllegalArgumentException(variable.getId().toString(), "You can only edit the field 'name'!");
             }
 
-            patchVariableName(id, patch.getValue());
+            patchVariableName(id, (String) patch.getValue());
         }
 
         PersistentDataService.saveVariableList();
@@ -270,7 +270,7 @@ public class VariableService {
         return respondWithVariableAndDevices(variable);
     }
 
-    public static ResponseEntity<Object> patchVariableDevices(String id, List<Map<String, String>> patchMappings) {
+    public static ResponseEntity<Object> patchVariableDevices(String id, List<Map<String, Object>> patchMappings) {
         Variable variable = ListService.getVariableList().getThing(id);
 
         // Convert patchMappings to FooSHJsonPatches
@@ -303,9 +303,9 @@ public class VariableService {
         return respondWithVariableAndDevices(variable);
     }
 
-    private static List<FooSHJsonPatch> convertPatchMappings(String variableId, List<Map<String, String>> patchMappings) {
+    private static List<FooSHJsonPatch> convertPatchMappings(String variableId, List<Map<String, Object>> patchMappings) {
         List<FooSHJsonPatch> patches = new ArrayList<>();
-        for (Map<String, String> patchMapping: patchMappings) {
+        for (Map<String, Object> patchMapping: patchMappings) {
             FooSHJsonPatch patch = new FooSHJsonPatch(patchMapping);
             patch.setParentId(variableId);
             patch.validateRequest(List.of(FooSHPatchOperation.ADD));
@@ -359,7 +359,7 @@ public class VariableService {
     private static void executePatch(Variable variable, FooSHJsonPatch patch) {
         List<UUID> devices = variable.getDeviceIds();
 
-        String value = patch.getValue();
+        String value = (String) patch.getValue();
 
         switch (patch.getOperation()) {
             case ADD:

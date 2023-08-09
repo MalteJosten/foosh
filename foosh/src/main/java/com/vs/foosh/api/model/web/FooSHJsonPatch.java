@@ -13,19 +13,19 @@ import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueException;
 import com.vs.foosh.api.services.IdService;
 
 public class FooSHJsonPatch {
-    private Map<String, String> request;
+    private Map<String, Object> request;
     private FooSHPatchOperation operation;
     private String path;
-    private String value;
+    private Object value;
     private String parentId;
 
-    public Map<String, String> getRequest() {
+    public Map<String, Object> getRequest() {
         return this.request;
     }
 
     public FooSHJsonPatch() {}
 
-    public FooSHJsonPatch(Map<String, String> request) {
+    public FooSHJsonPatch(Map<String, Object> request) {
         this.request = request;
     }
 
@@ -38,7 +38,7 @@ public class FooSHJsonPatch {
     }
 
     public void validateRequest(List<FooSHPatchOperation> allowedOperations) {
-        String operationField = request.get("op");
+        String operationField = (String) request.get("op");
 
         // Does the Patch contain a valid operation?
         try {
@@ -62,18 +62,21 @@ public class FooSHJsonPatch {
             throw new FooSHJsonPatchFormatException(parentId); 
         }
 
-        this.path = request.get("path");
+        this.path = (String) request.get("path");
         
-        String value = request.get("value");
+        Object value = request.get("value");
 
-        if (value.trim().isEmpty()) {
-            throw new FooSHJsonPatchValueIsEmptyException(parentId);
-        }
 
         if (valueClass == String.class) {
-            validateValueAsString(value);
+            String stringValue = (String) value;
+            if (stringValue.trim().isEmpty()) {
+                throw new FooSHJsonPatchValueIsEmptyException(parentId);
+            }
+
+            validateValueAsString(stringValue);
         } else if (valueClass == UUID.class) {
-            validateValueAsUUID(value);
+            String uuidValue = (String) value;
+            validateValueAsUUID(uuidValue);
         } else {
             throw new FooSHJsonPatchValueException(parentId, valueClass);
         }
@@ -87,18 +90,20 @@ public class FooSHJsonPatch {
             throw new FooSHJsonPatchFormatException(parentId); 
         }
 
-        this.path = request.get("path");
+        this.path = (String) request.get("path");
         
-        String value = request.get("value");
-
-        if (value.trim().isEmpty()) {
-            throw new FooSHJsonPatchValueIsEmptyException(parentId);
-        }
+        Object value = request.get("value");
 
         if (valueClass == String.class) {
-            validateValueAsString(value);
+            String stringValue = (String) value;
+            if (stringValue.trim().isEmpty()) {
+                throw new FooSHJsonPatchValueIsEmptyException(parentId);
+            }
+
+            validateValueAsString(stringValue);
         } else if (valueClass == UUID.class) {
-            validateValueAsUUID(value);
+            String uuidValue = (String) value;
+            validateValueAsUUID(uuidValue);
         } else {
             throw new FooSHJsonPatchValueException(parentId, valueClass);
         }
@@ -113,7 +118,7 @@ public class FooSHJsonPatch {
             }
         }
 
-        this.path = request.get("path");
+        this.path = (String) request.get("path");
     }
 
     private void validateValueAsString(String value) {
@@ -157,7 +162,7 @@ public class FooSHJsonPatch {
         return this.path.split("/")[this.path.split("/").length - 1];
     }
 
-    public String getValue() {
+    public Object getValue() {
         return this.value;
     }
 
