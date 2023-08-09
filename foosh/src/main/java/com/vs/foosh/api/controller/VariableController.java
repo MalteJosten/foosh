@@ -106,7 +106,7 @@ public class VariableController {
 
     @PatchMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> patchVar(@PathVariable("id") String id, @RequestBody List<Map<String, String>> patchMappings) {
+    public ResponseEntity<Object> patchVar(@PathVariable("id") String id, @RequestBody List<Map<String, Object>> patchMappings) {
         return VariableService.patchVariable(id, patchMappings);
     }
 
@@ -150,7 +150,7 @@ public class VariableController {
     
     @PatchMapping(value = "/{id}/devices/",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> patchVarDevices(@PathVariable("id") String id, @RequestBody List<Map<String, String>> patchMappings) {
+    public ResponseEntity<Object> patchVarDevices(@PathVariable("id") String id, @RequestBody List<Map<String, Object>> patchMappings) {
         return VariableService.patchVariableDevices(id, patchMappings);
     }
 
