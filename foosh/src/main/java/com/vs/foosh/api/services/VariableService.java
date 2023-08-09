@@ -335,7 +335,7 @@ public class VariableService {
         List<String> pathSegments;
         switch (patch.getOperation()) {
             case ADD:
-                pathSegments = List.of();
+                pathSegments = List.of("/");
                 break;
             case REPLACE:
                 // use "uuid" as a placeholder
