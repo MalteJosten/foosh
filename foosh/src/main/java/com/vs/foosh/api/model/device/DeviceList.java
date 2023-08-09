@@ -179,13 +179,12 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
     public List<LinkEntry> getLinks(String label) {
         LinkEntry get    = new LinkEntry(label, LinkBuilder.getDeviceListLink(), HttpAction.GET, List.of());
         LinkEntry post   = new LinkEntry(label, LinkBuilder.getDeviceListLink(), HttpAction.POST, List.of("application/json"));
-        LinkEntry patch  = new LinkEntry(label, LinkBuilder.getDeviceListLink(), HttpAction.PATCH, List.of("application/json"));
         LinkEntry delete = new LinkEntry(label, LinkBuilder.getDeviceListLink(), HttpAction.DELETE, List.of());
 
         if (getList().isEmpty() || getList().size() == 0) {
             return new ArrayList<>(List.of(get, post));
         } else {
-            return new ArrayList<>(List.of(get, patch, delete));
+            return new ArrayList<>(List.of(get, delete));
         }
     }
 
