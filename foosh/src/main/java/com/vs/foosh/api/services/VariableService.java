@@ -319,7 +319,7 @@ public class VariableService {
                     patch.validateReplace(UUID.class);
                     break;
                 case REMOVE:
-                    patch.validateRemove();
+                    patch.validateRemove(UUID.class);
                     break;
                 default:
                     throw new FooSHJsonPatchIllegalOperationException(patch.getOperation());

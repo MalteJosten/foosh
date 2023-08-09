@@ -1,5 +1,6 @@
 package com.vs.foosh.api.controller;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +16,6 @@ import java.util.Map;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
@@ -33,14 +33,25 @@ public class DeviceController {
     // Device Collection
     //
 
-    // TODO: Implement Paging
+    /**
+     * Handle incoming {@code GET} requests on route {@code /api/devices/} using {@link @GetMapping}.
+     * 
+     * 
+     * @return the HTTP response as a {@link ResponseEntity}
+     */
     @GetMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesGet() {
         return DeviceService.getDevices();
     }
 
-    // TODO: Implement Paging
+    /**
+     * Handle incoming {@code POST} requests on route {@code /api/devices} using {@link @PostMapping}.
+     * 
+     * @apiNote It only accepts {@code application/json} {@link MediaType}s
+     * @param credentials the smart home credentials
+     * @return the HTTP response as a {@link ResponseEntity}
+     */
     @PostMapping(value = "/",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -51,6 +62,13 @@ public class DeviceController {
 
     }
 
+    /**
+     * Handle incoming {@code PUT} requests on route {@code /api/devices} using {@link @PutMapping}
+     * 
+     * @apiNote Using {@code PUT} on this route is prohibited.
+     * @param credentials the smart home credentials
+     * @return the HTTP response as a {@link ResponseEntity}
+     */
     @PutMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesPut(
