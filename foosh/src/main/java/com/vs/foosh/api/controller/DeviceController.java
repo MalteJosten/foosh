@@ -17,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
-import com.vs.foosh.api.model.device.DeviceNamePatchRequest;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.model.web.SmartHomeCredentials;
@@ -64,7 +63,7 @@ public class DeviceController {
     // TODO: Remove RequestBody
     @PatchMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> devicesPatch(@RequestBody List<DeviceNamePatchRequest> request) {
+    public ResponseEntity<Object> devicesPatch() {
         throw new HttpMappingNotAllowedException(
                 "You cannot use PATCH on /devices/! Either use PATCH on /devices/{id} to update the device's name or DELETE and POST to replace the list of devices.",
                 ListService.getDeviceList().getLinks("self"));
