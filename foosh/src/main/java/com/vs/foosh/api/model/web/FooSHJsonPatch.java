@@ -124,7 +124,8 @@ public class FooSHJsonPatch {
         }
     }
 
-    public void validateRemove() {
+    @SuppressWarnings("rawtypes")
+    public void validateRemove(Class valueClass) {
         Set<String> keys = request.keySet();
 
         if (!keys.containsAll(List.of("op", "path", "value")) || keys.size() > 3) {
@@ -138,6 +139,8 @@ public class FooSHJsonPatch {
         if (path == null || path.trim().isEmpty()) {
             throw new FooSHJsonPatchFormatException(parentId);
         }
+
+        this.value = null;
     }
 
     private void validateValueAsString(String value) {

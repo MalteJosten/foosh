@@ -143,7 +143,6 @@ public class PredictionModelService {
         for (Map<String, Object> patchMapping: patchMappings) {
             FooSHJsonPatch patch = new FooSHJsonPatch(patchMapping);
             patch.setParentId(id);
-
             patch.validateRequest(List.of(FooSHPatchOperation.ADD, FooSHPatchOperation.REPLACE, FooSHPatchOperation.REMOVE));
             
             switch (patch.getOperation()) {
@@ -154,7 +153,7 @@ public class PredictionModelService {
                     patch.validateReplace(PredictionModelMappingPatchRequest.class);
                     break;
                 case REMOVE:
-                    patch.validateRemove();
+                    patch.validateRemove(PredictionModelMappingPatchRequest.class);
                     break;
                 default:
                     break;
@@ -188,8 +187,11 @@ public class PredictionModelService {
     @SuppressWarnings("unchecked")
     private static void patchMappingEntry(String modelId, FooSHJsonPatch patch) {
         List<ParameterMapping> parameterMappings = new ArrayList<>();
-        for (PredictionModelMappingPatchRequest patchRequest: (List<PredictionModelMappingPatchRequest>) patch.getValue()) {
-            parameterMappings.add(new ParameterMapping(patchRequest.getParameter(), patchRequest.getDeviceId().toString()));
+
+        if (patch.getOperation() == FooSHPatchOperation.ADD || patch.getOperation() == FooSHPatchOperation.REPLACE) {
+            for (PredictionModelMappingPatchRequest patchRequest: (List<PredictionModelMappingPatchRequest>) patch.getValue()) {
+                parameterMappings.add(new ParameterMapping(patchRequest.getParameter(), patchRequest.getDeviceId().toString()));
+            }
         }
 
         PredictionModelMappingPostRequest postRequest = new PredictionModelMappingPostRequest(UUID.fromString(patch.getDestination()), parameterMappings);
@@ -201,7 +203,9 @@ public class PredictionModelService {
             case REPLACE:
                 replaceMappings(modelId, postRequest);
                 break;
-
+            case REMOVE:
+                deleteMappings(modelId);
+                break;
             default:
                 break;
         }
