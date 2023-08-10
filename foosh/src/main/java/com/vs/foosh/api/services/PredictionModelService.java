@@ -151,7 +151,6 @@ public class PredictionModelService {
                     patch.validateReplace(PredictionModelMappingPatchRequest.class);
                     break;
                 case REMOVE:
-                    // TODO: Check, if ID still exsits
                     patch.validateRemove(PredictionModelMappingPatchRequest.class);
                     break;
                 default:

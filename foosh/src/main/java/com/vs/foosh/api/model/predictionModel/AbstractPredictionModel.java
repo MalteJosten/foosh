@@ -109,6 +109,12 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
     }
 
     public void deleteMapping(UUID variableId) {
+        if (!variableIds.contains(variableId)) {
+            throw new ParameterMappingAlreadyPresentException(
+                id,
+                "You cannot remove parameter mappings which are not present in the list of parameter mappings!");
+        }
+
         // Remove entry from variableIds
         for (Iterator<UUID> iterator = variableIds.iterator(); iterator.hasNext();) {
             UUID varId = iterator.next();
