@@ -127,11 +127,7 @@ public class PredictionModelService {
         }
 
         for (FooSHJsonPatch patch: patches) {
-            if (patch.getPath().equals("/")) {
-                patchAllMappings(id, patch);
-            } else {
-                patchMappingEntry(id, patch);
-            }
+            patchMappingEntry(id, patch);
         }
 
         return respondWithModel(id);
@@ -166,10 +162,10 @@ public class PredictionModelService {
     }
 
     private static void checkForCorrectPatchPath(AbstractPredictionModel model, FooSHJsonPatch patch) {
-        List<String> allowedPathSegments = List.of("/", "uuid");
+        List<String> allowedPathSegments = List.of("uuid");
         if (!patch.isValidPath(allowedPathSegments)) {
             throw new FooSHJsonPatchIllegalArgumentException(model.getId().toString(),
-                    "You can only edit the entire collection (using '/') or an individual mapping entry (using '/{uuid}')!");
+                    "You can only edit an individual mapping entry (using '/{uuid}')!");
         }
 
         if (patch.getOperation() == FooSHPatchOperation.REPLACE) {
@@ -209,11 +205,6 @@ public class PredictionModelService {
             default:
                 break;
         }
-    }
-
-    // TODO: Implement
-    private static void patchAllMappings(String modelId, FooSHJsonPatch patch) {
-
     }
 
     private static void setMappings(String modelId, PredictionModelMappingPostRequest request) {

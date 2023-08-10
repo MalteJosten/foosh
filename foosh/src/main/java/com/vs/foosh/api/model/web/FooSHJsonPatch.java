@@ -87,7 +87,7 @@ public class FooSHJsonPatch {
         } else if (valueClass == PredictionModelMappingPatchRequest.class) {
             validateValueAsListOfPredictionModelMappingPatchRequests(value);
         } else {
-            throw new FooSHJsonPatchValueException(parentId, valueClass);
+            throw new FooSHJsonPatchValueException(parentId);
         }
     }
 
@@ -120,7 +120,7 @@ public class FooSHJsonPatch {
         } else if (valueClass == PredictionModelMappingPatchRequest.class) {
             validateValueAsListOfPredictionModelMappingPatchRequests(value);
         } else {
-            throw new FooSHJsonPatchValueException(parentId, valueClass);
+            throw new FooSHJsonPatchValueException(parentId);
         }
     }
 
@@ -145,7 +145,7 @@ public class FooSHJsonPatch {
 
     private void validateValueAsString(String value) {
         if (IdService.isUuid(value).isPresent()) {
-            throw new FooSHJsonPatchValueException(parentId, String.class);
+            throw new FooSHJsonPatchValueException(parentId);
         }
 
         this.value = value;
@@ -153,7 +153,7 @@ public class FooSHJsonPatch {
 
     private void validateValueAsUUID(String value) {
         if (IdService.isUuid(value).isEmpty()) {
-            throw new FooSHJsonPatchValueException(parentId, UUID.class);
+            throw new FooSHJsonPatchValueException(parentId);
         }
 
         this.value = value;
@@ -172,7 +172,7 @@ public class FooSHJsonPatch {
 
             this.value = patches;
         } catch (ClassCastException e) {
-            throw new FooSHJsonPatchValueException(parentId, List.class);
+            throw new FooSHJsonPatchValueException(parentId);
         }
 
     }

@@ -100,7 +100,7 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
         if (variableIds.contains(variableId)) {
             throw new ParameterMappingAlreadyPresentException(
                 id,
-                "You cannot add new parameter mappings to this variable/model. There are already variable parameter mappings. Please use PATCH instead.");
+                "You cannot add new parameter mappings to this variable/model. There are already variable parameter mappings. Please use PATCH (replace) instead.");
         }
 
         ListService.getVariableList().getThing(variableId.toString()).attach(this);
