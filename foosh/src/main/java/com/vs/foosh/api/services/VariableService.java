@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalArgumentException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalOperationException;
+import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchOperationException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsEmptyException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsNullException;
 import com.vs.foosh.api.exceptions.device.DeviceIdNotFoundException;
@@ -269,18 +270,12 @@ public class VariableService {
         return respondWithVariableAndDevices(variable);
     }
 
-    // TODO: Make add only available if the deviceId is not registered yet
     public static ResponseEntity<Object> patchVariableDevices(String id, List<Map<String, Object>> patchMappings) {
         Variable variable = ListService.getVariableList().getThing(id);
 
         // Convert patchMappings to FooSHJsonPatches
         List<FooSHJsonPatch> patches = convertDevicesPatchMappings(id, patchMappings);
 
-        // To comply with RFC 6902, we need to make sure, that all instructions are valid.
-        // Otherwise, we must not execute any patch instruction.
-        for (FooSHJsonPatch patch : patches) {
-            checkForCorrectDevicesPatchPath(patch);
-        }
 
         for (FooSHJsonPatch patch: patches) {
             executePatch(variable, patch);
@@ -304,18 +299,43 @@ public class VariableService {
     }
 
     private static List<FooSHJsonPatch> convertDevicesPatchMappings(String variableId, List<Map<String, Object>> patchMappings) {
+        Variable variable = ListService.getVariableList().getThing(variableId);
+
         List<FooSHJsonPatch> patches = new ArrayList<>();
         for (Map<String, Object> patchMapping: patchMappings) {
             FooSHJsonPatch patch = new FooSHJsonPatch(patchMapping);
             patch.setParentId(variableId);
+
+            // To comply with RFC 6902, we need to make sure, that all instructions are valid.
+            // Otherwise, we must not execute any patch instruction.
             patch.validateRequest(List.of(FooSHPatchOperation.ADD, FooSHPatchOperation.REMOVE));
 
             switch (patch.getOperation()) {
                 case ADD:
                     patch.validateAdd(UUID.class);
+
+                    checkForCorrectDevicesPatchPath(patch);
+
+                    if (variable.getDeviceIds().contains(UUID.fromString((String) patch.getValue()))) {
+                        throw new FooSHJsonPatchOperationException(
+                            variable.getId(),
+                            variable.getVarDeviceLinks(),
+                            "You can only use add on devices that are not yet present in the list!");
+                    }
+
                     break;
                 case REMOVE:
                     patch.validateRemove(UUID.class);
+
+                    checkForCorrectDevicesPatchPath(patch);
+
+                    if (!variable.getDeviceIds().contains(UUID.fromString(patch.getDestination()))) {
+                        throw new FooSHJsonPatchOperationException(
+                            variable.getId(),
+                            variable.getVarDeviceLinks(),
+                            "You can only use remove on devices that are present in the list!");
+                    }
+
                     break;
                 default:
                     throw new FooSHJsonPatchIllegalOperationException(patch.getOperation());
@@ -333,10 +353,6 @@ public class VariableService {
             case ADD:
                 pathSegments = List.of("/");
                 break;
-            case REPLACE:
-                // use "uuid" as a placeholder
-                pathSegments = List.of("uuid");
-                break;
             case REMOVE:
                 // use "uuid" as a placeholder
                 pathSegments = List.of("uuid");
@@ -348,7 +364,7 @@ public class VariableService {
         if (!patch.isValidPath(pathSegments)) {
             throw new FooSHJsonPatchIllegalArgumentException(
                     patch.getParentId(),
-                    "You can only add a device under '/' and/or replace/remove a device using its UUID with '/{id}'!");
+                    "You can only add a device under '/' and/or remove a device using its UUID with '/{id}'!");
         }
     }
 

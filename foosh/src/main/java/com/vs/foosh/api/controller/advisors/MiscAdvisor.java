@@ -15,7 +15,7 @@ import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsNullExcep
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchFormatException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalArgumentException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalOperationException;
-import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchReplaceException;
+import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchOperationException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueException;
 import com.vs.foosh.api.exceptions.misc.CouldNotDeleteCollectionException;
 import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
@@ -26,7 +26,6 @@ import com.vs.foosh.api.exceptions.smarthome.SmartHomeDeviceFetcherIsNullExcepti
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeIOException;
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeInstructionExecutorIsNullException;
 import com.vs.foosh.api.services.HttpResponseBuilder;
-import com.vs.foosh.api.services.ListService;
 
 @ControllerAdvice
 public class MiscAdvisor extends ResponseEntityExceptionHandler {
@@ -107,12 +106,12 @@ public class MiscAdvisor extends ResponseEntityExceptionHandler {
                 HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(FooSHJsonPatchReplaceException.class)
-    public ResponseEntity<Object> handleFooSHJsonPatchReplaceException(FooSHJsonPatchReplaceException exception,
+    @ExceptionHandler(FooSHJsonPatchOperationException.class)
+    public ResponseEntity<Object> handleFooSHJsonPatchOperationException(FooSHJsonPatchOperationException exception,
                     WebRequest request) {
         return HttpResponseBuilder.buildException(
                 exception.getMessage(),
-                ListService.getPredictionModelList().getThing(exception.getModelId().toString()).getMappingLinks(),
+                exception.getLinks(),
                 HttpStatus.BAD_REQUEST);
     }
 

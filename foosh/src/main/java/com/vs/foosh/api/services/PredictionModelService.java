@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalArgumentException;
-import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchReplaceException;
+import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchOperationException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsEmptyException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsNullException;
 import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
@@ -172,8 +172,9 @@ public class PredictionModelService {
             Variable variable = ListService.getVariableList().getThing(patch.getDestination());
 
             if (!model.getVariableIds().contains(variable.getId())) {
-                throw new FooSHJsonPatchReplaceException(
+                throw new FooSHJsonPatchOperationException(
                         model.getId(),
+                        model.getMappingLinks(),
                         "You can only replace mappings which exist. Use the operation 'add' to add new mappings.");
 
             }

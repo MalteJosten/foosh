@@ -186,8 +186,12 @@ public class FooSHJsonPatch {
 
         for (String validPath: validPaths) {
             if (validPath.equalsIgnoreCase("uuid")) {
-                IdService.isUuid(path.split("/")[1]).orElseThrow(() -> new IdIsNoValidUUIDException(path.split("/")[1]));
-                isValid = true;
+                try {
+                    IdService.isUuid(path.split("/")[1]).orElseThrow(() -> new IdIsNoValidUUIDException(path.split("/")[1]));
+                    isValid = true;
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    isValid = false;
+                }
                 break;
             }
 

@@ -14,13 +14,10 @@ import org.springframework.web.client.ResourceAccessException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalArgumentException;
 import com.vs.foosh.api.exceptions.device.DeviceNameIsEmptyException;
 import com.vs.foosh.api.exceptions.device.DeviceNameIsNotUniqueException;
-import com.vs.foosh.api.exceptions.device.DeviceNameIsNullException;
-import com.vs.foosh.api.exceptions.misc.IdIsNoValidUUIDException;
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeAccessException;
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeIOException;
 import com.vs.foosh.api.model.device.AbstractDevice;
 import com.vs.foosh.api.model.device.FetchDeviceResponse;
-import com.vs.foosh.api.model.device.PatchDeviceNameValidationData;
 import com.vs.foosh.api.model.web.FooSHJsonPatch;
 import com.vs.foosh.api.model.web.FooSHPatchOperation;
 import com.vs.foosh.api.model.web.LinkEntry;
@@ -90,27 +87,6 @@ public class DeviceService {
         AbstractDevice device = ListService.getDeviceList().getThing(id);
 
         return respondWithDevice(device, HttpStatus.OK);
-    }
-
-    public static PatchDeviceNameValidationData validatePatchDeviceRequest(String id, Map<String, String> requestBody) {
-        UUID uuid = IdService.isUuid(id).orElseThrow(() -> new IdIsNoValidUUIDException(id));
-
-        // check whether there is a device with the given id
-        ListService.getDeviceList().checkIfIdIsPresent(id);
-
-        // Is there a field called 'name'?
-        if (requestBody.get("name") == null) {
-            throw new DeviceNameIsNullException(uuid, requestBody);
-        }
-
-        String name = requestBody.get("name").toLowerCase();
-
-        // Is this field non-empty?
-        if (name.isEmpty() || name.equals("")) {
-            throw new DeviceNameIsEmptyException(uuid, name);
-        }
-
-        return new PatchDeviceNameValidationData(id, uuid, name);
     }
 
     public static ResponseEntity<Object> patchDevice(String id, List<Map<String, Object>> patchMappings) {
