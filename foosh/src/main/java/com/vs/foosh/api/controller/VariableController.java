@@ -193,8 +193,8 @@ public class VariableController {
     @PatchMapping(value = "/{id}/models/",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> patchVarModels(@PathVariable("id") String id) {
-        throw new HttpMappingNotAllowedException("Not yet implemented!");
+    public ResponseEntity<Object> patchVarModels(@PathVariable("id") String id, @RequestBody List<Map<String, Object>> patchMappings) {
+        return VariableService.patchVariableModels(id, patchMappings);
     }
 
     @DeleteMapping(value = "/{id}/models/",

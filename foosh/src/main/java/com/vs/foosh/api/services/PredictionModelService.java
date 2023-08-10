@@ -112,7 +112,9 @@ public class PredictionModelService {
     }
 
     public static ResponseEntity<Object> postMappings(String id, PredictionModelMappingPostRequest request) {
-        setMappings(id, request);
+        AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
+
+        setMappings(model, request);
 
         return respondWithModel(id);
     }
@@ -127,7 +129,7 @@ public class PredictionModelService {
         }
 
         for (FooSHJsonPatch patch: patches) {
-            patchMappingEntry(id, patch);
+            patchMappingEntry(model, patch);
         }
 
         return respondWithModel(id);
@@ -182,7 +184,7 @@ public class PredictionModelService {
     }
 
     @SuppressWarnings("unchecked")
-    private static void patchMappingEntry(String modelId, FooSHJsonPatch patch) {
+    private static void patchMappingEntry(AbstractPredictionModel model, FooSHJsonPatch patch) {
         List<ParameterMapping> parameterMappings = new ArrayList<>();
 
         if (patch.getOperation() == FooSHPatchOperation.ADD || patch.getOperation() == FooSHPatchOperation.REPLACE) {
@@ -195,23 +197,21 @@ public class PredictionModelService {
 
         switch (patch.getOperation()) {
             case ADD:
-                setMappings(modelId, postRequest);
+                setMappings(model, postRequest);
                 break;
             case REPLACE:
-                replaceMappings(modelId, postRequest);
+                replaceMappings(model, postRequest);
                 break;
             case REMOVE:
-                deleteMappings(modelId);
+                deleteMapping(model, postRequest.getVariableId());
                 break;
             default:
                 break;
         }
     }
 
-    private static void setMappings(String modelId, PredictionModelMappingPostRequest request) {
-        AbstractPredictionModel model = ListService.getPredictionModelList().getThing(modelId);
-
-        request.validate(modelId, ListService.getVariableList().getThing(request.getVariableId().toString()).getDeviceIds());
+    private static void setMappings(AbstractPredictionModel model, PredictionModelMappingPostRequest request) {
+        request.validate(model.getId().toString(), ListService.getVariableList().getThing(request.getVariableId().toString()).getDeviceIds());
 
         model.addMapping(request.getVariableId(), request.getMappings()); 
         model.updateLinks();
@@ -219,10 +219,8 @@ public class PredictionModelService {
         PersistentDataService.saveAll();
     }
 
-    private static void replaceMappings(String modelId, PredictionModelMappingPostRequest request) {
-        AbstractPredictionModel model = ListService.getPredictionModelList().getThing(modelId);
-
-        request.validate(modelId, ListService.getVariableList().getThing(request.getVariableId().toString()).getDeviceIds());
+    private static void replaceMappings(AbstractPredictionModel model, PredictionModelMappingPostRequest request) {
+        request.validate(model.getId().toString(), ListService.getVariableList().getThing(request.getVariableId().toString()).getDeviceIds());
 
         model.setMapping(request.getVariableId(), request.getMappings()); 
         model.updateLinks();
@@ -230,10 +228,16 @@ public class PredictionModelService {
         PersistentDataService.saveAll();
     }
 
+    public static void deleteMapping(AbstractPredictionModel model, UUID variableId) {
+        model.deleteMapping(variableId);
+
+        PersistentDataService.savePredictionModelList();
+    }
+
     public static ResponseEntity<Object> deleteMappings(String id) {
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
 
-        model.deleteMapping();
+        model.deleteMappings();
 
         PersistentDataService.savePredictionModelList();
 

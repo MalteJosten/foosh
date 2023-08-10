@@ -278,7 +278,7 @@ public class VariableService {
 
 
         for (FooSHJsonPatch patch: patches) {
-            executePatch(variable, patch);
+            executeDevicesPatch(variable, patch);
 
             List<UUID> devices = variable.getDeviceIds();
             variable.unregisterFromSubject();
@@ -368,7 +368,7 @@ public class VariableService {
         }
     }
 
-    private static void executePatch(Variable variable, FooSHJsonPatch patch) {
+    private static void executeDevicesPatch(Variable variable, FooSHJsonPatch patch) {
         List<UUID> devices = variable.getDeviceIds();
 
         String value = (String) patch.getValue();
@@ -463,15 +463,74 @@ public class VariableService {
     public static ResponseEntity<Object> patchVariableModels(String id, List<Map<String, Object>> patchMappings) {
         Variable variable = ListService.getVariableList().getThing(id);
 
-        //List<FooSHJsonPatch> patches = convertPatchMappings(id, patchMappings);
+        List<FooSHJsonPatch> patches = convertModelsPatchMappings(variable, patchMappings);
+
+        System.out.println(patches);
+
+        reformatAndForwardModelPatches(variable, patches);
 
         return respondWithVariableAndModels(variable);
+    }
+
+    private static List<FooSHJsonPatch> convertModelsPatchMappings(Variable variable, List<Map<String, Object>> patchMappings) {
+        List<FooSHJsonPatch> patches = new ArrayList<>();
+
+        for (Map<String, Object> patchMapping: patchMappings) {
+            FooSHJsonPatch patch = new FooSHJsonPatch(patchMapping);
+            patch.setParentId(variable.getId().toString());
+
+            patch.validateRequest(List.of(FooSHPatchOperation.ADD, FooSHPatchOperation.REPLACE, FooSHPatchOperation.REMOVE));
+
+            switch (patch.getOperation()) {
+                case ADD:
+                    patch.validateAdd(VariableModelPostRequest.class);
+                    break;
+                case REPLACE:
+                    break;
+                case REMOVE:
+                    patch.validateRemove(VariableModelPostRequest.class);
+                    break;
+                default:
+                    throw new FooSHJsonPatchIllegalOperationException(patch.getOperation());
+            }
+
+            patches.add(patch);
+        }
+
+        return patches;
+    }
+
+    private static void reformatAndForwardModelPatches(Variable variable, List<FooSHJsonPatch> patches) {
+        for (FooSHJsonPatch patch: patches) {
+            System.out.println(patch);
+            switch (patch.getOperation()) {
+                case ADD:
+                    reformatAndForwardAddPatch(patch);
+                    break;
+                case REPLACE:
+                    break;
+                case REMOVE:
+                    PredictionModelService.deleteMapping(ListService.getPredictionModelList().getThing(patch.getDestination()), variable.getId());
+                    break;
+                default:
+                    throw new FooSHJsonPatchIllegalOperationException(patch.getOperation());
+            }
+        }
+
+        PersistentDataService.saveAll();
+    }
+
+    private static void reformatAndForwardAddPatch(FooSHJsonPatch patch) {
+
+        //PredictionModelService.patchMappings(modelId, List.of(forwardPatch));
     }
 
     public static ResponseEntity<Object> deleteVariableModels(String id) {
         Variable variable = ListService.getVariableList().getThing(id);
 
         variable.clearModels();
+
+        PersistentDataService.saveAll();
 
         return respondWithVariableAndModels(variable);
     }

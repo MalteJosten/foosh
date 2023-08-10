@@ -9,7 +9,9 @@ import java.util.UUID;
 
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsEmptyException;
 import com.vs.foosh.api.exceptions.misc.IdIsNoValidUUIDException;
+import com.vs.foosh.api.model.predictionModel.ParameterMapping;
 import com.vs.foosh.api.model.predictionModel.PredictionModelMappingPatchRequest;
+import com.vs.foosh.api.model.variable.VariableModelPostRequest;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchFormatException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalArgumentException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalOperationException;
@@ -86,6 +88,8 @@ public class FooSHJsonPatch {
             validateValueAsUUID(uuidValue);
         } else if (valueClass == PredictionModelMappingPatchRequest.class) {
             validateValueAsListOfPredictionModelMappingPatchRequests(value);
+        } else if (valueClass == VariableModelPostRequest.class) {
+            validateValueAsVariableModelPostRequest(value);
         } else {
             throw new FooSHJsonPatchValueException(parentId);
         }
@@ -175,6 +179,27 @@ public class FooSHJsonPatch {
             throw new FooSHJsonPatchValueException(parentId);
         }
 
+    }
+
+    @SuppressWarnings("unchecked")
+    private void validateValueAsVariableModelPostRequest(Object value) {
+        try {
+            Map<String, Object> valueMapping = (HashMap<String, Object>) value;
+
+            String modelId = (String) valueMapping.get("modelId");
+
+            List<ParameterMapping> parameterMappings = new ArrayList<>();
+            for (Object paramMappingObject: (List<Object>) valueMapping.get("mappings")) {
+                Map<String, String> paramMapping = (HashMap<String, String>) paramMappingObject;
+                parameterMappings.add(new ParameterMapping(paramMapping.get("parameter"), paramMapping.get("deviceId"))); 
+            }
+
+            VariableModelPostRequest varPostRequest = new VariableModelPostRequest(UUID.fromString(modelId), parameterMappings);
+
+            this.value = varPostRequest;
+        } catch (ClassCastException e) {
+            throw new FooSHJsonPatchValueException(parentId);
+        }
     }
 
     public boolean isValidPath(List<String> validPaths) {
