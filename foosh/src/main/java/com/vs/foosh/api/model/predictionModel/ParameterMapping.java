@@ -1,6 +1,10 @@
 package com.vs.foosh.api.model.predictionModel;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ParameterMapping implements Serializable {
     private String parameter;
@@ -17,6 +21,15 @@ public class ParameterMapping implements Serializable {
 
     public String getDeviceId() {
         return this.deviceId;
+    }
+
+    @JsonIgnore
+    public Map<String, String> getAsHashMap() {
+        Map<String, String> map = new HashMap<>();
+        map.put("parameter", this.parameter);
+        map.put("deviceId", this.deviceId);
+
+        return map;
     }
 
     @Override

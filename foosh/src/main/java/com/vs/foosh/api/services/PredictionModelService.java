@@ -151,6 +151,7 @@ public class PredictionModelService {
                     patch.validateReplace(PredictionModelMappingPatchRequest.class);
                     break;
                 case REMOVE:
+                    // TODO: Check, if ID still exsits
                     patch.validateRemove(PredictionModelMappingPatchRequest.class);
                     break;
                 default:
@@ -184,7 +185,7 @@ public class PredictionModelService {
     }
 
     @SuppressWarnings("unchecked")
-    private static void patchMappingEntry(AbstractPredictionModel model, FooSHJsonPatch patch) {
+    public static void patchMappingEntry(AbstractPredictionModel model, FooSHJsonPatch patch) {
         List<ParameterMapping> parameterMappings = new ArrayList<>();
 
         if (patch.getOperation() == FooSHPatchOperation.ADD || patch.getOperation() == FooSHPatchOperation.REPLACE) {

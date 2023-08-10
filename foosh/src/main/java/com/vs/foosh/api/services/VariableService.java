@@ -24,6 +24,7 @@ import com.vs.foosh.api.exceptions.variable.VariableDevicePostException;
 import com.vs.foosh.api.model.device.DeviceResponseObject;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
+import com.vs.foosh.api.model.predictionModel.ParameterMapping;
 import com.vs.foosh.api.model.predictionModel.PredictionModelMappingPostRequest;
 import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.variable.VariableDevicesPostRequest;
@@ -465,8 +466,6 @@ public class VariableService {
 
         List<FooSHJsonPatch> patches = convertModelsPatchMappings(variable, patchMappings);
 
-        System.out.println(patches);
-
         reformatAndForwardModelPatches(variable, patches);
 
         return respondWithVariableAndModels(variable);
@@ -486,6 +485,7 @@ public class VariableService {
                     patch.validateAdd(VariableModelPostRequest.class);
                     break;
                 case REPLACE:
+                    patch.validateReplace(VariableModelPostRequest.class);
                     break;
                 case REMOVE:
                     patch.validateRemove(VariableModelPostRequest.class);
@@ -502,10 +502,9 @@ public class VariableService {
 
     private static void reformatAndForwardModelPatches(Variable variable, List<FooSHJsonPatch> patches) {
         for (FooSHJsonPatch patch: patches) {
-            System.out.println(patch);
             switch (patch.getOperation()) {
                 case ADD:
-                    reformatAndForwardAddPatch(patch);
+                    reformatAndForwardAddPatch(variable, patch);
                     break;
                 case REPLACE:
                     break;
@@ -520,9 +519,22 @@ public class VariableService {
         PersistentDataService.saveAll();
     }
 
-    private static void reformatAndForwardAddPatch(FooSHJsonPatch patch) {
+    private static void reformatAndForwardAddPatch(Variable variable, FooSHJsonPatch patch) {
 
-        //PredictionModelService.patchMappings(modelId, List.of(forwardPatch));
+        Map<String, Object> forwardHashMap = new HashMap<>();
+        VariableModelPostRequest oldPatchValue = (VariableModelPostRequest) patch.getValue();
+        forwardHashMap.put("op", "add");
+        forwardHashMap.put("path", "/" + variable.getId());
+
+        List<Map<String, String>> paramMappings = new ArrayList<>();
+        for (ParameterMapping parameterMapping: oldPatchValue.mappings()) {
+            Map<String, String> hashParamMapping = parameterMapping.getAsHashMap();
+            paramMappings.add(hashParamMapping);
+        }
+
+        forwardHashMap.put("value", paramMappings);
+
+        PredictionModelService.patchMappings(oldPatchValue.modelId().toString(), List.of(forwardHashMap));
     }
 
     public static ResponseEntity<Object> deleteVariableModels(String id) {

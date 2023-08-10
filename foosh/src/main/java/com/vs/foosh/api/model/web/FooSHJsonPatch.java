@@ -238,6 +238,8 @@ public class FooSHJsonPatch {
     }
 
     public String getDestination() {
+        if (this.path.equals("/")) return "";
+
         return this.path.split("/")[this.path.split("/").length - 1];
     }
 
