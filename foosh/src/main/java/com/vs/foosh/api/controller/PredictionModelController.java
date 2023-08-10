@@ -93,7 +93,6 @@ public class PredictionModelController {
                 ListService.getPredictionModelList().getThing(id).getSelfLinks());
     }
 
-    // TODO: Also allow FooSHJsonPatch for /mappings?
     @PatchMapping(value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -112,14 +111,12 @@ public class PredictionModelController {
     /// Mapping
     ///
 
-    // TODO: Implement Paging
     @GetMapping(value = "/{id}/mappings/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getModelMapping(@PathVariable("id") String id) {
         return PredictionModelService.getMappings(id);
     }
 
-    // TODO: Implement Paging
     @PostMapping(value = "/{id}/mappings/",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -141,7 +138,6 @@ public class PredictionModelController {
                 links);
     }
     
-    // TODO: (Implement custom Json Patch)
     @PatchMapping(value = "/{id}/mappings/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> patchModelMapping(@PathVariable("id") String id, @RequestBody List<Map<String, Object>> patchMappings) {

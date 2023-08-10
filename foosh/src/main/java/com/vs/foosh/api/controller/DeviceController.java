@@ -121,7 +121,6 @@ public class DeviceController {
                 ListService.getDeviceList().getThing(id).getSelfLinks());
     }
 
-    // TODO: Implement custom Json Patch
     @PatchMapping(value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)

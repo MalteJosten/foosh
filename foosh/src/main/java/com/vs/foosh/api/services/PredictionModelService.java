@@ -39,7 +39,6 @@ public class PredictionModelService {
         return respondWithModel(id);
     }
 
-    // TODO: Also allow patching of mappings?
     public static ResponseEntity<Object> patchModel(String id, List<Map<String, Object>> patchMappings) {
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
 
@@ -84,6 +83,7 @@ public class PredictionModelService {
         return false;
     }
 
+    // TODO: Implement paging
     private static ResponseEntity<Object> respondWithModel(String id) {
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
 
@@ -94,6 +94,7 @@ public class PredictionModelService {
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
+    // TODO: Implement paging
     public static ResponseEntity<Object> getMappings(String id) {
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
 

@@ -20,7 +20,7 @@ public class PredictionModelList implements Serializable, IThingList<AbstractPre
 
     @Override
     public void setList(List<AbstractPredictionModel> thingList) {
-        // TODO Auto-generated method stub
+        List.copyOf(thingList);
         throw new UnsupportedOperationException("Unimplemented method 'setList'");
     }
 
@@ -31,14 +31,17 @@ public class PredictionModelList implements Serializable, IThingList<AbstractPre
 
     @Override
     public List<Thing> getAsThings() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAsThings'");
+        List<Thing> things = new ArrayList<>();
+        for (AbstractPredictionModel model: models) {
+            things.add(model);
+        }
+
+        return things;
     }
 
     @Override
     public void clearList() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'clearList'");
+        models.clear();
     }
 
     @Override
@@ -71,8 +74,7 @@ public class PredictionModelList implements Serializable, IThingList<AbstractPre
 
     @Override
     public void deleteThing(String identifier) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteThing'");
+        return;
     }
 
     @Override
@@ -102,8 +104,13 @@ public class PredictionModelList implements Serializable, IThingList<AbstractPre
 
     @Override
     public void checkIfIdIsPresent(String identifier) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'checkIfIdIsPresent'");
+        for (AbstractPredictionModel model: getList()) {
+            if (model.getId().toString().equals(identifier) || model.getName().equals(identifier.toLowerCase())) {
+                return;
+            }
+        }
+
+        throw new PredictionModelNotFoundException(identifier);
     }
 
     @Override
@@ -116,8 +123,9 @@ public class PredictionModelList implements Serializable, IThingList<AbstractPre
 
     @Override
     public void updateLinks() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateLinks'");
+        for (AbstractPredictionModel model: getList()) {
+            model.updateLinks();
+        }
     }
     
     @Override

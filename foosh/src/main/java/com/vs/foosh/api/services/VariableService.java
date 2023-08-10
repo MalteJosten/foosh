@@ -177,6 +177,8 @@ public class VariableService {
             patchVariableName(id, (String) patch.getValue());
         }
 
+        variable.updateLinks();
+
         PersistentDataService.saveVariableList();
         
         return respondWithVariable(id);
@@ -467,6 +469,10 @@ public class VariableService {
         List<FooSHJsonPatch> patches = convertModelsPatchMappings(variable, patchMappings);
 
         reformatAndForwardModelPatches(variable, patches);
+
+        variable.updateLinks();
+
+        PersistentDataService.saveAll();
 
         return respondWithVariableAndModels(variable);
     }

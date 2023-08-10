@@ -167,7 +167,6 @@ public class Variable extends Thing implements IThingListObserver, IThingListSub
         links.addAll(List.of(getId, patchId, deleteId, getName, deleteName));
     }
 
-    // TODO: Needs to be called after PATCH
     private void updateDeviceLinks() {
         if (deviceLinks != null || !deviceLinks.isEmpty()) {
             deviceLinks.clear();
@@ -178,7 +177,6 @@ public class Variable extends Thing implements IThingListObserver, IThingListSub
         }
     }
 
-    // TODO: Needs to be called after PATCH
     private void updateModelLinks() {
         if (modelLinks != null || !modelLinks.isEmpty()) {
             modelLinks.clear();
@@ -247,7 +245,6 @@ public class Variable extends Thing implements IThingListObserver, IThingListSub
         ListService.getDeviceList().attach(this);
     }
 
-    // TODO: Needs to be called after DELETE vars/{id} and DELETE vars/{id}/devices
     public void unregisterFromSubject() {
         ListService.getDeviceList().detach(this);
     }

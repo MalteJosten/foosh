@@ -109,7 +109,6 @@ public class PersistentDataService {
         }
     } 
 
-    // TODO: Implement
     public static ReadSaveFileResult<PredictionModelList> hasSavedPredictionModelList() {
         ReadSaveFileResult<PredictionModelList> result = new ReadSaveFileResult<>();
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ApplicationConfig.getPredictionModelSavePath().toFile()))) {
