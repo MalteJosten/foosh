@@ -232,7 +232,6 @@ public class VariableService {
         return respondWithVariableAndDevices(variable);
     }
 
-    // TODO: Implement Paging
     public static ResponseEntity<Object> postVariableDevices(String id, VariableDevicesPostRequest request) {
         Variable variable = ListService.getVariableList().getThing(id);
 
@@ -270,16 +269,17 @@ public class VariableService {
         return respondWithVariableAndDevices(variable);
     }
 
+    // TODO: Make add only available if the deviceId is not registered yet
     public static ResponseEntity<Object> patchVariableDevices(String id, List<Map<String, Object>> patchMappings) {
         Variable variable = ListService.getVariableList().getThing(id);
 
         // Convert patchMappings to FooSHJsonPatches
-        List<FooSHJsonPatch> patches = convertPatchMappings(id, patchMappings);
+        List<FooSHJsonPatch> patches = convertDevicesPatchMappings(id, patchMappings);
 
         // To comply with RFC 6902, we need to make sure, that all instructions are valid.
         // Otherwise, we must not execute any patch instruction.
         for (FooSHJsonPatch patch : patches) {
-            checkForCorrectPatchPath(patch);
+            checkForCorrectDevicesPatchPath(patch);
         }
 
         for (FooSHJsonPatch patch: patches) {
@@ -303,20 +303,16 @@ public class VariableService {
         return respondWithVariableAndDevices(variable);
     }
 
-    private static List<FooSHJsonPatch> convertPatchMappings(String variableId, List<Map<String, Object>> patchMappings) {
+    private static List<FooSHJsonPatch> convertDevicesPatchMappings(String variableId, List<Map<String, Object>> patchMappings) {
         List<FooSHJsonPatch> patches = new ArrayList<>();
         for (Map<String, Object> patchMapping: patchMappings) {
             FooSHJsonPatch patch = new FooSHJsonPatch(patchMapping);
             patch.setParentId(variableId);
-            patch.validateRequest(List.of(FooSHPatchOperation.ADD));
+            patch.validateRequest(List.of(FooSHPatchOperation.ADD, FooSHPatchOperation.REMOVE));
 
-            // TODO: Implement replace, remove
             switch (patch.getOperation()) {
                 case ADD:
                     patch.validateAdd(UUID.class);
-                    break;
-                case REPLACE:
-                    patch.validateReplace(UUID.class);
                     break;
                 case REMOVE:
                     patch.validateRemove(UUID.class);
@@ -331,7 +327,7 @@ public class VariableService {
         return patches;
     }    
 
-    private static void checkForCorrectPatchPath(FooSHJsonPatch patch) {
+    private static void checkForCorrectDevicesPatchPath(FooSHJsonPatch patch) {
         List<String> pathSegments;
         switch (patch.getOperation()) {
             case ADD:
@@ -444,6 +440,14 @@ public class VariableService {
         // Rewriting post request to be able to forward it to the PredictionModelService.postMappings(...)
         // It is going to be handled as if the user did a POST /models/{modelId}/mappings/
         PredictionModelService.postMappings(request.modelId().toString(), new PredictionModelMappingPostRequest(variable.getId(), request.mappings()));
+
+        return respondWithVariableAndModels(variable);
+    }
+
+    public static ResponseEntity<Object> patchVariableModels(String id, List<Map<String, Object>> patchMappings) {
+        Variable variable = ListService.getVariableList().getThing(id);
+
+        //List<FooSHJsonPatch> patches = convertPatchMappings(id, patchMappings);
 
         return respondWithVariableAndModels(variable);
     }
