@@ -504,9 +504,10 @@ public class VariableService {
         for (FooSHJsonPatch patch: patches) {
             switch (patch.getOperation()) {
                 case ADD:
-                    reformatAndForwardAddPatch(variable, patch);
+                    reformatAndForwardPatch(variable, patch);
                     break;
                 case REPLACE:
+                    reformatAndForwardPatch(variable, patch);
                     break;
                 case REMOVE:
                     PredictionModelService.deleteMapping(ListService.getPredictionModelList().getThing(patch.getDestination()), variable.getId());
@@ -519,11 +520,10 @@ public class VariableService {
         PersistentDataService.saveAll();
     }
 
-    private static void reformatAndForwardAddPatch(Variable variable, FooSHJsonPatch patch) {
-
+    private static void reformatAndForwardPatch(Variable variable, FooSHJsonPatch patch) {
         Map<String, Object> forwardHashMap = new HashMap<>();
         VariableModelPostRequest oldPatchValue = (VariableModelPostRequest) patch.getValue();
-        forwardHashMap.put("op", "add");
+        forwardHashMap.put("op", patch.getOperation().toString());
         forwardHashMap.put("path", "/" + variable.getId());
 
         List<Map<String, String>> paramMappings = new ArrayList<>();

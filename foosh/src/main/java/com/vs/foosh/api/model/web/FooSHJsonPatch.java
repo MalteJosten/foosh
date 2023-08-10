@@ -123,6 +123,8 @@ public class FooSHJsonPatch {
             validateValueAsUUID(uuidValue);
         } else if (valueClass == PredictionModelMappingPatchRequest.class) {
             validateValueAsListOfPredictionModelMappingPatchRequests(value);
+        } else if (valueClass == VariableModelPostRequest.class) {
+            validateValueAsVariableModelPostRequest(value);
         } else {
             throw new FooSHJsonPatchValueException(parentId);
         }

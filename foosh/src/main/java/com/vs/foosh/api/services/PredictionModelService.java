@@ -132,6 +132,8 @@ public class PredictionModelService {
             patchMappingEntry(model, patch);
         }
 
+        model.updateLinks();
+
         return respondWithModel(id);
     }
 
