@@ -71,8 +71,7 @@ public class DeviceController {
      */
     @PutMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> devicesPut(
-            @RequestBody(required=false) SmartHomeCredentials credentials) {
+    public ResponseEntity<Object> devicesPut() {
         throw new HttpMappingNotAllowedException(
                 "You cannot use PUT on /devices/! Use DELETE and POST to replace the list of devices.",
                 ListService.getDeviceList().getLinks("self"));
