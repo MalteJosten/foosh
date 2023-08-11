@@ -225,13 +225,12 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
         LinkEntry patchId = new LinkEntry("selfStatic", LinkBuilder.getPredictionModelLink(this.id.toString()), HttpAction.PATCH, List.of("application/json"));
 
         LinkEntry getName   = new LinkEntry("selfName", LinkBuilder.getPredictionModelLink(this.name), HttpAction.GET, List.of());
-        LinkEntry patchName = new LinkEntry("selfName", LinkBuilder.getPredictionModelLink(this.name), HttpAction.PATCH, List.of("application/json"));
 
         if (links != null || !links.isEmpty()) {
             links.clear();
         }
 
-        links.addAll(List.of(getId, patchId, getName, patchName));
+        links.addAll(List.of(getId, patchId, getName));
     }
 
     protected void updateVariableLinks() {
