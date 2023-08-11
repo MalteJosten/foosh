@@ -232,7 +232,7 @@ public class Variable extends Thing implements IThingListObserver, IThingListSub
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder("<< Variable >>\n");
         builder.append("ID:\t "     + id      + "\n");
         builder.append("Name:\t "   + name    + "\n");
         builder.append("Devices: "  + devices + "\n");
