@@ -133,7 +133,7 @@ public class DeviceController {
     }
 
     @PatchMapping(value = "/{id}",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
+            consumes = "application/json-patch+json",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicePatch(@PathVariable("id") UUID uuid, @RequestBody List<Map<String, Object>> patchMappings) {
         return DeviceService.patchDevice(uuid, patchMappings);
