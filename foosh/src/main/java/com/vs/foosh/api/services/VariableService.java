@@ -242,6 +242,13 @@ public class VariableService {
     public static ResponseEntity<Object> postVariableDevices(String id, VariableDevicesPostRequest request) {
         Variable variable = ListService.getVariableList().getThing(id);
 
+        if (request.deviceIds() == null) {
+            throw new VariableDevicePostException(
+                id,
+                "The list of device-IDs is missing. Please provide a field 'deviceIds' with a list of device-IDs.",
+                HttpStatus.BAD_REQUEST);
+        }
+
         // Do we already have stored devices?
         // If that's the case, we disallow POST
         if (!variable.getDeviceIds().isEmpty()) {
@@ -261,7 +268,6 @@ public class VariableService {
             if(!IdService.isUuidInList(deviceId, ListService.getDeviceList().getList())) {
                 throw new VariableDevicePostException(
                     id,
-                    deviceId,
                     "Could not find a device with ID '" + deviceId + "'. Aborting.",
                     HttpStatus.BAD_REQUEST
                 );

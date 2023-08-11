@@ -152,6 +152,7 @@ public class VariableController {
     }
     
     @PatchMapping(value = "/{id}/devices/",
+            consumes = "application/json-patch+json",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> patchVarDevices(@PathVariable("id") String id, @RequestBody List<Map<String, Object>> patchMappings) {
         return VariableService.patchVariableDevices(id, patchMappings);
