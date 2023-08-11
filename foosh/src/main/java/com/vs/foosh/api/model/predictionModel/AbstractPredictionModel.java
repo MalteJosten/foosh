@@ -32,6 +32,8 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
     protected List<LinkEntry> mappingLinks  = new ArrayList<>();
     protected List<LinkEntry> deviceLinks   = new ArrayList<>();
 
+    protected Object valueBounds;
+
     /// This is a default implementation.
     /// Needs to be overwritten!
     public List<SmartHomeInstruction> makePrediction(UUID variableId, String value) {
@@ -311,6 +313,12 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
 
         PersistentDataService.savePredictionModelList();
     }
+
+    public Object getValueBounds() {
+        return this.valueBounds;
+    }
+
+    public abstract void checkValueInBounds(String variableId, Object value);
 
     @Override
     public String toString() {

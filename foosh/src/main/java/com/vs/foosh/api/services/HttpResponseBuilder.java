@@ -47,6 +47,7 @@ public class HttpResponseBuilder {
     public static ResponseEntity<Object> buildException(String message, HttpStatus status) {
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("message", message);
+        responseBody.put("status", status);
 
         return new ResponseEntity<>(responseBody, status);
     }

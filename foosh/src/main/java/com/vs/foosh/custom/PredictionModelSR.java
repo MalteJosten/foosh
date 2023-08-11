@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.vs.foosh.api.exceptions.predictionModel.PredictionModelValueException;
 import com.vs.foosh.api.exceptions.variable.CouldNotMakePredictionException;
 import com.vs.foosh.api.exceptions.variable.VariablePredictionException;
 import com.vs.foosh.api.model.device.AbstractDevice;
@@ -19,6 +20,9 @@ public class PredictionModelSR extends AbstractPredictionModel {
     public PredictionModelSR() {
         this.id   = UUID.randomUUID();
         this.name = "Symbolic Regression Model";
+
+        float[] myBounds = {0, 100};
+        this.valueBounds = myBounds;
 
         setParameters(List.of("x1", "x2")); 
     }
@@ -55,6 +59,34 @@ public class PredictionModelSR extends AbstractPredictionModel {
         }
 
         return instructions;
+
+    }
+
+    @Override
+    public void checkValueInBounds(String variableId, Object value) {
+        try {
+            checkValueInThisBounds(variableId, (String) value);
+        } catch (Exception e) {
+            throw new PredictionModelValueException(
+                variableId,
+                "Could not convert value. Please make sure to provide the value as a floating point number.");
+        }
+    }
+
+    private void checkValueInThisBounds(String variableId, String value) {
+        try {
+            float floatValue = Float.parseFloat(value);
+            float[] floatBounds = (float[]) this.valueBounds;
+            if (floatValue > floatBounds[1] || floatValue < floatBounds[0]) {
+                throw new PredictionModelValueException(
+                    variableId,
+                    "The value exceeds the prediction value interval. Please provide a value between " + floatBounds[0] + " and " + floatBounds[1] + ".");
+            }
+        } catch (Exception e) {
+            throw new PredictionModelValueException(
+                variableId,
+                "Could not convert value to a floating point number. Please make sure to provide the value as a floating point number.");
+        }
 
     }
     

@@ -3,6 +3,7 @@ package com.vs.foosh.api.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -89,6 +90,7 @@ public class VariableController {
         return VariableService.getVariable(id);
     }
 
+    /// Note: Default value for field 'execute': false
     @PostMapping(value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -105,9 +107,10 @@ public class VariableController {
     }
 
     @PatchMapping(value = "/{id}",
+            consumes = "application/json-patch+json",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> patchVar(@PathVariable("id") String id, @RequestBody List<Map<String, Object>> patchMappings) {
-        return VariableService.patchVariable(id, patchMappings);
+    public ResponseEntity<Object> patchVar(@PathVariable("id") UUID uuid, @RequestBody List<Map<String, Object>> patchMappings) {
+        return VariableService.patchVariable(uuid.toString(), patchMappings);
     }
 
     @DeleteMapping(value = "/{id}",

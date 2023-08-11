@@ -17,6 +17,7 @@ import com.vs.foosh.api.exceptions.predictionModel.ParameterMappingDeviceExcepti
 import com.vs.foosh.api.exceptions.predictionModel.PredictionModelNameIsNotUniqueException;
 import com.vs.foosh.api.exceptions.predictionModel.PredictionModelNameMustNotBeAnUuidException;
 import com.vs.foosh.api.exceptions.predictionModel.PredictionModelNotFoundException;
+import com.vs.foosh.api.exceptions.predictionModel.PredictionModelValueException;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.HttpResponseBuilder;
@@ -85,6 +86,17 @@ public class PredictionModelAdvisor extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ParameterMappingAlreadyPresentException.class)
     public ResponseEntity<Object> handleParameterMappingAlreadyPresentException(ParameterMappingAlreadyPresentException exception, WebRequest request) {
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(ListService.getPredictionModelList().getLinks("models"));
+        
+        return HttpResponseBuilder.buildException(
+                exception.getMessage(),
+                links,
+                HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PredictionModelValueException.class)
+    public ResponseEntity<Object> handlePredicitionModelValueException(PredictionModelValueException exception, WebRequest request) {
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(ListService.getPredictionModelList().getLinks("models"));
         

@@ -131,6 +131,9 @@ public class VariableService {
 
     public static ResponseEntity<Object> startVariablePrediction(String id, VariablePredictionRequest request) {
         Variable variable = ListService.getVariableList().getThing(id);
+
+        request.validate(id);
+
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(request.modelId());
 
         if (!variable.getModelIds().contains(model.getId())) {
