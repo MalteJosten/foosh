@@ -486,6 +486,7 @@ public class VariableService {
 
         for (FooSHJsonPatch patch: patches) {
             checkForCorrectModelsPatchPath(variable, patch);
+            checkForCorrectModelPresence(variable, patch);
         }
 
         reformatAndForwardModelPatches(variable, patches);
@@ -531,18 +532,43 @@ public class VariableService {
             throw new FooSHJsonPatchIllegalArgumentException(variable.getId().toString(),
                     "You can only edit an individual mapping regarding one model at a time. Use '/{modelId}' as the path.");
         }
-
-        AbstractPredictionModel model = ListService.getPredictionModelList().getThing(patch.getDestination());
-
-        if (!variable.getModelIds().contains(model.getId())) {
-            throw new FooSHJsonPatchOperationException(
-                    variable.getId(),
-                    variable.getModelLinks(),
-                    "You can only replace mappings which exist. Use the operation 'add' to add new mappings.");
-
-        }
     }
 
+    private static void checkForCorrectModelPresence(Variable variable, FooSHJsonPatch patch) {
+        AbstractPredictionModel model = ListService.getPredictionModelList().getThing(patch.getDestination());
+
+        if (patch.getOperation() == FooSHPatchOperation.REPLACE) {
+            if (!variable.getModelIds().contains(model.getId())) {
+                List<LinkEntry> links = variable.getModelLinks();
+                if (links.isEmpty()) {
+                    links.addAll(variable.getSelfLinks());
+                }
+
+                throw new FooSHJsonPatchOperationException(
+                        variable.getId(),
+                        links,
+                        "You can only replace mappings which exist. Use the operation 'add' to add new mappings.");
+
+            }
+        }
+
+        if (patch.getOperation() == FooSHPatchOperation.REMOVE) {
+            if (!variable.getModelIds().contains(model.getId())) {
+                List<LinkEntry> links = variable.getModelLinks();
+                if (links.isEmpty()) {
+                    links.addAll(variable.getSelfLinks());
+                }
+
+                throw new FooSHJsonPatchOperationException(
+                        variable.getId(),
+                        links,
+                        "You can only remove mappings which exist.");
+
+            }
+        }
+
+    }
+    
     private static void reformatAndForwardModelPatches(Variable variable, List<FooSHJsonPatch> patches) {
         for (FooSHJsonPatch patch: patches) {
             switch (patch.getOperation()) {
