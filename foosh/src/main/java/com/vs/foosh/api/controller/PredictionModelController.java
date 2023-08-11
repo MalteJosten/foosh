@@ -37,7 +37,7 @@ public class PredictionModelController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modelsPost() {
         throw new HttpMappingNotAllowedException(
-                "You cannot use POST on /models/! You can only use the pre-defined models.",
+                "You cannot use POST on /models/! Please use the pre-defined model(s).",
                 ListService.getPredictionModelList().getLinks("self"));
     }
 
@@ -45,12 +45,11 @@ public class PredictionModelController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modelsPut() {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /models/! Use PATCH on /models/{id} instead, to edit the parameter mapping(s).",
+                "You cannot use PUT on /models/! Use the pre-defined model(s) and/or use PATCH on /models/{id} instead, to edit the parameter mapping(s).",
                 ListService.getPredictionModelList().getLinks("self"));
     }
 
     @PatchMapping(value = "/",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modelsPatch() {
         throw new HttpMappingNotAllowedException(
@@ -94,7 +93,7 @@ public class PredictionModelController {
     }
 
     @PatchMapping(value = "/{id}",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
+            consumes = "application/json-patch+json",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modelPatch(@PathVariable("id") String id, @RequestBody List<Map<String, Object>> patchMappings) {
         return PredictionModelService.patchModel(id, patchMappings);
@@ -139,6 +138,7 @@ public class PredictionModelController {
     }
     
     @PatchMapping(value = "/{id}/mappings/",
+            consumes = "application/json-patch+json",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> patchModelMapping(@PathVariable("id") String id, @RequestBody List<Map<String, Object>> patchMappings) {
         return PredictionModelService.patchMappings(id, patchMappings);
