@@ -198,6 +198,16 @@ public class LinkBuilder {
         return new LinkEntry("root", buildPath(List.of("api")), HttpAction.GET, List.of());
     }
 
+    public static List<LinkEntry> getRootLinkEntries() {
+        List<LinkEntry> links = new ArrayList<>();
+        links.add(new LinkEntry("root", buildPath(List.of("api")), HttpAction.GET, List.of()));
+        links.add(new LinkEntry("devices", LinkBuilder.getDeviceListLink() , HttpAction.GET, List.of()));
+        links.add(new LinkEntry("variables", LinkBuilder.getVariableListLink() , HttpAction.GET, List.of()));
+        links.add(new LinkEntry("models", LinkBuilder.getPredictionModelListLink() , HttpAction.GET, List.of()));
+
+        return links;
+    }
+
     public static List<LinkEntry> getDeviceLinkWithDevices(String id) {
         List<LinkEntry> links = new ArrayList<>();
         List<LinkEntry> deviceSelfLinks = ListService.getDeviceList().getThing(id).getSelfLinks();

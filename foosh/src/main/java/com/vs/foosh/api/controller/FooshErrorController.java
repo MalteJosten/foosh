@@ -1,7 +1,5 @@
 package com.vs.foosh.api.controller;
 
-import java.util.List;
-
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +23,10 @@ public class FooshErrorController implements ErrorController {
             HttpStatus statusCode = HttpStatus.valueOf(Integer.valueOf(status.toString()));
 
             if (statusCode == HttpStatus.NOT_FOUND) {
-                return HttpResponseBuilder.buildException("Page not found!", List.of(LinkBuilder.getRootLinkEntry()), HttpStatus.NOT_FOUND);
+                return HttpResponseBuilder.buildException("Page not found!", LinkBuilder.getRootLinkEntries(), HttpStatus.NOT_FOUND);
             }
         }
 
-        return HttpResponseBuilder.buildException("An error occurred!", List.of(LinkBuilder.getRootLinkEntry()), HttpStatus.I_AM_A_TEAPOT);
+        return HttpResponseBuilder.buildException("An error occurred!", LinkBuilder.getRootLinkEntries(), HttpStatus.I_AM_A_TEAPOT);
     }
 }
