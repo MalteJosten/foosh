@@ -484,6 +484,10 @@ public class VariableService {
 
         List<FooSHJsonPatch> patches = convertModelsPatchMappings(variable, patchMappings);
 
+        for (FooSHJsonPatch patch: patches) {
+            checkForCorrectModelsPatchPath(variable, patch);
+        }
+
         reformatAndForwardModelPatches(variable, patches);
 
         variable.updateLinks();
@@ -499,7 +503,6 @@ public class VariableService {
         for (Map<String, Object> patchMapping: patchMappings) {
             FooSHJsonPatch patch = new FooSHJsonPatch(patchMapping);
             patch.setParentId(variable.getId().toString());
-
             patch.validateRequest(variable.getId().toString(), List.of(FooSHPatchOperation.ADD, FooSHPatchOperation.REPLACE, FooSHPatchOperation.REMOVE));
 
             switch (patch.getOperation()) {
@@ -522,6 +525,24 @@ public class VariableService {
         return patches;
     }
 
+    private static void checkForCorrectModelsPatchPath(Variable variable, FooSHJsonPatch patch) {
+        List<String> allowedPathSegments = List.of("uuid");
+        if (!patch.isValidPath(allowedPathSegments)) {
+            throw new FooSHJsonPatchIllegalArgumentException(variable.getId().toString(),
+                    "You can only edit an individual mapping regarding one model at a time. Use '/{modelId}' as the path.");
+        }
+
+        AbstractPredictionModel model = ListService.getPredictionModelList().getThing(patch.getDestination());
+
+        if (!variable.getModelIds().contains(model.getId())) {
+            throw new FooSHJsonPatchOperationException(
+                    variable.getId(),
+                    variable.getModelLinks(),
+                    "You can only replace mappings which exist. Use the operation 'add' to add new mappings.");
+
+        }
+    }
+
     private static void reformatAndForwardModelPatches(Variable variable, List<FooSHJsonPatch> patches) {
         for (FooSHJsonPatch patch: patches) {
             switch (patch.getOperation()) {
@@ -542,21 +563,22 @@ public class VariableService {
         PersistentDataService.saveAll();
     }
 
+    @SuppressWarnings("unchecked")
     private static void reformatAndForwardPatch(Variable variable, FooSHJsonPatch patch) {
         Map<String, Object> forwardHashMap = new HashMap<>();
-        VariableModelPostRequest oldPatchValue = (VariableModelPostRequest) patch.getValue();
+        List<ParameterMapping> oldPatchValue = (List<ParameterMapping>) patch.getValue();
         forwardHashMap.put("op", patch.getOperation().toString());
         forwardHashMap.put("path", "/" + variable.getId());
 
         List<Map<String, String>> paramMappings = new ArrayList<>();
-        for (ParameterMapping parameterMapping: oldPatchValue.mappings()) {
+        for (ParameterMapping parameterMapping: oldPatchValue) {
             Map<String, String> hashParamMapping = parameterMapping.getAsHashMap();
             paramMappings.add(hashParamMapping);
         }
 
         forwardHashMap.put("value", paramMappings);
 
-        PredictionModelService.patchMappings(oldPatchValue.modelId().toString(), List.of(forwardHashMap));
+        PredictionModelService.patchMappings(patch.getDestination().toString(), List.of(forwardHashMap));
     }
 
     public static ResponseEntity<Object> deleteVariableModels(String id) {

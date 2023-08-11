@@ -48,7 +48,7 @@ public class FooSHJsonPatch {
 
         // Does the Patch contain a valid operation?
         try {
-            operation = FooSHPatchOperation.valueOf(operationField.toUpperCase());
+            this.operation = FooSHPatchOperation.valueOf(operationField.toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new FooSHJsonPatchIllegalArgumentException(parentId, "The operation '" + operationField + "' is not a valid Json Patch operation. Please visit https://www.rfc-editor.org/rfc/rfc6902#section-4 for a list of valid operations.");
         } catch (NullPointerException e) {
@@ -72,7 +72,7 @@ public class FooSHJsonPatch {
 
         this.path = (String) request.get("path");
 
-        if (path == null || path.trim().isEmpty()) {
+        if (this.path == null || this.path.trim().isEmpty()) {
             throw new FooSHJsonPatchFormatException(parentId);
         }
         
@@ -107,7 +107,7 @@ public class FooSHJsonPatch {
 
         this.path = (String) request.get("path");
         
-        if (path == null || path.trim().isEmpty()) {
+        if (this.path == null || this.path.trim().isEmpty()) {
             throw new FooSHJsonPatchFormatException(parentId);
         }
 
@@ -144,7 +144,7 @@ public class FooSHJsonPatch {
 
         this.path = (String) request.get("path");
 
-        if (path == null || path.trim().isEmpty()) {
+        if (this.path == null || this.path.trim().isEmpty()) {
             throw new FooSHJsonPatchFormatException(parentId);
         }
 
@@ -190,17 +190,13 @@ public class FooSHJsonPatch {
         try {
             Map<String, Object> valueMapping = (HashMap<String, Object>) value;
 
-            String modelId = (String) valueMapping.get("modelId");
-
             List<ParameterMapping> parameterMappings = new ArrayList<>();
             for (Object paramMappingObject: (List<Object>) valueMapping.get("mappings")) {
                 Map<String, String> paramMapping = (HashMap<String, String>) paramMappingObject;
                 parameterMappings.add(new ParameterMapping(paramMapping.get("parameter"), paramMapping.get("deviceId"))); 
             }
 
-            VariableModelPostRequest varPostRequest = new VariableModelPostRequest(UUID.fromString(modelId), parameterMappings);
-
-            this.value = varPostRequest;
+            this.value = parameterMappings;
         } catch (ClassCastException e) {
             throw new FooSHJsonPatchValueException(parentId);
         }
@@ -209,14 +205,14 @@ public class FooSHJsonPatch {
     public boolean isValidPath(List<String> validPaths) {
         boolean isValid = false;
 
-        if (path.trim().isEmpty()) {
+        if (this.path.trim().isEmpty()) {
             return isValid;
         }
 
         for (String validPath: validPaths) {
             if (validPath.equalsIgnoreCase("uuid")) {
                 try {
-                    IdService.isUuid(path.split("/")[1]).orElseThrow(() -> new IdIsNoValidUUIDException(path.split("/")[1]));
+                    IdService.isUuid(this.path.split("/")[1]).orElseThrow(() -> new IdIsNoValidUUIDException(this.path.split("/")[1]));
                     isValid = true;
                 } catch (ArrayIndexOutOfBoundsException e) {
                     isValid = false;
@@ -224,7 +220,7 @@ public class FooSHJsonPatch {
                 break;
             }
 
-            if (path.equalsIgnoreCase(validPath)) {
+            if (this.path.equalsIgnoreCase(validPath)) {
                 isValid = true;
                 break;
             }
