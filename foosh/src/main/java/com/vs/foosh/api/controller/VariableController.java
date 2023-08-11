@@ -69,7 +69,7 @@ public class VariableController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> patchVars() {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PATCH on /vars/! Either use PATCH on /vars/{id} to update the variable's name or DELETE and POST on /vars/ to replace the list of variables.",
+                "You cannot use PATCH on /vars/! Either use PATCH on /vars/{id} to update a variable's name or DELETE and POST on /vars/ to replace the list of variables.",
                 ListService.getVariableList().getLinks("self"));
     }
 

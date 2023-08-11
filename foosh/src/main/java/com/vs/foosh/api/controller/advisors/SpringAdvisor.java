@@ -26,10 +26,10 @@ public class SpringAdvisor extends ResponseEntityExceptionHandler {
     ///
 
     // TODO: Test each API Endpoint and make sure to cover all @RequestBody exceptions (implement custom handler methods below)
+    // TODO: Add links
 
     @Override
     protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        // TODO: Add links
         return HttpResponseBuilder.buildException(
                 "This method only accepts requests with Content-Type: 'application/json'",
                 HttpStatus.BAD_REQUEST);
