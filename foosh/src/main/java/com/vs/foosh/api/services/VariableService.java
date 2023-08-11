@@ -162,7 +162,7 @@ public class VariableService {
         List<FooSHJsonPatch> patches = new ArrayList<>();
         for (Map<String, Object> patchMapping: patchMappings) {
             FooSHJsonPatch patch = new FooSHJsonPatch(patchMapping);
-            patch.validateRequest(List.of(FooSHPatchOperation.REPLACE));
+            patch.validateRequest(id, List.of(FooSHPatchOperation.REPLACE));
             patch.validateReplace(String.class);
 
             patches.add(patch);
@@ -311,7 +311,7 @@ public class VariableService {
 
             // To comply with RFC 6902, we need to make sure, that all instructions are valid.
             // Otherwise, we must not execute any patch instruction.
-            patch.validateRequest(List.of(FooSHPatchOperation.ADD, FooSHPatchOperation.REMOVE));
+            patch.validateRequest(variableId, List.of(FooSHPatchOperation.ADD, FooSHPatchOperation.REMOVE));
 
             switch (patch.getOperation()) {
                 case ADD:
@@ -484,7 +484,7 @@ public class VariableService {
             FooSHJsonPatch patch = new FooSHJsonPatch(patchMapping);
             patch.setParentId(variable.getId().toString());
 
-            patch.validateRequest(List.of(FooSHPatchOperation.ADD, FooSHPatchOperation.REPLACE, FooSHPatchOperation.REMOVE));
+            patch.validateRequest(variable.getId().toString(), List.of(FooSHPatchOperation.ADD, FooSHPatchOperation.REPLACE, FooSHPatchOperation.REMOVE));
 
             switch (patch.getOperation()) {
                 case ADD:

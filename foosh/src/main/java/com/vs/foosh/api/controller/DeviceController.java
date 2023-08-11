@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
+import com.vs.foosh.api.model.device.AbstractDevice;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.model.web.SmartHomeCredentials;
@@ -104,33 +106,44 @@ public class DeviceController {
     @PostMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicePost(@PathVariable("id") String id) {
+        AbstractDevice device = ListService.getDeviceList().getThing(id);
+
         List<LinkEntry> links = new ArrayList<>();
         links.add(new LinkEntry("devices", LinkBuilder.getDeviceListLink(), HttpAction.POST, List.of("application/json")));
+        links.addAll(device.getSelfLinks());
 
         throw new HttpMappingNotAllowedException(
-                "You cannot use POST on /devices/" + id.replace(" ", "%20") +  "! Please use POST on /devices/ instead.",
+                "You cannot use POST on /devices/" + id.replace(" ", "%20") +  "! Please use POST instead.",
                 links);
     }
 
     @PutMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicePut(@PathVariable("id") String id) {
+        AbstractDevice device = ListService.getDeviceList().getThing(id);
+
+        List<LinkEntry> links = new ArrayList<>();
+        links.add(new LinkEntry("devices", LinkBuilder.getDeviceListLink(), HttpAction.POST, List.of("application/json")));
+        links.add(new LinkEntry("devices", LinkBuilder.getDeviceListLink(), HttpAction.DELETE, List.of()));
+        links.addAll(device.getSelfLinks());
+
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /devices/" + id.replace(" ", "%20") +  "! Either use PATCH to update or DELETE and POST to replace a device.",
-                ListService.getDeviceList().getThing(id).getSelfLinks());
+                "You cannot use PUT on /devices/" + id.replace(" ", "%20") +  "! Either use PATCH on /devices/" + device.getId() + " to edit " + device.getName() + "'s name or use DELETE and POST on /devices/ to update the entire collection of devices.",
+                links);
     }
 
     @PatchMapping(value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> devicePatch(@PathVariable("id") String id, @RequestBody List<Map<String, Object>> patchMappings) {
-        return DeviceService.patchDevice(id, patchMappings);
+    public ResponseEntity<Object> devicePatch(@PathVariable("id") UUID uuid, @RequestBody List<Map<String, Object>> patchMappings) {
+        return DeviceService.patchDevice(uuid, patchMappings);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deviceDelete(@PathVariable("id") String id) {
         List<LinkEntry> links = new ArrayList<>();
         links.add(new LinkEntry("devices", LinkBuilder.getDeviceListLink(), HttpAction.DELETE, List.of()));
+        links.addAll(ListService.getDeviceList().getThing(id).getSelfLinks());
 
         throw new HttpMappingNotAllowedException(
                 "You cannot delete an individual device. You can only delete the entire collection with DELETE on /devices/ !",

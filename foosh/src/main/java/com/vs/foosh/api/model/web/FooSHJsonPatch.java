@@ -43,7 +43,7 @@ public class FooSHJsonPatch {
         return this.parentId;
     }
 
-    public void validateRequest(List<FooSHPatchOperation> allowedOperations) {
+    public void validateRequest(String thingId, List<FooSHPatchOperation> allowedOperations) {
         String operationField = (String) request.get("op");
 
         // Does the Patch contain a valid operation?
@@ -51,6 +51,8 @@ public class FooSHJsonPatch {
             operation = FooSHPatchOperation.valueOf(operationField.toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new FooSHJsonPatchIllegalArgumentException(parentId, "The operation '" + operationField + "' is not a valid Json Patch operation. Please visit https://www.rfc-editor.org/rfc/rfc6902#section-4 for a list of valid operations.");
+        } catch (NullPointerException e) {
+            throw new FooSHJsonPatchFormatException(thingId);
         }
 
         // Do we allow this operation?
