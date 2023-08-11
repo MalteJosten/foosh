@@ -116,9 +116,8 @@ public class PredictionModelList implements Serializable, IThingList<AbstractPre
     @Override
     public List<LinkEntry> getLinks(String label) {
         LinkEntry get   = new LinkEntry(label, LinkBuilder.getPredictionModelListLink(), HttpAction.GET, List.of());
-        LinkEntry patch = new LinkEntry(label, LinkBuilder.getPredictionModelListLink(), HttpAction.PATCH, List.of("application/json"));
 
-        return new ArrayList<>(List.of(get, patch));
+        return new ArrayList<>(List.of(get));
     }
 
     @Override

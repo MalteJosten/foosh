@@ -198,7 +198,7 @@ public class Variable extends Thing implements IThingListObserver, IThingListSub
     private void updateVarDeviceLinks() {
         LinkEntry get    = new LinkEntry("devices", LinkBuilder.getVariableDevicesLink(this.id.toString()), HttpAction.GET, List.of());
         LinkEntry post   = new LinkEntry("devices", LinkBuilder.getVariableDevicesLink(this.id.toString()), HttpAction.POST, List.of("application/json"));
-        LinkEntry patch  = new LinkEntry("devices", LinkBuilder.getVariableDevicesLink(this.id.toString()), HttpAction.PATCH, List.of("application/json"));
+        LinkEntry patch  = new LinkEntry("devices", LinkBuilder.getVariableDevicesLink(this.id.toString()), HttpAction.PATCH, List.of("application/json-patch+json"));
         LinkEntry delete = new LinkEntry("devices", LinkBuilder.getVariableDevicesLink(this.id.toString()), HttpAction.DELETE, List.of());
 
 
@@ -216,7 +216,7 @@ public class Variable extends Thing implements IThingListObserver, IThingListSub
     private void updateVarModelLinks() {
         LinkEntry get    = new LinkEntry("models", LinkBuilder.getVariableModelsLink(this.id.toString()), HttpAction.GET, List.of());
         LinkEntry post   = new LinkEntry("models", LinkBuilder.getVariableModelsLink(this.id.toString()), HttpAction.POST, List.of("application/json"));
-        LinkEntry patch  = new LinkEntry("models", LinkBuilder.getVariableModelsLink(this.id.toString()), HttpAction.PATCH, List.of("application/json"));
+        LinkEntry patch  = new LinkEntry("models", LinkBuilder.getVariableModelsLink(this.id.toString()), HttpAction.PATCH, List.of("application/json-patch+json"));
         LinkEntry delete = new LinkEntry("models", LinkBuilder.getVariableModelsLink(this.id.toString()), HttpAction.DELETE, List.of());
 
 

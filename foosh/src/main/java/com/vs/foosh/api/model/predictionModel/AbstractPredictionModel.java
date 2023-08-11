@@ -222,7 +222,7 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
 
     protected void updateSelfLinks() {
         LinkEntry getId   = new LinkEntry("selfStatic", LinkBuilder.getPredictionModelLink(this.id.toString()), HttpAction.GET, List.of());
-        LinkEntry patchId = new LinkEntry("selfStatic", LinkBuilder.getPredictionModelLink(this.id.toString()), HttpAction.PATCH, List.of("application/json"));
+        LinkEntry patchId = new LinkEntry("selfStatic", LinkBuilder.getPredictionModelLink(this.id.toString()), HttpAction.PATCH, List.of("application/json-patch+json"));
 
         LinkEntry getName   = new LinkEntry("selfName", LinkBuilder.getPredictionModelLink(this.name), HttpAction.GET, List.of());
 
@@ -246,7 +246,7 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
     protected void updateMappingLinks() {
         LinkEntry getMapping    = new LinkEntry("mappings", LinkBuilder.getPredictionModelMappingLink(this.id.toString()), HttpAction.GET, List.of());
         LinkEntry postMapping   = new LinkEntry("mappings", LinkBuilder.getPredictionModelMappingLink(this.id.toString()), HttpAction.POST, List.of("application/json"));
-        LinkEntry patchMapping  = new LinkEntry("mappings", LinkBuilder.getPredictionModelMappingLink(this.id.toString()), HttpAction.PATCH, List.of("application/json"));
+        LinkEntry patchMapping  = new LinkEntry("mappings", LinkBuilder.getPredictionModelMappingLink(this.id.toString()), HttpAction.PATCH, List.of("application/json-patch+json"));
         LinkEntry deleteMapping = new LinkEntry("mappings", LinkBuilder.getPredictionModelMappingLink(this.id.toString()), HttpAction.DELETE, List.of());
 
         if (mappingLinks != null || !mappingLinks.isEmpty()) {

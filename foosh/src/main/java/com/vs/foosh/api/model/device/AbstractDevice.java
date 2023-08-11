@@ -85,7 +85,7 @@ public abstract class AbstractDevice extends Thing {
 
     private List<LinkEntry> buildSelfEntries() {
         LinkEntry selfGet   = new LinkEntry("selfStatic", LinkBuilder.getDeviceLink(this.id.toString()), HttpAction.GET, List.of());
-        LinkEntry selfPatch = new LinkEntry("selfStatic", LinkBuilder.getDeviceLink(this.id.toString()), HttpAction.PATCH, List.of("application/json"));
+        LinkEntry selfPatch = new LinkEntry("selfStatic", LinkBuilder.getDeviceLink(this.id.toString()), HttpAction.PATCH, List.of("application/json-patch+json"));
 
         LinkEntry queryGet   = new LinkEntry("selfName",  LinkBuilder.getDeviceLink(this.name), HttpAction.GET, List.of());
 
