@@ -1,9 +1,9 @@
 package com.vs.foosh.api.exceptions.FooSHJsonPatch;
 
-import java.util.UUID;
+import org.springframework.http.HttpStatus;
 
-public class FooSHJsonPatchValueIsNullException extends RuntimeException {
-    public FooSHJsonPatchValueIsNullException(UUID id) {
-        super();    
+public class FooSHJsonPatchValueIsNullException extends FooSHJsonPatchException {
+    public FooSHJsonPatchValueIsNullException() {
+        super(HttpStatus.BAD_REQUEST, "There is no field called 'name'!");
     }
 }

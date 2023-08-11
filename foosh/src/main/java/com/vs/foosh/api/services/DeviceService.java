@@ -104,7 +104,7 @@ public class DeviceService {
         for (FooSHJsonPatch patch: patches) {
             List<String> pathSegments = List.of("/name");
             if (!patch.isValidPath(pathSegments)) {
-                throw new FooSHJsonPatchIllegalArgumentException(uuid.toString(), "You can only edit the field 'name'!");
+                throw new FooSHJsonPatchIllegalArgumentException("You can only edit the field 'name'!");
             }
 
             patchDeviceName(uuid.toString(), (String) patch.getValue());

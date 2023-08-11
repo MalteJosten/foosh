@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -35,13 +34,6 @@ public class SpringAdvisor extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(status).body(ProblemDetail.forStatusAndDetail(
             status,
             "Failed to read request. Please refer to the documentation for the valid type of request(s)."));
-    }
-
-    @Override
-    protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        return ResponseEntity.status(status).body(ProblemDetail.forStatusAndDetail(
-            status,
-            "This method only accepts requests with Content-Type: 'application/json'"));
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)

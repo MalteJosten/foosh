@@ -174,7 +174,7 @@ public class VariableService {
         for (FooSHJsonPatch patch: patches) {
             List<String> pathSegments = List.of("/name");
             if (!patch.isValidPath(pathSegments)) {
-                throw new FooSHJsonPatchIllegalArgumentException(variable.getId().toString(), "You can only edit the field 'name'!");
+                throw new FooSHJsonPatchIllegalArgumentException("You can only edit the field 'name'!");
             }
 
             patchVariableName(id, (String) patch.getValue());
@@ -191,11 +191,11 @@ public class VariableService {
         UUID uuid = IdService.isUuid(id).get();
 
         if (patchName == null) {
-            throw new FooSHJsonPatchValueIsNullException(uuid);
+            throw new FooSHJsonPatchValueIsNullException();
         }
 
         if (patchName.trim().isEmpty() || patchName.equals("")) {
-            throw new FooSHJsonPatchValueIsEmptyException(uuid.toString());
+            throw new FooSHJsonPatchValueIsEmptyException();
         }
 
         if (ListService.getVariableList().isUniqueName(patchName, uuid)) {
@@ -374,9 +374,7 @@ public class VariableService {
         }
 
         if (!patch.isValidPath(pathSegments)) {
-            throw new FooSHJsonPatchIllegalArgumentException(
-                    patch.getParentId(),
-                    "You can only add a device under '/' and/or remove a device using its UUID with '/{id}'!");
+            throw new FooSHJsonPatchIllegalArgumentException("You can only add a device under '/' and/or remove a device using its UUID with '/{id}'!");
         }
     }
 
@@ -400,9 +398,7 @@ public class VariableService {
                     if (!IdService.isIdentifierInList(value, ListService.getDeviceList().getList())) {
                         throw new DeviceIdNotFoundException(value);
                     }
-                    throw new FooSHJsonPatchIllegalArgumentException(
-                            variable.getId().toString(),
-                            "Could not replace device since it is not part of the device collection.");
+                    throw new FooSHJsonPatchIllegalArgumentException("Could not replace device since it is not part of the device collection.");
                 }
 
                 devices.remove(UUID.fromString(patch.getDestination()));
@@ -529,8 +525,7 @@ public class VariableService {
     private static void checkForCorrectModelsPatchPath(Variable variable, FooSHJsonPatch patch) {
         List<String> allowedPathSegments = List.of("uuid");
         if (!patch.isValidPath(allowedPathSegments)) {
-            throw new FooSHJsonPatchIllegalArgumentException(variable.getId().toString(),
-                    "You can only edit an individual mapping regarding one model at a time. Use '/{modelId}' as the path.");
+            throw new FooSHJsonPatchIllegalArgumentException("You can only edit an individual mapping regarding one model at a time. Use '/{modelId}' as the path.");
         }
     }
 

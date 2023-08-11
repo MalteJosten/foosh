@@ -40,7 +40,7 @@ public class PredictionModelService {
     }
 
     public static ResponseEntity<Object> patchModel(String id, List<Map<String, Object>> patchMappings) {
-        AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
+        ListService.getPredictionModelList().checkIfIdIsPresent(id);
 
         List<FooSHJsonPatch> patches = new ArrayList<>();
         for (Map<String, Object> patchMapping: patchMappings) {
@@ -54,7 +54,7 @@ public class PredictionModelService {
         for (FooSHJsonPatch patch: patches) {
             List<String> pathSegments = List.of("/name");
             if (!patch.isValidPath(pathSegments)) {
-                throw new FooSHJsonPatchIllegalArgumentException(model.getId().toString(), "You can only edit the field 'name'!");
+                throw new FooSHJsonPatchIllegalArgumentException("You can only edit the field 'name'!");
             }
 
             patchModelName(id, (String) patch.getValue());
@@ -69,11 +69,11 @@ public class PredictionModelService {
         UUID uuid = IdService.isUuid(id).get();
 
         if (patchName == null) {
-            throw new FooSHJsonPatchValueIsNullException(uuid);
+            throw new FooSHJsonPatchValueIsNullException();
         }
 
         if (patchName.trim().isEmpty() || patchName.equals("")) {
-            throw new FooSHJsonPatchValueIsEmptyException(uuid.toString());
+            throw new FooSHJsonPatchValueIsEmptyException();
         }
 
         if (ListService.getPredictionModelList().isUniqueName(patchName, uuid)) {
@@ -169,8 +169,7 @@ public class PredictionModelService {
     private static void checkForCorrectPatchPath(AbstractPredictionModel model, FooSHJsonPatch patch) {
         List<String> allowedPathSegments = List.of("uuid");
         if (!patch.isValidPath(allowedPathSegments)) {
-            throw new FooSHJsonPatchIllegalArgumentException(model.getId().toString(),
-                    "You can only edit an individual mapping entry (using '/{uuid}')!");
+            throw new FooSHJsonPatchIllegalArgumentException("You can only edit an individual mapping entry (using '/{uuid}')!");
         }
 
         if (patch.getOperation() == FooSHPatchOperation.REPLACE) {

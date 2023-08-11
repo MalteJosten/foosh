@@ -1,14 +1,10 @@
 package com.vs.foosh.api.exceptions.FooSHJsonPatch;
 
-public class FooSHJsonPatchIllegalArgumentException extends RuntimeException {
-    private String id;
+import org.springframework.http.HttpStatus;
 
-    public FooSHJsonPatchIllegalArgumentException(String id, String message) {
-        super(message);
-        this.id = id;
+public class FooSHJsonPatchIllegalArgumentException extends FooSHJsonPatchException {
+    public FooSHJsonPatchIllegalArgumentException(String message) {
+        super(HttpStatus.BAD_REQUEST, message);
     }
 
-    public String getId() {
-        return this.id;
-    }
 }

@@ -1,14 +1,9 @@
 package com.vs.foosh.api.exceptions.FooSHJsonPatch;
 
-public class FooSHJsonPatchValueIsEmptyException extends RuntimeException {
-    private String id;
+import org.springframework.http.HttpStatus;
 
-    public FooSHJsonPatchValueIsEmptyException(String id) {
-        super("The field 'value' needs to contain a value! Please refer to https://www.rfc-editor.org/rfc/rfc6902");
-        this.id = id;
-    }
-
-    public String getId() {
-        return this.id;
+public class FooSHJsonPatchValueIsEmptyException extends FooSHJsonPatchException {
+    public FooSHJsonPatchValueIsEmptyException() {
+        super(HttpStatus.BAD_REQUEST, "The field 'value' needs to contain a value! Please refer to https://www.rfc-editor.org/rfc/rfc6902");
     }
 }

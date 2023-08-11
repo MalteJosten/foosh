@@ -1,9 +1,11 @@
 package com.vs.foosh.api.exceptions.FooSHJsonPatch;
 
+import org.springframework.http.HttpStatus;
+
 import com.vs.foosh.api.model.web.FooSHPatchOperation;
 
-public class FooSHJsonPatchIllegalOperationException extends RuntimeException {
+public class FooSHJsonPatchIllegalOperationException extends FooSHJsonPatchException {
     public FooSHJsonPatchIllegalOperationException(FooSHPatchOperation operation) {
-        super("The operation '" + operation.toString().toLowerCase() + "' is not allowed on this resource!");
+        super(HttpStatus.BAD_REQUEST, "The operation '" + operation.toString().toLowerCase() + "' is not allowed on this resource!");
     }
 }

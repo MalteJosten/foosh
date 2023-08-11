@@ -1,11 +1,12 @@
 package com.vs.foosh.api.controller.advisors;
 
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
+import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchFormatException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalArgumentException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalOperationException;
@@ -13,7 +14,6 @@ import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchOperationExcepti
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsEmptyException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsNullException;
-import com.vs.foosh.api.services.HttpResponseBuilder;
 
 @ControllerAdvice
 public class FooSHJsonPatchAdvisor {
@@ -24,19 +24,19 @@ public class FooSHJsonPatchAdvisor {
         FooSHJsonPatchValueException.class,
         FooSHJsonPatchValueIsEmptyException.class,
         FooSHJsonPatchValueIsNullException.class})
-    public ResponseEntity<Object> handleFooSHJsonPatchExceptions(RuntimeException exception,
+    public ResponseEntity<Object> handleFooSHJsonPatchExceptions(FooSHJsonPatchException exception,
             WebRequest request) {
-        return HttpResponseBuilder.buildException(
-                exception.getMessage(),
-                HttpStatus.BAD_REQUEST);
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(exception.getStatusCode(), exception.getMessage());
+
+        return ResponseEntity.status(exception.getStatusCode()).body(problemDetail);
     }
 
     @ExceptionHandler(FooSHJsonPatchOperationException.class)
     public ResponseEntity<Object> handleFooSHJsonPatchOperationException(FooSHJsonPatchOperationException exception,
                     WebRequest request) {
-        return HttpResponseBuilder.buildException(
-                exception.getMessage(),
-                exception.getLinks(),
-                HttpStatus.BAD_REQUEST);
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(exception.getStatusCode(), exception.getMessage());
+        problemDetail.setProperty("_links", exception.getLinks());
+
+        return ResponseEntity.status(exception.getStatusCode()).body(problemDetail);
     }
 }
