@@ -465,6 +465,13 @@ public class VariableService {
             );
         }
 
+        // Check whether the user provided a list of parameter mappings
+        if (request.mappings() == null) {
+            throw new MalformedVariableModelPostRequestException(
+                id,
+                "Please provide a field named 'mappings' containing a list of Parameter Mappings!");
+        }
+
         // Rewriting post request to be able to forward it to the PredictionModelService.postMappings(...)
         // It is going to be handled as if the user did a POST /models/{modelId}/mappings/
         PredictionModelService.postMappings(request.modelId().toString(), new PredictionModelMappingPostRequest(variable.getId(), request.mappings()));

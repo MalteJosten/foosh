@@ -190,12 +190,12 @@ public class VariableController {
         links.addAll(variable.getModelLinks());
 
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /vars/" + id + "/models/! Use DELETE and POST instead.",
+                "You cannot use PUT on /vars/" + id + "/models/! Either use PATCH or DELETE and POST instead.",
                 links);
     }
 
     @PatchMapping(value = "/{id}/models/",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
+            consumes = "application/json-patch+json",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> patchVarModels(@PathVariable("id") String id, @RequestBody List<Map<String, Object>> patchMappings) {
         return VariableService.patchVariableModels(id, patchMappings);
