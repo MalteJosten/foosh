@@ -129,7 +129,7 @@ public abstract class AbstractDevice extends Thing {
     /**
      * Set/Overwrite both link {@link List}s, {@code links} and {@code extLinks}, of type {@link LinkEntry}.
      * {@code links} is set to the return value of {@link com.vs.foosh.api.model.device.AbstractDevice#buildSelfEntries() buildSelfEntries()}.
-     * {@code extLinks} are set by retrieving the corresponding collection from the {@link ListService} or the {@link DeviceList}, to be more exact.
+     * {@code extLinks} are set by retrieving the links from the corresponding collection from the {@link ListService} or the {@link DeviceList}, to be more exact.
      */
     public void setLinks() {
         if (!links.isEmpty()) {
