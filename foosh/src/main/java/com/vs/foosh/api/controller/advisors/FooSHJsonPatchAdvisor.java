@@ -17,7 +17,7 @@ import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsNullExcep
 
 @ControllerAdvice
 public class FooSHJsonPatchAdvisor {
-    @ExceptionHandler(value = {
+    @ExceptionHandler({
         FooSHJsonPatchFormatException.class,
         FooSHJsonPatchIllegalArgumentException.class,
         FooSHJsonPatchIllegalOperationException.class,
