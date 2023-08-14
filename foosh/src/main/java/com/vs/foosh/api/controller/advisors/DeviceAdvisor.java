@@ -25,7 +25,7 @@ public class DeviceAdvisor extends ResponseEntityExceptionHandler {
         DeviceNameIsEmptyException.class,
         DeviceIdNotFoundException.class,
         CouldNotFindUniqueDeviceNameException.class})
-    public ResponseEntity<Object> handleIdIsNoValidUUIDException(FooSHApiException exception,
+    public ResponseEntity<Object> handleFooSHApiException(FooSHApiException exception,
             WebRequest request) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(exception.getStatus(), exception.getMessage());
         problemDetail.setProperty("_links", exception.getLinks());
