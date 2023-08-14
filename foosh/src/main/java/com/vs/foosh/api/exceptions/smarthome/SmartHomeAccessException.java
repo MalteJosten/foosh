@@ -1,12 +1,10 @@
 package com.vs.foosh.api.exceptions.smarthome;
 
-public class SmartHomeAccessException extends RuntimeException {
-    private String uri;
+import org.springframework.http.HttpStatus;
+
+public class SmartHomeAccessException extends FooSHSmartHomeException {
 
     public SmartHomeAccessException(String uri) {
-        super("Could not access Smart Home API at '" + uri + "'!");
-        this.uri = uri;
+        super("Could not access Smart Home API at '" + uri + "'!", HttpStatus.BAD_GATEWAY);
     }
-    
-    public String getUri() { return this.uri; }
 }
