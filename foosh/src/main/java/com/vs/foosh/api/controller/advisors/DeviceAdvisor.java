@@ -24,7 +24,8 @@ public class DeviceAdvisor extends ResponseEntityExceptionHandler {
         DeviceNameIsNullException.class,
         DeviceNameIsEmptyException.class,
         DeviceIdNotFoundException.class,
-        CouldNotFindUniqueDeviceNameException.class})
+        CouldNotFindUniqueDeviceNameException.class
+    })
     public ResponseEntity<Object> handleFooSHApiException(FooSHApiException exception,
             WebRequest request) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(exception.getStatus(), exception.getMessage());

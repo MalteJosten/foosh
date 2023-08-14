@@ -27,7 +27,8 @@ public class MiscAdvisor {
     @ExceptionHandler({
         SaveFileNotFoundException.class,
         SavingToFileIOException.class,
-        CouldNotDeleteCollectionException.class})
+        CouldNotDeleteCollectionException.class
+    })
     public ResponseEntity<Object> handleSaveFileExceptions(FooSHSaveFileException exception, WebRequest request) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(exception.getStatus(), exception.getMessage());
 

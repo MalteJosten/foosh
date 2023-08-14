@@ -18,7 +18,8 @@ public class SmartHomeAdvisor {
         SmartHomeAccessException.class,
         SmartHomeIOException.class,
         SmartHomeDeviceFetcherIsNullException.class,
-        SmartHomeInstructionExecutorIsNullException.class})
+        SmartHomeInstructionExecutorIsNullException.class
+    })
     public ResponseEntity<Object> handleSmartHomeAccessException(FooSHSmartHomeException exception, WebRequest request) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(exception.getStatus(), exception.getMessage());
 

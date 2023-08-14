@@ -23,7 +23,8 @@ public class FooSHJsonPatchAdvisor {
         FooSHJsonPatchIllegalOperationException.class,
         FooSHJsonPatchValueException.class,
         FooSHJsonPatchValueIsEmptyException.class,
-        FooSHJsonPatchValueIsNullException.class})
+        FooSHJsonPatchValueIsNullException.class
+    })
     public ResponseEntity<Object> handleFooSHJsonPatchExceptions(FooSHJsonPatchException exception,
             WebRequest request) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(exception.getStatusCode(), exception.getMessage());

@@ -28,7 +28,8 @@ public class PredictionModelAdvisor extends ResponseEntityExceptionHandler {
         PredictionModelNotFoundException.class,
         PredictionModelValueException.class,
         PredictionModelNameMustNotBeAnUuidException.class,
-        PredictionModelNameIsNotUniqueException.class})
+        PredictionModelNameIsNotUniqueException.class
+    })
     public ResponseEntity<Object> handleFooSHApiException(FooSHApiException exception, WebRequest request) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(exception.getStatus(), exception.getMessage());
         problemDetail.setProperty("_links", exception.getLinks());
