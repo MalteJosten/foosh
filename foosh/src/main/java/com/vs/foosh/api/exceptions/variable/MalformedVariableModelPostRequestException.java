@@ -1,15 +1,18 @@
 package com.vs.foosh.api.exceptions.variable;
 
-public class MalformedVariableModelPostRequestException extends RuntimeException {
-    private String id;
+import org.springframework.http.HttpStatus;
+
+import com.vs.foosh.api.exceptions.misc.FooSHApiException;
+import com.vs.foosh.api.services.LinkBuilder;
+import com.vs.foosh.api.services.ListService;
+
+public class MalformedVariableModelPostRequestException extends FooSHApiException {
 
     public MalformedVariableModelPostRequestException(String id, String message) {
-        super(message);
-        this.id = id;
-    }
+        super(message, HttpStatus.BAD_REQUEST);
 
-    public String getId() {
-        return this.id;
+        this.links.addAll(LinkBuilder.getVariableLinkBlock(id));
+        this.links.addAll(ListService.getVariableList().getThing(id).getVarModelLinks());
     }
     
 }

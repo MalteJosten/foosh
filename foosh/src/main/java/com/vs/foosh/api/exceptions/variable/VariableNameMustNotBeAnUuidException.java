@@ -2,16 +2,17 @@ package com.vs.foosh.api.exceptions.variable;
 
 import java.util.UUID;
 
-public class VariableNameMustNotBeAnUuidException extends RuntimeException {
-    private UUID id;
+import org.springframework.http.HttpStatus;
 
-    public VariableNameMustNotBeAnUuidException(UUID id) {
-        super("The name must not be an UUID!");
-        this.id = id;
+import com.vs.foosh.api.exceptions.misc.FooSHApiException;
+import com.vs.foosh.api.services.LinkBuilder;
+
+public class VariableNameMustNotBeAnUuidException extends FooSHApiException {
+
+    public VariableNameMustNotBeAnUuidException(UUID variableUuid) {
+        super("The name must not be an UUID!", HttpStatus.BAD_REQUEST);
+        
+        this.links = LinkBuilder.getVariableLinkBlock(variableUuid.toString());
     }
 
-    public UUID getId() {
-        return this.id;
-    }
-    
 }
