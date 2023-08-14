@@ -10,7 +10,8 @@ public class HttpMappingNotAllowedException extends FooSHApiException {
 
     public HttpMappingNotAllowedException(String message, List<LinkEntry> returnPaths) {
         super(message, HttpStatus.METHOD_NOT_ALLOWED);
-        this.links = returnPaths;
+
+        this.links.addAll(returnPaths);
     }
 
 }

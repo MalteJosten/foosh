@@ -11,6 +11,7 @@ public class DeviceNameIsEmptyException extends FooSHApiException {
 
     public DeviceNameIsEmptyException(UUID uuid, String name) {
         super("The provided value for the field 'name' (" + name + ") is empty!", HttpStatus.BAD_REQUEST);
-        this.links = LinkBuilder.getDeviceLinkWithDevices(uuid.toString());
+
+        this.links.addAll(LinkBuilder.getDeviceLinkWithDevices(uuid.toString()));
     }
 }

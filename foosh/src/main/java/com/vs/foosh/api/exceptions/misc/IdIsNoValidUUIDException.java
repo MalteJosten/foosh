@@ -12,13 +12,13 @@ public class IdIsNoValidUUIDException extends FooSHApiException {
     
         switch (type) {
             case DEVICE:
-                this.links = ListService.getDeviceList().getLinks("devices");
+                this.links.addAll(ListService.getDeviceList().getLinks("devices"));
                 break;
             case VARIABLE:
-                this.links = ListService.getVariableList().getLinks("variables");
+                this.links.addAll(ListService.getVariableList().getLinks("variables"));
                 break;
             case PREDICTION_MODEL:
-                this.links = ListService.getPredictionModelList().getLinks("predictionModel");
+                this.links.addAll(ListService.getPredictionModelList().getLinks("predictionModel"));
                 break;
         }
     }

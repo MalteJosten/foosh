@@ -1,6 +1,5 @@
 package com.vs.foosh.api.exceptions.predictionModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -15,9 +14,7 @@ public class MalformedParameterMappingException extends FooSHApiException {
     public MalformedParameterMappingException(String id, String message) {
         super(message, HttpStatus.BAD_REQUEST);
 
-        List<LinkEntry> links = new ArrayList<>();
-        links.addAll(LinkBuilder.getPredictionModelLinkBlock(id));
-        links.add(new LinkEntry("devices", LinkBuilder.getDeviceListLink(), HttpAction.GET, List.of()));
-        this.links = links;
+        this.links.addAll(LinkBuilder.getPredictionModelLinkBlock(id));
+        this.links.add(new LinkEntry("devices", LinkBuilder.getDeviceListLink(), HttpAction.GET, List.of()));
     }
 }

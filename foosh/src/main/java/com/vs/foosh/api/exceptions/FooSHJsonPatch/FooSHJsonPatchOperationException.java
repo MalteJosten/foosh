@@ -14,8 +14,9 @@ public class FooSHJsonPatchOperationException extends RuntimeException {
 
     public FooSHJsonPatchOperationException(UUID thingId, List<LinkEntry> links, String message) {
         super(message);
-        this.thingId    = thingId;
-        this.links      = links;
+
+        this.thingId = thingId;
+        this.links   = links;
     }
 
     public UUID getThingId() {

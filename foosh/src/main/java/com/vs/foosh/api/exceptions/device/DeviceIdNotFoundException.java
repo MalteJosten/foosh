@@ -12,7 +12,7 @@ public class DeviceIdNotFoundException extends FooSHApiException {
     public DeviceIdNotFoundException(String id) {
         super(HttpStatus.BAD_REQUEST);
 
-        this.links = ListService.getDeviceList().getLinks("devices");
+        this.links.addAll(ListService.getDeviceList().getLinks("devices"));
 
         try {
             UUID uniqueId = UUID.fromString(id);

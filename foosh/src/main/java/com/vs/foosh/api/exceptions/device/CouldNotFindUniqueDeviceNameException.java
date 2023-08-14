@@ -12,7 +12,7 @@ public class CouldNotFindUniqueDeviceNameException extends FooSHApiException {
     public CouldNotFindUniqueDeviceNameException(UUID uuid, int timeoutCount) {
         super("Could not find an unique name for device " + uuid + " after " + timeoutCount + " tries.", HttpStatus.BAD_REQUEST);
 
-        this.links = LinkBuilder.getDeviceLinkWithDevices(uuid.toString());
+        this.links.addAll(LinkBuilder.getDeviceLinkWithDevices(uuid.toString()));
     }
 
 }

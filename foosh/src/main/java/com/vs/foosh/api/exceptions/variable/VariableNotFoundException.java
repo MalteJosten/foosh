@@ -12,7 +12,7 @@ public class VariableNotFoundException extends FooSHApiException {
     public VariableNotFoundException(String id) {
         super(HttpStatus.NOT_FOUND);
 
-        this.links = ListService.getVariableList().getLinks("variables");
+        this.links.addAll(ListService.getVariableList().getLinks("variables"));
 
         try {
             UUID uniqueId = UUID.fromString(id);

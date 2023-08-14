@@ -10,7 +10,7 @@ public class VariableCreationException extends FooSHApiException {
     public VariableCreationException(String message) {
         super(message, HttpStatus.BAD_REQUEST);
 
-        this.links = ListService.getVariableList().getLinks("self");
+        this.links.addAll(ListService.getVariableList().getLinks("self"));
     }
     
 }

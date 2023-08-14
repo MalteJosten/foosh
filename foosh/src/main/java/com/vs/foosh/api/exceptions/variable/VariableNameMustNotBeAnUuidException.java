@@ -12,7 +12,7 @@ public class VariableNameMustNotBeAnUuidException extends FooSHApiException {
     public VariableNameMustNotBeAnUuidException(UUID variableUuid) {
         super("The name must not be an UUID!", HttpStatus.BAD_REQUEST);
         
-        this.links = LinkBuilder.getVariableLinkBlock(variableUuid.toString());
+        this.links.addAll(LinkBuilder.getVariableLinkBlock(variableUuid.toString()));
     }
 
 }
