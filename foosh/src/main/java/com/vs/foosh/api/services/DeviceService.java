@@ -18,6 +18,7 @@ import com.vs.foosh.api.exceptions.smarthome.SmartHomeAccessException;
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeIOException;
 import com.vs.foosh.api.model.device.AbstractDevice;
 import com.vs.foosh.api.model.device.FetchDeviceResponse;
+import com.vs.foosh.api.model.misc.ThingType;
 import com.vs.foosh.api.model.web.FooSHJsonPatch;
 import com.vs.foosh.api.model.web.FooSHPatchOperation;
 import com.vs.foosh.api.model.web.LinkEntry;
@@ -103,7 +104,7 @@ public class DeviceService {
 
         for (FooSHJsonPatch patch: patches) {
             List<String> pathSegments = List.of("/name");
-            if (!patch.isValidPath(pathSegments)) {
+            if (!patch.isValidPath(pathSegments, ThingType.DEVICE)) {
                 throw new FooSHJsonPatchIllegalArgumentException("You can only edit the field 'name'!");
             }
 

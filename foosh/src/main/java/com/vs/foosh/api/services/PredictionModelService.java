@@ -14,6 +14,7 @@ import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalArgumentE
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchOperationException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsEmptyException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsNullException;
+import com.vs.foosh.api.model.misc.ThingType;
 import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
 import com.vs.foosh.api.model.predictionModel.ParameterMapping;
 import com.vs.foosh.api.model.predictionModel.PredictionModelMappingPatchRequest;
@@ -53,7 +54,7 @@ public class PredictionModelService {
 
         for (FooSHJsonPatch patch: patches) {
             List<String> pathSegments = List.of("/name");
-            if (!patch.isValidPath(pathSegments)) {
+            if (!patch.isValidPath(pathSegments, ThingType.PREDICTION_MODEL)) {
                 throw new FooSHJsonPatchIllegalArgumentException("You can only edit the field 'name'!");
             }
 
@@ -168,7 +169,7 @@ public class PredictionModelService {
 
     private static void checkForCorrectPatchPath(AbstractPredictionModel model, FooSHJsonPatch patch) {
         List<String> allowedPathSegments = List.of("uuid");
-        if (!patch.isValidPath(allowedPathSegments)) {
+        if (!patch.isValidPath(allowedPathSegments, ThingType.PREDICTION_MODEL)) {
             throw new FooSHJsonPatchIllegalArgumentException("You can only edit an individual mapping entry (using '/{uuid}')!");
         }
 
