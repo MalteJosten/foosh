@@ -1,7 +1,10 @@
 package com.vs.foosh.api.exceptions.misc;
 
-public class SaveFileNotFoundException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class SaveFileNotFoundException extends FooSHSaveFileException {
+
     public SaveFileNotFoundException(String collection) {
-        super("Could not find save file for collection '" + collection + "'!");   
+        super("Could not find save file for collection '" + collection + "'!", HttpStatus.INTERNAL_SERVER_ERROR);   
     }
 }
