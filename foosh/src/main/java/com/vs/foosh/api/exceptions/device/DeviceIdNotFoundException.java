@@ -2,11 +2,17 @@ package com.vs.foosh.api.exceptions.device;
 
 import java.util.UUID;
 
-public class DeviceIdNotFoundException extends RuntimeException {
-    private String message;
+import org.springframework.http.HttpStatus;
+
+import com.vs.foosh.api.exceptions.misc.FooSHApiException;
+import com.vs.foosh.api.services.ListService;
+
+public class DeviceIdNotFoundException extends FooSHApiException {
 
     public DeviceIdNotFoundException(String id) {
-        super();
+        super(HttpStatus.BAD_REQUEST);
+
+        this.links = ListService.getDeviceList().getLinks("devices");
 
         try {
             UUID uniqueId = UUID.fromString(id);
@@ -16,8 +22,4 @@ public class DeviceIdNotFoundException extends RuntimeException {
         }
     }
 
-    @Override
-    public String getMessage() {
-        return this.message;
-    }
 }

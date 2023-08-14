@@ -2,21 +2,17 @@ package com.vs.foosh.api.exceptions.device;
 
 import java.util.UUID;
 
-public class CouldNotFindUniqueDeviceNameException extends RuntimeException {
-    private UUID id;
-    private int timeoutCount;
+import org.springframework.http.HttpStatus;
 
-    public CouldNotFindUniqueDeviceNameException(UUID id, int timeoutCount) {
-        super("Could not find an unique name for device " + id + " after " + timeoutCount + " tries.");
-        this.id = id;
-        this.timeoutCount = timeoutCount;
+import com.vs.foosh.api.exceptions.misc.FooSHApiException;
+import com.vs.foosh.api.services.LinkBuilder;
+
+public class CouldNotFindUniqueDeviceNameException extends FooSHApiException {
+
+    public CouldNotFindUniqueDeviceNameException(UUID uuid, int timeoutCount) {
+        super("Could not find an unique name for device " + uuid + " after " + timeoutCount + " tries.", HttpStatus.BAD_REQUEST);
+
+        this.links = LinkBuilder.getDeviceLinkWithDevices(uuid.toString());
     }
 
-    public UUID getId() {
-        return this. id;
-    }
-
-    public int getTimeoutCount() {
-        return this.timeoutCount;
-    }
 }
