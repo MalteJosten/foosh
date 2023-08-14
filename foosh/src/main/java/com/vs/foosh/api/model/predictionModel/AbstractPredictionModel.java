@@ -100,9 +100,9 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
 
     public void addMapping(UUID variableId, List<ParameterMapping> mappings) {
         if (variableIds.contains(variableId)) {
-            throw new ParameterMappingAlreadyPresentException(
-                id,
-                "You cannot add new parameter mappings to this variable/model. There are already variable parameter mappings. Please use PATCH (replace) instead.");
+            throw new ParameterMappingAlreadyPresentException("You cannot add new parameter mappings to this variable/model. "
+                + "There are already variable parameter mappings. "
+                + "Please use PATCH (replace) instead.");
         }
 
         ListService.getVariableList().getThing(variableId.toString()).attach(this);
@@ -112,9 +112,7 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
 
     public void deleteMapping(UUID variableId) {
         if (!variableIds.contains(variableId)) {
-            throw new ParameterMappingAlreadyPresentException(
-                id,
-                "You cannot remove parameter mappings which are not present in the list of parameter mappings!");
+            throw new ParameterMappingAlreadyPresentException("You cannot remove parameter mappings which are not present in the list of parameter mappings!");
         }
 
         // Remove entry from variableIds

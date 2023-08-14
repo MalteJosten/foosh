@@ -1,14 +1,23 @@
 package com.vs.foosh.api.exceptions.predictionModel;
 
-public class MalformedParameterMappingException extends RuntimeException {
-    private String id;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+
+import com.vs.foosh.api.exceptions.misc.FooSHApiException;
+import com.vs.foosh.api.model.web.HttpAction;
+import com.vs.foosh.api.model.web.LinkEntry;
+import com.vs.foosh.api.services.LinkBuilder;
+
+public class MalformedParameterMappingException extends FooSHApiException {
 
     public MalformedParameterMappingException(String id, String message) {
-        super(message);
-        this.id = id;
-    }
+        super(message, HttpStatus.BAD_REQUEST);
 
-    public String getId() {
-        return this.id;
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(LinkBuilder.getPredictionModelLinkBlock(id));
+        links.add(new LinkEntry("devices", LinkBuilder.getDeviceListLink(), HttpAction.GET, List.of()));
+        this.links = links;
     }
 }

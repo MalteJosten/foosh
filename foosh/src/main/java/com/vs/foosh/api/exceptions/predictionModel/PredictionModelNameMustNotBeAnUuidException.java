@@ -1,17 +1,22 @@
 package com.vs.foosh.api.exceptions.predictionModel;
 
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
-public class PredictionModelNameMustNotBeAnUuidException extends RuntimeException {
-    private UUID id;
+import org.springframework.http.HttpStatus;
 
-    public PredictionModelNameMustNotBeAnUuidException(UUID id) {
-        super("The name must not be an UUID!");
-        this.id = id;
-    }
+import com.vs.foosh.api.exceptions.misc.FooSHApiException;
+import com.vs.foosh.api.model.web.LinkEntry;
+import com.vs.foosh.api.services.ListService;
 
-    public UUID getId() {
-        return this.id;
+public class PredictionModelNameMustNotBeAnUuidException extends FooSHApiException {
+
+    public PredictionModelNameMustNotBeAnUuidException() {
+        super("The name must not be an UUID!", HttpStatus.BAD_REQUEST);
+
+        List<LinkEntry> links = new ArrayList<>();
+        links.addAll(ListService.getPredictionModelList().getLinks("models"));
+        this.links = links;
     }
     
 }

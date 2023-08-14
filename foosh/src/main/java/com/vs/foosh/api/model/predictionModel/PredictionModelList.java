@@ -83,7 +83,7 @@ public class PredictionModelList implements Serializable, IThingList<AbstractPre
             // Check whether the provided 'name' could be an UUID.
             // Names in form of an UUID are disallowed.
             UUID.fromString(name);
-            throw new PredictionModelNameMustNotBeAnUuidException(id);
+            throw new PredictionModelNameMustNotBeAnUuidException();
         } catch (IllegalArgumentException e) {
             for (AbstractPredictionModel model : this.models) {
                 // Check whether the name is already used
@@ -93,7 +93,7 @@ public class PredictionModelList implements Serializable, IThingList<AbstractPre
                         return true;
                     }
 
-                    throw new PredictionModelNameIsNotUniqueException(id, name);
+                    throw new PredictionModelNameIsNotUniqueException(name);
                 }
 
             }
