@@ -13,7 +13,7 @@ import com.vs.foosh.api.model.misc.ModificationType;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
-import com.vs.foosh.api.services.LinkBuilder;
+import com.vs.foosh.api.services.LinkBuilderService;
 
 public class VariableList implements Serializable, IThingList<Variable, VariableDisplayRepresentation> {
     private List<Variable> variables;
@@ -124,9 +124,9 @@ public class VariableList implements Serializable, IThingList<Variable, Variable
     }
 
     public List<LinkEntry> getLinks(String label) {
-        LinkEntry get    = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.GET, List.of());
-        LinkEntry post   = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.POST, List.of("application/json"));
-        LinkEntry delete = new LinkEntry(label, LinkBuilder.getVariableListLink(), HttpAction.DELETE, List.of());
+        LinkEntry get    = new LinkEntry(label, LinkBuilderService.getVariableListLink(), HttpAction.GET, List.of());
+        LinkEntry post   = new LinkEntry(label, LinkBuilderService.getVariableListLink(), HttpAction.POST, List.of("application/json"));
+        LinkEntry delete = new LinkEntry(label, LinkBuilderService.getVariableListLink(), HttpAction.DELETE, List.of());
 
         if (getList().isEmpty() || getList().size() == 0) {
             return new ArrayList<>(List.of(get, post));

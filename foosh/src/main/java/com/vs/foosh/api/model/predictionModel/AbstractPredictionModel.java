@@ -17,7 +17,7 @@ import com.vs.foosh.api.model.variable.VariableModification;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.model.web.SmartHomeInstruction;
-import com.vs.foosh.api.services.LinkBuilder;
+import com.vs.foosh.api.services.LinkBuilderService;
 import com.vs.foosh.api.services.ListService;
 import com.vs.foosh.api.services.PersistentDataService;
 
@@ -219,10 +219,10 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
     }
 
     protected void updateSelfLinks() {
-        LinkEntry getId   = new LinkEntry("selfStatic", LinkBuilder.getPredictionModelLink(this.id.toString()), HttpAction.GET, List.of());
-        LinkEntry patchId = new LinkEntry("selfStatic", LinkBuilder.getPredictionModelLink(this.id.toString()), HttpAction.PATCH, List.of("application/json-patch+json"));
+        LinkEntry getId   = new LinkEntry("selfStatic", LinkBuilderService.getPredictionModelLink(this.id.toString()), HttpAction.GET, List.of());
+        LinkEntry patchId = new LinkEntry("selfStatic", LinkBuilderService.getPredictionModelLink(this.id.toString()), HttpAction.PATCH, List.of("application/json-patch+json"));
 
-        LinkEntry getName   = new LinkEntry("selfName", LinkBuilder.getPredictionModelLink(this.name), HttpAction.GET, List.of());
+        LinkEntry getName   = new LinkEntry("selfName", LinkBuilderService.getPredictionModelLink(this.name), HttpAction.GET, List.of());
 
         if (links != null || !links.isEmpty()) {
             links.clear();
@@ -242,10 +242,10 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
     }
 
     protected void updateMappingLinks() {
-        LinkEntry getMapping    = new LinkEntry("mappings", LinkBuilder.getPredictionModelMappingLink(this.id.toString()), HttpAction.GET, List.of());
-        LinkEntry postMapping   = new LinkEntry("mappings", LinkBuilder.getPredictionModelMappingLink(this.id.toString()), HttpAction.POST, List.of("application/json"));
-        LinkEntry patchMapping  = new LinkEntry("mappings", LinkBuilder.getPredictionModelMappingLink(this.id.toString()), HttpAction.PATCH, List.of("application/json-patch+json"));
-        LinkEntry deleteMapping = new LinkEntry("mappings", LinkBuilder.getPredictionModelMappingLink(this.id.toString()), HttpAction.DELETE, List.of());
+        LinkEntry getMapping    = new LinkEntry("mappings", LinkBuilderService.getPredictionModelMappingLink(this.id.toString()), HttpAction.GET, List.of());
+        LinkEntry postMapping   = new LinkEntry("mappings", LinkBuilderService.getPredictionModelMappingLink(this.id.toString()), HttpAction.POST, List.of("application/json"));
+        LinkEntry patchMapping  = new LinkEntry("mappings", LinkBuilderService.getPredictionModelMappingLink(this.id.toString()), HttpAction.PATCH, List.of("application/json-patch+json"));
+        LinkEntry deleteMapping = new LinkEntry("mappings", LinkBuilderService.getPredictionModelMappingLink(this.id.toString()), HttpAction.DELETE, List.of());
 
         if (mappingLinks != null || !mappingLinks.isEmpty()) {
             mappingLinks.clear();

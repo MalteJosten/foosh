@@ -8,7 +8,7 @@ import com.vs.foosh.api.model.misc.IThingListObserver;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
-import com.vs.foosh.api.services.LinkBuilder;
+import com.vs.foosh.api.services.LinkBuilderService;
 import com.vs.foosh.api.services.ListService;
 
 /**
@@ -148,10 +148,10 @@ public abstract class AbstractDevice extends Thing {
      * @return the {@link List} of built self links as a {@link List} of type {@link LinkEntry}
      */
     private List<LinkEntry> buildSelfEntries() {
-        LinkEntry selfGet   = new LinkEntry("selfStatic", LinkBuilder.getDeviceLink(this.id.toString()), HttpAction.GET, List.of());
-        LinkEntry selfPatch = new LinkEntry("selfStatic", LinkBuilder.getDeviceLink(this.id.toString()), HttpAction.PATCH, List.of("application/json-patch+json"));
+        LinkEntry selfGet   = new LinkEntry("selfStatic", LinkBuilderService.getDeviceLink(this.id.toString()), HttpAction.GET, List.of());
+        LinkEntry selfPatch = new LinkEntry("selfStatic", LinkBuilderService.getDeviceLink(this.id.toString()), HttpAction.PATCH, List.of("application/json-patch+json"));
 
-        LinkEntry queryGet   = new LinkEntry("selfName",  LinkBuilder.getDeviceLink(this.name), HttpAction.GET, List.of());
+        LinkEntry queryGet   = new LinkEntry("selfName",  LinkBuilderService.getDeviceLink(this.name), HttpAction.GET, List.of());
 
         return new ArrayList<>(List.of(selfGet, selfPatch, queryGet));
     }

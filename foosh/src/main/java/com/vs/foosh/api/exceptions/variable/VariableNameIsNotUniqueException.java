@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.springframework.http.HttpStatus;
 
 import com.vs.foosh.api.exceptions.misc.FooSHApiException;
-import com.vs.foosh.api.services.LinkBuilder;
+import com.vs.foosh.api.services.LinkBuilderService;
 import com.vs.foosh.api.services.ListService;
 
 public class VariableNameIsNotUniqueException extends FooSHApiException {
@@ -16,7 +16,7 @@ public class VariableNameIsNotUniqueException extends FooSHApiException {
         if (variableUuid == null) {
             this.links.addAll(ListService.getVariableList().getLinks("variables"));
         } else {
-            this.links.addAll(LinkBuilder.getVariableLinkBlock(variableUuid.toString()));
+            this.links.addAll(LinkBuilderService.getVariableLinkBlock(variableUuid.toString()));
         }
     }
 }

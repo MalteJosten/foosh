@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -14,7 +15,8 @@ import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 
-public class LinkBuilder {
+@Service
+public class LinkBuilderService {
     private static String host;
     private static int port;
 
@@ -201,9 +203,9 @@ public class LinkBuilder {
     public static List<LinkEntry> getRootLinkEntries() {
         List<LinkEntry> links = new ArrayList<>();
         links.add(new LinkEntry("root", buildPath(List.of("api")), HttpAction.GET, List.of()));
-        links.add(new LinkEntry("devices", LinkBuilder.getDeviceListLink() , HttpAction.GET, List.of()));
-        links.add(new LinkEntry("variables", LinkBuilder.getVariableListLink() , HttpAction.GET, List.of()));
-        links.add(new LinkEntry("models", LinkBuilder.getPredictionModelListLink() , HttpAction.GET, List.of()));
+        links.add(new LinkEntry("devices", LinkBuilderService.getDeviceListLink() , HttpAction.GET, List.of()));
+        links.add(new LinkEntry("variables", LinkBuilderService.getVariableListLink() , HttpAction.GET, List.of()));
+        links.add(new LinkEntry("models", LinkBuilderService.getPredictionModelListLink() , HttpAction.GET, List.of()));
 
         return links;
     }

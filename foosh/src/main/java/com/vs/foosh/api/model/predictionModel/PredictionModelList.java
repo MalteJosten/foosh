@@ -12,7 +12,7 @@ import com.vs.foosh.api.model.misc.IThingList;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
-import com.vs.foosh.api.services.LinkBuilder;
+import com.vs.foosh.api.services.LinkBuilderService;
 import com.vs.foosh.api.services.ListService;
 
 public class PredictionModelList implements Serializable, IThingList<AbstractPredictionModel, PredictionModelDisplayRepresentation>{
@@ -115,7 +115,7 @@ public class PredictionModelList implements Serializable, IThingList<AbstractPre
 
     @Override
     public List<LinkEntry> getLinks(String label) {
-        LinkEntry get   = new LinkEntry(label, LinkBuilder.getPredictionModelListLink(), HttpAction.GET, List.of());
+        LinkEntry get   = new LinkEntry(label, LinkBuilderService.getPredictionModelListLink(), HttpAction.GET, List.of());
 
         return new ArrayList<>(List.of(get));
     }

@@ -17,7 +17,7 @@ import com.vs.foosh.api.model.misc.ModificationType;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
-import com.vs.foosh.api.services.LinkBuilder;
+import com.vs.foosh.api.services.LinkBuilderService;
 
 public class DeviceList implements IThingListSubject, IThingList<AbstractDevice, DeviceDisplayRepresentation>, Serializable {
 
@@ -177,9 +177,9 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
     }
 
     public List<LinkEntry> getLinks(String label) {
-        LinkEntry get    = new LinkEntry(label, LinkBuilder.getDeviceListLink(), HttpAction.GET, List.of());
-        LinkEntry post   = new LinkEntry(label, LinkBuilder.getDeviceListLink(), HttpAction.POST, List.of("application/json"));
-        LinkEntry delete = new LinkEntry(label, LinkBuilder.getDeviceListLink(), HttpAction.DELETE, List.of());
+        LinkEntry get    = new LinkEntry(label, LinkBuilderService.getDeviceListLink(), HttpAction.GET, List.of());
+        LinkEntry post   = new LinkEntry(label, LinkBuilderService.getDeviceListLink(), HttpAction.POST, List.of("application/json"));
+        LinkEntry delete = new LinkEntry(label, LinkBuilderService.getDeviceListLink(), HttpAction.DELETE, List.of());
 
         if (getList().isEmpty() || getList().size() == 0) {
             return new ArrayList<>(List.of(get, post));

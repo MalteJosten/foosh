@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.vs.foosh.api.services.LinkBuilder;
+import com.vs.foosh.api.services.LinkBuilderService;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,7 +35,7 @@ public class FooshErrorController implements ErrorController {
 
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("message", message);
-        responseBody.put("_links", LinkBuilder.getRootLinkEntries());
+        responseBody.put("_links", LinkBuilderService.getRootLinkEntries());
 
         return new ResponseEntity<>(responseBody, httpStatus);
     }

@@ -13,11 +13,11 @@ import com.vs.foosh.api.model.misc.ThingType;
 import com.vs.foosh.api.model.predictionModel.ParameterMapping;
 import com.vs.foosh.api.model.predictionModel.PredictionModelMappingPatchRequest;
 import com.vs.foosh.api.model.variable.VariableModelPostRequest;
+import com.vs.foosh.api.services.IdService;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchFormatException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalArgumentException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalOperationException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueException;
-import com.vs.foosh.api.services.IdService;
 
 public class FooSHJsonPatch {
     private Map<String, Object> request;

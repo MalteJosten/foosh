@@ -12,7 +12,7 @@ import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
-import com.vs.foosh.api.services.LinkBuilder;
+import com.vs.foosh.api.services.LinkBuilderService;
 import com.vs.foosh.api.services.ListService;
 
 public class Variable extends Thing implements IThingListObserver, IThingListSubject {
@@ -153,12 +153,12 @@ public class Variable extends Thing implements IThingListObserver, IThingListSub
     }
     
     private void updateSelfLinks() {
-        LinkEntry getId    = new LinkEntry("selfStatic", LinkBuilder.getVariableLink(this.id.toString()), HttpAction.GET, List.of());
-        LinkEntry patchId  = new LinkEntry("selfStatic", LinkBuilder.getVariableLink(this.id.toString()), HttpAction.PATCH, List.of("application/json"));
-        LinkEntry deleteId = new LinkEntry("selfStatic", LinkBuilder.getVariableLink(this.id.toString()), HttpAction.DELETE, List.of());
+        LinkEntry getId    = new LinkEntry("selfStatic", LinkBuilderService.getVariableLink(this.id.toString()), HttpAction.GET, List.of());
+        LinkEntry patchId  = new LinkEntry("selfStatic", LinkBuilderService.getVariableLink(this.id.toString()), HttpAction.PATCH, List.of("application/json"));
+        LinkEntry deleteId = new LinkEntry("selfStatic", LinkBuilderService.getVariableLink(this.id.toString()), HttpAction.DELETE, List.of());
 
-        LinkEntry getName    = new LinkEntry("selfName", LinkBuilder.getVariableLink(this.name), HttpAction.GET, List.of());
-        LinkEntry deleteName = new LinkEntry("selfName", LinkBuilder.getVariableLink(this.name), HttpAction.DELETE, List.of());
+        LinkEntry getName    = new LinkEntry("selfName", LinkBuilderService.getVariableLink(this.name), HttpAction.GET, List.of());
+        LinkEntry deleteName = new LinkEntry("selfName", LinkBuilderService.getVariableLink(this.name), HttpAction.DELETE, List.of());
 
         if (links != null || !links.isEmpty()) {
             links.clear();
@@ -196,10 +196,10 @@ public class Variable extends Thing implements IThingListObserver, IThingListSub
     }
 
     private void updateVarDeviceLinks() {
-        LinkEntry get    = new LinkEntry("devices", LinkBuilder.getVariableDevicesLink(this.id.toString()), HttpAction.GET, List.of());
-        LinkEntry post   = new LinkEntry("devices", LinkBuilder.getVariableDevicesLink(this.id.toString()), HttpAction.POST, List.of("application/json"));
-        LinkEntry patch  = new LinkEntry("devices", LinkBuilder.getVariableDevicesLink(this.id.toString()), HttpAction.PATCH, List.of("application/json-patch+json"));
-        LinkEntry delete = new LinkEntry("devices", LinkBuilder.getVariableDevicesLink(this.id.toString()), HttpAction.DELETE, List.of());
+        LinkEntry get    = new LinkEntry("devices", LinkBuilderService.getVariableDevicesLink(this.id.toString()), HttpAction.GET, List.of());
+        LinkEntry post   = new LinkEntry("devices", LinkBuilderService.getVariableDevicesLink(this.id.toString()), HttpAction.POST, List.of("application/json"));
+        LinkEntry patch  = new LinkEntry("devices", LinkBuilderService.getVariableDevicesLink(this.id.toString()), HttpAction.PATCH, List.of("application/json-patch+json"));
+        LinkEntry delete = new LinkEntry("devices", LinkBuilderService.getVariableDevicesLink(this.id.toString()), HttpAction.DELETE, List.of());
 
 
         if (varDeviceLinks != null || !varDeviceLinks.isEmpty()) {
@@ -214,10 +214,10 @@ public class Variable extends Thing implements IThingListObserver, IThingListSub
     }
 
     private void updateVarModelLinks() {
-        LinkEntry get    = new LinkEntry("models", LinkBuilder.getVariableModelsLink(this.id.toString()), HttpAction.GET, List.of());
-        LinkEntry post   = new LinkEntry("models", LinkBuilder.getVariableModelsLink(this.id.toString()), HttpAction.POST, List.of("application/json"));
-        LinkEntry patch  = new LinkEntry("models", LinkBuilder.getVariableModelsLink(this.id.toString()), HttpAction.PATCH, List.of("application/json-patch+json"));
-        LinkEntry delete = new LinkEntry("models", LinkBuilder.getVariableModelsLink(this.id.toString()), HttpAction.DELETE, List.of());
+        LinkEntry get    = new LinkEntry("models", LinkBuilderService.getVariableModelsLink(this.id.toString()), HttpAction.GET, List.of());
+        LinkEntry post   = new LinkEntry("models", LinkBuilderService.getVariableModelsLink(this.id.toString()), HttpAction.POST, List.of("application/json"));
+        LinkEntry patch  = new LinkEntry("models", LinkBuilderService.getVariableModelsLink(this.id.toString()), HttpAction.PATCH, List.of("application/json-patch+json"));
+        LinkEntry delete = new LinkEntry("models", LinkBuilderService.getVariableModelsLink(this.id.toString()), HttpAction.DELETE, List.of());
 
 
         if (varModelLinks != null || !varModelLinks.isEmpty()) {

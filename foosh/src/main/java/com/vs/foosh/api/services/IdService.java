@@ -4,8 +4,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.stereotype.Service;
+
 import com.vs.foosh.api.model.misc.Thing;
 
+@Service
 public class IdService {
     public static Optional<UUID> isUuid(String id) {
         UUID uuid;

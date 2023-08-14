@@ -17,12 +17,12 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.vs.foosh.api.ApplicationConfig;
 import com.vs.foosh.api.model.device.AbstractDevice;
 import com.vs.foosh.api.model.device.FetchDeviceResponse;
 import com.vs.foosh.api.model.web.SmartHomeCredentials;
 import com.vs.foosh.api.model.web.SmartHomeInstruction;
 import com.vs.foosh.api.model.web.SmartHomePostResult;
-import com.vs.foosh.api.services.ApplicationConfig;
 import com.vs.foosh.api.services.ISmartHomeDeviceFetcher;
 import com.vs.foosh.api.services.ISmartHomeInstructionExecutor;
 import com.vs.foosh.api.services.SmartHomeService;

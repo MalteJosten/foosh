@@ -5,14 +5,14 @@ import java.util.UUID;
 import org.springframework.http.HttpStatus;
 
 import com.vs.foosh.api.exceptions.misc.FooSHApiException;
-import com.vs.foosh.api.services.LinkBuilder;
+import com.vs.foosh.api.services.LinkBuilderService;
 
 public class VariablePredictionException extends FooSHApiException {
 
     public VariablePredictionException(UUID uuid, String message) {
         super(message, HttpStatus.INTERNAL_SERVER_ERROR);
         
-        this.links.addAll(LinkBuilder.getVariableLinkBlock(uuid.toString()));
+        this.links.addAll(LinkBuilderService.getVariableLinkBlock(uuid.toString()));
     }
     
 }
