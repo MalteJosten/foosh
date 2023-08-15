@@ -48,7 +48,7 @@ public class DeviceController {
     }
 
     /**
-     * Handle incoming {@code POST} requests on route {@code /api/devices} using {@link @PostMapping}.
+     * Handle incoming {@code POST} requests on route {@code /api/devices/} using {@link @PostMapping}.
      * 
      * @apiNote It only accepts {@code application/json} {@link MediaType}s
      * @param credentials the smart home credentials
@@ -65,7 +65,7 @@ public class DeviceController {
     }
 
     /**
-     * Handle incoming {@code PUT} requests on route {@code /api/devices} using {@link @PutMapping}
+     * Handle incoming {@code PUT} requests on route {@code /api/devices/} using {@link @PutMapping}
      * 
      * @apiNote Using {@code PUT} on this route is prohibited.
      * @param credentials the smart home credentials
