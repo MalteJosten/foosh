@@ -16,7 +16,7 @@ public class DeviceDisplayRepresentation {
     private DeviceResponseObject device;
 
     /**
-     * The {@link List} of {@link LinkEntry} that holds the relevant link information for the current respond
+     * The list of {@link LinkEntry} that holds the relevant link information for the current respond
      */
     private List<LinkEntry> links;
 
