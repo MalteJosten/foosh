@@ -2,16 +2,17 @@ package com.vs.foosh.api.exceptions.variable;
 
 import java.util.UUID;
 
-public class VariablePredictionException extends RuntimeException {
-    private UUID id;
+import org.springframework.http.HttpStatus;
 
-    public VariablePredictionException(UUID id, String message) {
-        super(message);
-        this.id = id;
-    }
+import com.vs.foosh.api.exceptions.misc.FooSHApiException;
+import com.vs.foosh.api.services.LinkBuilderService;
 
-    public UUID getId() {
-        return this.id;
+public class VariablePredictionException extends FooSHApiException {
+
+    public VariablePredictionException(UUID uuid, String message) {
+        super(message, HttpStatus.INTERNAL_SERVER_ERROR);
+        
+        this.links.addAll(LinkBuilderService.getVariableLinkBlock(uuid.toString()));
     }
     
 }

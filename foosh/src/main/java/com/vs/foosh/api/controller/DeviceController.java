@@ -23,9 +23,9 @@ import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.model.web.SmartHomeCredentials;
 import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
-import com.vs.foosh.api.services.LinkBuilder;
-import com.vs.foosh.api.services.ListService;
 import com.vs.foosh.api.services.DeviceService;
+import com.vs.foosh.api.services.LinkBuilderService;
+import com.vs.foosh.api.services.ListService;
 
 @RestController
 @RequestMapping(value="/api/devices")
@@ -48,7 +48,7 @@ public class DeviceController {
     }
 
     /**
-     * Handle incoming {@code POST} requests on route {@code /api/devices} using {@link @PostMapping}.
+     * Handle incoming {@code POST} requests on route {@code /api/devices/} using {@link @PostMapping}.
      * 
      * @apiNote It only accepts {@code application/json} {@link MediaType}s
      * @param credentials the smart home credentials
@@ -65,7 +65,7 @@ public class DeviceController {
     }
 
     /**
-     * Handle incoming {@code PUT} requests on route {@code /api/devices} using {@link @PutMapping}
+     * Handle incoming {@code PUT} requests on route {@code /api/devices/} using {@link @PutMapping}
      * 
      * @apiNote Using {@code PUT} on this route is prohibited.
      * @param credentials the smart home credentials
@@ -109,7 +109,7 @@ public class DeviceController {
         AbstractDevice device = ListService.getDeviceList().getThing(id);
 
         List<LinkEntry> links = new ArrayList<>();
-        links.add(new LinkEntry("devices", LinkBuilder.getDeviceListLink(), HttpAction.POST, List.of("application/json")));
+        links.add(new LinkEntry("devices", LinkBuilderService.getDeviceListLink(), HttpAction.POST, List.of("application/json")));
         links.addAll(device.getSelfLinks());
 
         throw new HttpMappingNotAllowedException(
@@ -123,8 +123,8 @@ public class DeviceController {
         AbstractDevice device = ListService.getDeviceList().getThing(id);
 
         List<LinkEntry> links = new ArrayList<>();
-        links.add(new LinkEntry("devices", LinkBuilder.getDeviceListLink(), HttpAction.POST, List.of("application/json")));
-        links.add(new LinkEntry("devices", LinkBuilder.getDeviceListLink(), HttpAction.DELETE, List.of()));
+        links.add(new LinkEntry("devices", LinkBuilderService.getDeviceListLink(), HttpAction.POST, List.of("application/json")));
+        links.add(new LinkEntry("devices", LinkBuilderService.getDeviceListLink(), HttpAction.DELETE, List.of()));
         links.addAll(device.getSelfLinks());
 
         throw new HttpMappingNotAllowedException(
@@ -142,7 +142,7 @@ public class DeviceController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deviceDelete(@PathVariable("id") String id) {
         List<LinkEntry> links = new ArrayList<>();
-        links.add(new LinkEntry("devices", LinkBuilder.getDeviceListLink(), HttpAction.DELETE, List.of()));
+        links.add(new LinkEntry("devices", LinkBuilderService.getDeviceListLink(), HttpAction.DELETE, List.of()));
         links.addAll(ListService.getDeviceList().getThing(id).getSelfLinks());
 
         throw new HttpMappingNotAllowedException(

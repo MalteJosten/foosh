@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalArgumentException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalOperationException;
@@ -23,6 +24,7 @@ import com.vs.foosh.api.exceptions.variable.VariableCreationException;
 import com.vs.foosh.api.exceptions.variable.VariableDevicePostException;
 import com.vs.foosh.api.model.device.DeviceResponseObject;
 import com.vs.foosh.api.model.misc.Thing;
+import com.vs.foosh.api.model.misc.ThingType;
 import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
 import com.vs.foosh.api.model.predictionModel.ParameterMapping;
 import com.vs.foosh.api.model.predictionModel.PredictionModelMappingPostRequest;
@@ -37,6 +39,7 @@ import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.model.web.SmartHomeInstruction;
 import com.vs.foosh.api.model.web.SmartHomePostResult;
 
+@Service
 public class VariableService {
 
     ///
@@ -173,7 +176,7 @@ public class VariableService {
 
         for (FooSHJsonPatch patch: patches) {
             List<String> pathSegments = List.of("/name");
-            if (!patch.isValidPath(pathSegments)) {
+            if (!patch.isValidPath(pathSegments, ThingType.VARIABLE)) {
                 throw new FooSHJsonPatchIllegalArgumentException("You can only edit the field 'name'!");
             }
 
@@ -373,7 +376,7 @@ public class VariableService {
                 throw new FooSHJsonPatchIllegalOperationException(patch.getOperation());
         }
 
-        if (!patch.isValidPath(pathSegments)) {
+        if (!patch.isValidPath(pathSegments, ThingType.VARIABLE)) {
             throw new FooSHJsonPatchIllegalArgumentException("You can only add a device under '/' and/or remove a device using its UUID with '/{id}'!");
         }
     }
@@ -524,7 +527,7 @@ public class VariableService {
 
     private static void checkForCorrectModelsPatchPath(Variable variable, FooSHJsonPatch patch) {
         List<String> allowedPathSegments = List.of("uuid");
-        if (!patch.isValidPath(allowedPathSegments)) {
+        if (!patch.isValidPath(allowedPathSegments, ThingType.VARIABLE)) {
             throw new FooSHJsonPatchIllegalArgumentException("You can only edit an individual mapping regarding one model at a time. Use '/{modelId}' as the path.");
         }
     }

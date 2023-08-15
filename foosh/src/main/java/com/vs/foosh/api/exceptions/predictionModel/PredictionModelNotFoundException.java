@@ -1,15 +1,16 @@
 package com.vs.foosh.api.exceptions.predictionModel;
 
-public class PredictionModelNotFoundException extends RuntimeException {
-    private String id;
+import org.springframework.http.HttpStatus;
+
+import com.vs.foosh.api.exceptions.misc.FooSHApiException;
+import com.vs.foosh.api.services.ListService;
+
+public class PredictionModelNotFoundException extends FooSHApiException {
 
     public PredictionModelNotFoundException(String id) {
-        super();
-        this.id = id;
+        super("Could not find prediction model with identifier '" + id + "'!", HttpStatus.BAD_REQUEST);
+
+        this.links.addAll(ListService.getPredictionModelList().getLinks("models"));
     }
 
-    public String getId() {
-        return this.id;
-    }
-    
 }

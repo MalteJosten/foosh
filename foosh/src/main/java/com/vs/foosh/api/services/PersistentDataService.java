@@ -9,6 +9,9 @@ import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
+import org.springframework.stereotype.Service;
+
+import com.vs.foosh.api.ApplicationConfig;
 import com.vs.foosh.api.exceptions.misc.CouldNotDeleteCollectionException;
 import com.vs.foosh.api.exceptions.misc.SaveFileNotFoundException;
 import com.vs.foosh.api.exceptions.misc.SavingToFileIOException;
@@ -17,6 +20,7 @@ import com.vs.foosh.api.model.misc.ReadSaveFileResult;
 import com.vs.foosh.api.model.predictionModel.PredictionModelList;
 import com.vs.foosh.api.model.variable.VariableList;
 
+@Service
 public class PersistentDataService {
     public static void saveAll() {
         saveDeviceList();

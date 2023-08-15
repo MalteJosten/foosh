@@ -1,17 +1,16 @@
 package com.vs.foosh.api.exceptions.predictionModel;
 
-import java.util.UUID;
+import org.springframework.http.HttpStatus;
 
-public class ParameterMappingAlreadyPresentException extends RuntimeException {
-    private UUID modelId;
+import com.vs.foosh.api.exceptions.misc.FooSHApiException;
+import com.vs.foosh.api.services.ListService;
 
-    public ParameterMappingAlreadyPresentException(UUID modelId, String message) {
-        super(message);
-        this.modelId = modelId;
-    }
+public class ParameterMappingAlreadyPresentException extends FooSHApiException {
 
-    public UUID getModelId() {
-        return this.modelId;
+    public ParameterMappingAlreadyPresentException(String message) {
+        super(message, HttpStatus.BAD_REQUEST);
+        
+        this.links.addAll(ListService.getPredictionModelList().getLinks("models"));
     }
     
 }

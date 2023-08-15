@@ -2,15 +2,16 @@ package com.vs.foosh.api.exceptions.device;
 
 import java.util.UUID;
 
-public class DeviceNameIsEmptyException extends RuntimeException {
-    private UUID id;
+import org.springframework.http.HttpStatus;
 
-    public DeviceNameIsEmptyException(UUID id, String name) {
-        super("The provided value for the field 'name' (" + id + ") is empty!");
-        this.id = id;
-    }
+import com.vs.foosh.api.exceptions.misc.FooSHApiException;
+import com.vs.foosh.api.services.LinkBuilderService;
 
-    public UUID getId() {
-        return this.id;
+public class DeviceNameIsEmptyException extends FooSHApiException {
+
+    public DeviceNameIsEmptyException(UUID uuid, String name) {
+        super("The provided value for the field 'name' (" + name + ") is empty!", HttpStatus.BAD_REQUEST);
+
+        this.links.addAll(LinkBuilderService.getDeviceLinkWithDevices(uuid.toString()));
     }
 }

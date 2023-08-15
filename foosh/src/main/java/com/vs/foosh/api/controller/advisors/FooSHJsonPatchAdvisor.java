@@ -17,13 +17,14 @@ import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsNullExcep
 
 @ControllerAdvice
 public class FooSHJsonPatchAdvisor {
-    @ExceptionHandler(value = {
+    @ExceptionHandler({
         FooSHJsonPatchFormatException.class,
         FooSHJsonPatchIllegalArgumentException.class,
         FooSHJsonPatchIllegalOperationException.class,
         FooSHJsonPatchValueException.class,
         FooSHJsonPatchValueIsEmptyException.class,
-        FooSHJsonPatchValueIsNullException.class})
+        FooSHJsonPatchValueIsNullException.class
+    })
     public ResponseEntity<Object> handleFooSHJsonPatchExceptions(FooSHJsonPatchException exception,
             WebRequest request) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(exception.getStatusCode(), exception.getMessage());

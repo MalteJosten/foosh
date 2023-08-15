@@ -1,9 +1,12 @@
 package com.vs.foosh.api.services;
 
+import org.springframework.stereotype.Service;
+
 import com.vs.foosh.api.model.device.DeviceList;
 import com.vs.foosh.api.model.predictionModel.PredictionModelList;
 import com.vs.foosh.api.model.variable.VariableList;
 
+@Service
 public class ListService {
     private static DeviceList devices;
     private static VariableList variables;

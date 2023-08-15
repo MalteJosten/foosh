@@ -1,15 +1,16 @@
 package com.vs.foosh.api.exceptions.variable;
 
-public class MalformedVariablePredictionRequest extends RuntimeException {
-    private String id;
+import org.springframework.http.HttpStatus;
+
+import com.vs.foosh.api.exceptions.misc.FooSHApiException;
+import com.vs.foosh.api.services.LinkBuilderService;
+
+public class MalformedVariablePredictionRequest extends FooSHApiException {
 
     public MalformedVariablePredictionRequest(String id, String message) {
-        super(message);
-        this.id = id;
+        super(message, HttpStatus.BAD_REQUEST);
+
+        this.links.addAll(LinkBuilderService.getVariableLinkBlock(id));
     }
 
-    public String getId() {
-        return this.id;
-    }
-    
 }

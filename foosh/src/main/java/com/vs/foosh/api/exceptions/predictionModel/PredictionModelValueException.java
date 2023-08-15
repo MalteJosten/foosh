@@ -1,15 +1,15 @@
 package com.vs.foosh.api.exceptions.predictionModel;
 
-public class PredictionModelValueException extends RuntimeException {
-    private String variableId;
+import org.springframework.http.HttpStatus;
 
-    public PredictionModelValueException(String variableId, String message) {
-        super(message);
-        this.variableId = variableId;
+import com.vs.foosh.api.exceptions.misc.FooSHApiException;
+import com.vs.foosh.api.services.ListService;
+
+public class PredictionModelValueException extends FooSHApiException {
+    public PredictionModelValueException(String message) {
+        super(message, HttpStatus.BAD_REQUEST);
+
+        this.links.addAll(ListService.getPredictionModelList().getLinks("models"));
     }
 
-    public String getVariableId() {
-        return this.variableId;
-    }
-    
 }

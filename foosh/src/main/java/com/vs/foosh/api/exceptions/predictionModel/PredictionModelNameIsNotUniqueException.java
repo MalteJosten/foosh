@@ -1,16 +1,16 @@
 package com.vs.foosh.api.exceptions.predictionModel;
 
-import java.util.UUID;
+import org.springframework.http.HttpStatus;
 
-public class PredictionModelNameIsNotUniqueException extends RuntimeException {
-    private UUID id;
+import com.vs.foosh.api.exceptions.misc.FooSHApiException;
+import com.vs.foosh.api.services.ListService;
 
-    public PredictionModelNameIsNotUniqueException(UUID id, String name) {
-        super("The name '" + name + "' is already used!");
-        this.id = id;
+public class PredictionModelNameIsNotUniqueException extends FooSHApiException {
+
+    public PredictionModelNameIsNotUniqueException(String name) {
+        super("The name '" + name + "' is already used!", HttpStatus.BAD_REQUEST);
+
+        this.links.addAll(ListService.getPredictionModelList().getLinks("models"));
     }
 
-    public UUID getId() {
-        return this.id;
-    }
 }

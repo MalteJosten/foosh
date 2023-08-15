@@ -2,22 +2,16 @@ package com.vs.foosh.api.exceptions.variable;
 
 import org.springframework.http.HttpStatus;
 
-public class VariableDevicePostException extends RuntimeException {
-    private String variableId;
-    private HttpStatus status;
+import com.vs.foosh.api.exceptions.misc.FooSHApiException;
+import com.vs.foosh.api.services.ListService;
+
+public class VariableDevicePostException extends FooSHApiException {
    
     public VariableDevicePostException(String variableId, String message, HttpStatus status) {
-        super(message);
-        this.variableId = variableId;
-        this.status     = status;
-    }
+        super(message, status);
 
-    public String getVariableId() {
-        return this.variableId;
-    }
-
-    public HttpStatus getStatus() {
-        return this.status;
+        this.links.addAll(ListService.getVariableList().getThing(variableId).getSelfLinks());
+        this.links.addAll(ListService.getVariableList().getThing(variableId).getVarDeviceLinks());
     }
 
 }

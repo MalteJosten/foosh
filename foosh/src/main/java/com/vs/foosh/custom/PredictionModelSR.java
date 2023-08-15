@@ -67,9 +67,7 @@ public class PredictionModelSR extends AbstractPredictionModel {
         try {
             checkValueInThisBounds(variableId, (String) value);
         } catch (Exception e) {
-            throw new PredictionModelValueException(
-                variableId,
-                "Could not convert value. Please make sure to provide the value as a floating point number.");
+            throw new PredictionModelValueException("Could not convert value. Please make sure to provide the value as a floating point number.");
         }
     }
 
@@ -78,14 +76,10 @@ public class PredictionModelSR extends AbstractPredictionModel {
             float floatValue = Float.parseFloat(value);
             float[] floatBounds = (float[]) this.valueBounds;
             if (floatValue > floatBounds[1] || floatValue < floatBounds[0]) {
-                throw new PredictionModelValueException(
-                    variableId,
-                    "The value exceeds the prediction value interval. Please provide a value between " + floatBounds[0] + " and " + floatBounds[1] + ".");
+                throw new PredictionModelValueException("The value exceeds the prediction value interval. Please provide a value between " + floatBounds[0] + " and " + floatBounds[1] + ".");
             }
         } catch (Exception e) {
-            throw new PredictionModelValueException(
-                variableId,
-                "Could not convert value to a floating point number. Please make sure to provide the value as a floating point number.");
+            throw new PredictionModelValueException("Could not convert value to a floating point number. Please make sure to provide the value as a floating point number.");
         }
 
     }

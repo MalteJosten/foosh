@@ -1,8 +1,11 @@
 package com.vs.foosh.api.services;
 
+import org.springframework.stereotype.Service;
+
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeDeviceFetcherIsNullException;
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeInstructionExecutorIsNullException;
 
+@Service
 public class SmartHomeService {
     private static ISmartHomeDeviceFetcher smartHomeDeviceFetcher;
     private static ISmartHomeInstructionExecutor smartHomeInstructionExecutor;

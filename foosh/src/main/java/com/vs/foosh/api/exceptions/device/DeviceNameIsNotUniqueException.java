@@ -2,15 +2,17 @@ package com.vs.foosh.api.exceptions.device;
 
 import java.util.UUID;
 
-public class DeviceNameIsNotUniqueException extends RuntimeException {
-    private UUID id;
+import org.springframework.http.HttpStatus;
 
-    public DeviceNameIsNotUniqueException(UUID id, String name) {
-        super("The name '" + name + "' is already used!");
-        this.id = id;
+import com.vs.foosh.api.exceptions.misc.FooSHApiException;
+import com.vs.foosh.api.services.LinkBuilderService;
+
+public class DeviceNameIsNotUniqueException extends FooSHApiException {
+
+    public DeviceNameIsNotUniqueException(UUID uuid, String name) {
+        super("The name '" + name + "' is already used!", HttpStatus.CONFLICT);
+
+        this.links.addAll(LinkBuilderService.getDeviceLinkWithDevices(uuid.toString()));
     }
 
-    public UUID getId() {
-        return this.id;
-    }
 }

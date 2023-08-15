@@ -1,4 +1,4 @@
-package com.vs.foosh.api.services;
+package com.vs.foosh.api;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,6 +18,9 @@ import com.vs.foosh.api.model.misc.ReadSaveFileResult;
 import com.vs.foosh.api.model.predictionModel.PredictionModelList;
 import com.vs.foosh.api.model.variable.VariableList;
 import com.vs.foosh.api.model.web.SmartHomeCredentials;
+import com.vs.foosh.api.services.LinkBuilderService;
+import com.vs.foosh.api.services.ListService;
+import com.vs.foosh.api.services.PersistentDataService;
 import com.vs.foosh.custom.PredictionModelSR;
 
 @Configuration
@@ -55,7 +58,7 @@ public class ApplicationConfig {
                             + "[INFO] Using default port: "
                             + DEFAULT_PORT);
         } finally {
-            LinkBuilder.setServerVariables(HOST, port);
+            LinkBuilderService.setServerVariables(HOST, port);
         }
     }
 
@@ -83,7 +86,7 @@ public class ApplicationConfig {
                             + "[INFO] Using default port: "
                             + DEFAULT_PORT);
         } finally {
-            LinkBuilder.setServerVariables(HOST, port);
+            LinkBuilderService.setServerVariables(HOST, port);
         }
     }
 

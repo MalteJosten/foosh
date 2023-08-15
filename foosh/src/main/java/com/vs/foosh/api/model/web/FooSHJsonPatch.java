@@ -9,14 +9,15 @@ import java.util.UUID;
 
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsEmptyException;
 import com.vs.foosh.api.exceptions.misc.IdIsNoValidUUIDException;
+import com.vs.foosh.api.model.misc.ThingType;
 import com.vs.foosh.api.model.predictionModel.ParameterMapping;
 import com.vs.foosh.api.model.predictionModel.PredictionModelMappingPatchRequest;
 import com.vs.foosh.api.model.variable.VariableModelPostRequest;
+import com.vs.foosh.api.services.IdService;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchFormatException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalArgumentException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalOperationException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueException;
-import com.vs.foosh.api.services.IdService;
 
 public class FooSHJsonPatch {
     private Map<String, Object> request;
@@ -202,7 +203,7 @@ public class FooSHJsonPatch {
         }
     }
 
-    public boolean isValidPath(List<String> validPaths) {
+    public boolean isValidPath(List<String> validPaths, ThingType type) {
         boolean isValid = false;
 
         if (this.path.trim().isEmpty()) {
@@ -212,7 +213,7 @@ public class FooSHJsonPatch {
         for (String validPath: validPaths) {
             if (validPath.equalsIgnoreCase("uuid")) {
                 try {
-                    IdService.isUuid(this.path.split("/")[1]).orElseThrow(() -> new IdIsNoValidUUIDException(this.path.split("/")[1]));
+                    IdService.isUuid(this.path.split("/")[1]).orElseThrow(() -> new IdIsNoValidUUIDException(this.path.split("/")[1], type));
                     isValid = true;
                 } catch (ArrayIndexOutOfBoundsException e) {
                     isValid = false;

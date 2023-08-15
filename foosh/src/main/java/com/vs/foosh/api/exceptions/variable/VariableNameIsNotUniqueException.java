@@ -2,15 +2,21 @@ package com.vs.foosh.api.exceptions.variable;
 
 import java.util.UUID;
 
-public class VariableNameIsNotUniqueException extends RuntimeException {
-    private UUID id;
+import org.springframework.http.HttpStatus;
 
-    public VariableNameIsNotUniqueException(UUID id, String name) {
-        super("The name '" + name + "' is already used!");
-        this.id = id;
-    }
+import com.vs.foosh.api.exceptions.misc.FooSHApiException;
+import com.vs.foosh.api.services.LinkBuilderService;
+import com.vs.foosh.api.services.ListService;
 
-    public UUID getId() {
-        return this.id;
+public class VariableNameIsNotUniqueException extends FooSHApiException {
+
+    public VariableNameIsNotUniqueException(UUID variableUuid, String name) {
+        super("The name '" + name + "' is already used!", HttpStatus.CONFLICT);
+        
+        if (variableUuid == null) {
+            this.links.addAll(ListService.getVariableList().getLinks("variables"));
+        } else {
+            this.links.addAll(LinkBuilderService.getVariableLinkBlock(variableUuid.toString()));
+        }
     }
 }

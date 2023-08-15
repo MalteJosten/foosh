@@ -12,7 +12,7 @@ import com.vs.foosh.api.model.misc.IThingList;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
-import com.vs.foosh.api.services.LinkBuilder;
+import com.vs.foosh.api.services.LinkBuilderService;
 import com.vs.foosh.api.services.ListService;
 
 public class PredictionModelList implements Serializable, IThingList<AbstractPredictionModel, PredictionModelDisplayRepresentation>{
@@ -83,7 +83,7 @@ public class PredictionModelList implements Serializable, IThingList<AbstractPre
             // Check whether the provided 'name' could be an UUID.
             // Names in form of an UUID are disallowed.
             UUID.fromString(name);
-            throw new PredictionModelNameMustNotBeAnUuidException(id);
+            throw new PredictionModelNameMustNotBeAnUuidException();
         } catch (IllegalArgumentException e) {
             for (AbstractPredictionModel model : this.models) {
                 // Check whether the name is already used
@@ -93,7 +93,7 @@ public class PredictionModelList implements Serializable, IThingList<AbstractPre
                         return true;
                     }
 
-                    throw new PredictionModelNameIsNotUniqueException(id, name);
+                    throw new PredictionModelNameIsNotUniqueException(name);
                 }
 
             }
@@ -115,7 +115,7 @@ public class PredictionModelList implements Serializable, IThingList<AbstractPre
 
     @Override
     public List<LinkEntry> getLinks(String label) {
-        LinkEntry get   = new LinkEntry(label, LinkBuilder.getPredictionModelListLink(), HttpAction.GET, List.of());
+        LinkEntry get   = new LinkEntry(label, LinkBuilderService.getPredictionModelListLink(), HttpAction.GET, List.of());
 
         return new ArrayList<>(List.of(get));
     }

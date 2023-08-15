@@ -1,15 +1,16 @@
 package com.vs.foosh.api.exceptions.variable;
 
-public class VariableCreationException extends RuntimeException {
-    private String message;
+import org.springframework.http.HttpStatus;
+
+import com.vs.foosh.api.exceptions.misc.FooSHApiException;
+import com.vs.foosh.api.services.ListService;
+
+public class VariableCreationException extends FooSHApiException {
 
     public VariableCreationException(String message) {
-        super();
-        this.message = message;
-    }
+        super(message, HttpStatus.BAD_REQUEST);
 
-    public String getMessage() {
-        return this.message;
+        this.links.addAll(ListService.getVariableList().getLinks("self"));
     }
     
 }
