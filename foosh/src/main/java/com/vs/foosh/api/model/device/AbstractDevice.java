@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.vs.foosh.api.model.misc.IThingListObserver;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
@@ -17,15 +16,38 @@ import com.vs.foosh.api.services.ListService;
  * which add data to the object, retrieved from the smart home API.
  */
 public abstract class AbstractDevice extends Thing {
+    /**
+     * The device's name given it by the smart home system
+     */
     protected String deviceName;
+
+    /**
+     * The device's type given it by the smart home system 
+     */
     protected String type;
+
+    /**
+     * Any additional information provided by the smart home system that might be needed
+     */
     protected AbstractDeviceDescription description;
 
-    protected List<LinkEntry> links    = new ArrayList<>();
+
+    /**
+     * The list of {@link LinkEntry} which all point to the device's own API URIs
+     */
+    protected List<LinkEntry> links = new ArrayList<>();
+
+    /**
+     * The list of {@link LinkEntry} which all point to the device collection's API URIs
+     */
     protected List<LinkEntry> extLinks = new ArrayList<>();
 
-    protected List<IThingListObserver> observers = new ArrayList<>();
 
+    /**
+     * Set all aforementoined fields.
+     * 
+     * @apiNote Should be implemented to set the object fields and call custom methods if needed
+     */
     protected abstract void setObjectFields();
 
     /**
