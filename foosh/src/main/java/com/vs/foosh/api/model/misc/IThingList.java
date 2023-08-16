@@ -16,7 +16,7 @@ public interface IThingList<T,V> {
     public void addThing(T thing);
     public void deleteThing(String identifier);
 
-    public boolean isUniqueName(String name, UUID id);
+    public boolean isValidName(String name, UUID id);
     public void checkIfIdIsPresent(String identifier);
 
     public List<LinkEntry> getLinks(String label);
