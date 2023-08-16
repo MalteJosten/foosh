@@ -259,7 +259,7 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
      */
     public String findUniqueName(DeviceNamePatchRequest request) {
         StringBuilder name = new StringBuilder(request.name().toLowerCase());
-        UUID id = request.id();
+        UUID id = request.uuid();
 
         // Does the field contain any letters, i.e., is it not empty?
         if (name.toString().trim().isEmpty()) {
