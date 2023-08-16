@@ -12,6 +12,7 @@ import com.vs.foosh.api.model.device.AbstractDevice;
 import com.vs.foosh.api.services.ListService;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -116,6 +117,24 @@ public class DeviceControllerTest {
     @Test
     void givenAnything_whenPutDevices_thenGetNonEmptyLinksField() throws Exception {
         mvc.perform(put("/api/devices/"))
+            .andExpect(jsonPath("$._links").exists())
+            .andExpect(jsonPath("$._links").isArray())
+            .andExpect(jsonPath("$._links").isNotEmpty());
+    }
+    
+    ///
+    /// PATCH /devices/
+    ///
+
+    @Test
+    void givenAnything_whenPatchDevices_thenGetStatus405() throws Exception {
+        mvc.perform(patch("/api/devices/"))
+            .andExpect(status().isMethodNotAllowed());
+    }
+
+    @Test
+    void givenAnything_whenPatchDevices_thenGetNonEmptyLinksField() throws Exception {
+        mvc.perform(patch("/api/devices/"))
             .andExpect(jsonPath("$._links").exists())
             .andExpect(jsonPath("$._links").isArray())
             .andExpect(jsonPath("$._links").isNotEmpty());
