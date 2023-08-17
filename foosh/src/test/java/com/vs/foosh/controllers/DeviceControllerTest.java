@@ -11,6 +11,7 @@ import com.vs.foosh.AbstractDeviceTest;
 import com.vs.foosh.api.model.device.AbstractDevice;
 import com.vs.foosh.api.services.ListService;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -35,12 +36,14 @@ public class DeviceControllerTest {
     @Test
     void givenAnything_whenGetDevices_thenStatus200() throws Exception {
         mvc.perform(get("/api/devices/"))
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
     }
 
     @Test
     void givenAnything_whenGetDevices_thenGetNonEmptyLinksField() throws Exception {
         mvc.perform(get("/api/devices/"))
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$._links").exists())
             .andExpect(jsonPath("$._links").isArray())
@@ -82,12 +85,14 @@ public class DeviceControllerTest {
         ListService.getDeviceList().setList(deviceList);
 
         mvc.perform(post("/api/devices/").contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
             .andExpect(status().isConflict());
     }
 
     @Test
-    void givenAnything_whenPostDevices_thenGetNonEmptyLinksField() throws Exception {
+    void givenAnySuccessfulRequest_whenPostDevices_thenGetNonEmptyLinksField() throws Exception {
         mvc.perform(post("/api/devices/"))
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$._links").exists())
             .andExpect(jsonPath("$._links").isArray())
             .andExpect(jsonPath("$._links").isNotEmpty());
@@ -96,6 +101,7 @@ public class DeviceControllerTest {
     @Test
     void givenAnything_whenPostDevicesWithNonJSON_thenGetProblemDetailWithStatus415() throws Exception {
         mvc.perform(post("/api/devices/").contentType(MediaType.TEXT_PLAIN))
+            .andExpect(content().contentTypeCompatibleWith("application/problem+json"))
             .andExpect(jsonPath("$.type").exists())
             .andExpect(jsonPath("$.title").exists())
             .andExpect(jsonPath("$.status").exists())
@@ -109,8 +115,9 @@ public class DeviceControllerTest {
     ///
 
     @Test
-    void givenAnything_whenPutDevices_thenGetStatus405() throws Exception {
+    void givenAnything_whenPutDevices_thenGetProblemDetailWithStatus405() throws Exception {
         mvc.perform(put("/api/devices/"))
+            .andExpect(content().contentTypeCompatibleWith("application/problem+json"))
             .andExpect(status().isMethodNotAllowed());
     }
 
@@ -127,8 +134,9 @@ public class DeviceControllerTest {
     ///
 
     @Test
-    void givenAnything_whenPatchDevices_thenGetStatus405() throws Exception {
+    void givenAnything_whenPatchDevices_thenGetProblemDetailWithStatus405() throws Exception {
         mvc.perform(patch("/api/devices/"))
+            .andExpect(content().contentTypeCompatibleWith("application/problem+json"))
             .andExpect(status().isMethodNotAllowed());
     }
 
@@ -144,6 +152,35 @@ public class DeviceControllerTest {
     /// DELETE /devices/
     ///
 
+    @Test
+    void givenAnything_whenDeleteDevices_thenGetNonEmptyLinksField() throws Exception {
+        mvc.perform(delete("/api/devices/"))
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$._links").exists())
+            .andExpect(jsonPath("$._links").isArray())
+            .andExpect(jsonPath("$._links").isNotEmpty());
+    }
+    
+    @Test
+    void givenANonEmptyList_whenDeleteDevices_thenReturnEmptyList() throws Exception {
+        List<AbstractDevice> deviceList = List.of(new AbstractDeviceTest("device"));
+        ListService.getDeviceList().setList(deviceList);
 
+        mvc.perform(delete("/api/devices/"))
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.devices").exists())
+            .andExpect(jsonPath("$.devices").isArray())
+            .andExpect(jsonPath("$.devices").isEmpty());
+    }
 
+    @Test
+    void givenAnEmptyList_whenDeleteDevices_thenReturnEmptyList() throws Exception {
+        ListService.getDeviceList().clearList();
+
+        mvc.perform(delete("/api/devices/"))
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.devices").exists())
+            .andExpect(jsonPath("$.devices").isArray())
+            .andExpect(jsonPath("$.devices").isEmpty());
+    }
 }
