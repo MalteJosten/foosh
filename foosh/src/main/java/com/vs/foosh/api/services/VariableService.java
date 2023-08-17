@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalArgumentException;
+import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalPathException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalOperationException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchOperationException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsEmptyException;
@@ -97,7 +97,7 @@ public class VariableService {
         }
 
         // Check for duplicates
-        if (!ListService.getVariableList().isUniqueName(request.name(), null)) {
+        if (!ListService.getVariableList().isValidName(request.name(), null)) {
             throw new VariableCreationException("Cannot create variable(s)! The name '" + request.name() + "' is already taken.");
         }
 
@@ -177,7 +177,7 @@ public class VariableService {
         for (FooSHJsonPatch patch: patches) {
             List<String> pathSegments = List.of("/name");
             if (!patch.isValidPath(pathSegments, ThingType.VARIABLE)) {
-                throw new FooSHJsonPatchIllegalArgumentException("You can only edit the field 'name'!");
+                throw new FooSHJsonPatchIllegalPathException("You can only edit the field 'name'!");
             }
 
             patchVariableName(id, (String) patch.getValue());
@@ -201,7 +201,7 @@ public class VariableService {
             throw new FooSHJsonPatchValueIsEmptyException();
         }
 
-        if (ListService.getVariableList().isUniqueName(patchName, uuid)) {
+        if (ListService.getVariableList().isValidName(patchName, uuid)) {
             ListService.getVariableList().getThing(id).setName(patchName);
             return true;
         }
@@ -377,7 +377,7 @@ public class VariableService {
         }
 
         if (!patch.isValidPath(pathSegments, ThingType.VARIABLE)) {
-            throw new FooSHJsonPatchIllegalArgumentException("You can only add a device under '/' and/or remove a device using its UUID with '/{id}'!");
+            throw new FooSHJsonPatchIllegalPathException("You can only add a device under '/' and/or remove a device using its UUID with '/{id}'!");
         }
     }
 
@@ -401,7 +401,7 @@ public class VariableService {
                     if (!IdService.isIdentifierInList(value, ListService.getDeviceList().getList())) {
                         throw new DeviceIdNotFoundException(value);
                     }
-                    throw new FooSHJsonPatchIllegalArgumentException("Could not replace device since it is not part of the device collection.");
+                    throw new FooSHJsonPatchIllegalPathException("Could not replace device since it is not part of the device collection.");
                 }
 
                 devices.remove(UUID.fromString(patch.getDestination()));
@@ -528,7 +528,7 @@ public class VariableService {
     private static void checkForCorrectModelsPatchPath(Variable variable, FooSHJsonPatch patch) {
         List<String> allowedPathSegments = List.of("uuid");
         if (!patch.isValidPath(allowedPathSegments, ThingType.VARIABLE)) {
-            throw new FooSHJsonPatchIllegalArgumentException("You can only edit an individual mapping regarding one model at a time. Use '/{modelId}' as the path.");
+            throw new FooSHJsonPatchIllegalPathException("You can only edit an individual mapping regarding one model at a time. Use '/{modelId}' as the path.");
         }
     }
 

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 
 import com.vs.foosh.api.ApplicationConfig;
-import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalArgumentException;
+import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalPathException;
 import com.vs.foosh.api.exceptions.device.DeviceNameIsEmptyException;
 import com.vs.foosh.api.exceptions.device.DeviceNameIsNotUniqueException;
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeAccessException;
@@ -108,7 +108,7 @@ public class DeviceService {
         for (FooSHJsonPatch patch: patches) {
             List<String> pathSegments = List.of("/name");
             if (!patch.isValidPath(pathSegments, ThingType.DEVICE)) {
-                throw new FooSHJsonPatchIllegalArgumentException("You can only edit the field 'name'!");
+                throw new FooSHJsonPatchIllegalPathException("You can only edit the field 'name'!");
             }
 
             patchDeviceName(uuid.toString(), (String) patch.getValue());
@@ -128,7 +128,7 @@ public class DeviceService {
         }
 
         // Is the name provided by the field unique?
-        if (ListService.getDeviceList().isUniqueName(patchName, uuid)) {
+        if (ListService.getDeviceList().isValidName(patchName, uuid)) {
             AbstractDevice device = ListService.getDeviceList().getThing(id.toString());
             device.setName(patchName);
             return true;

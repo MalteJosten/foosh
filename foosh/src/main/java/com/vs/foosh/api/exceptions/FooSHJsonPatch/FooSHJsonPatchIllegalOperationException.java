@@ -8,4 +8,8 @@ public class FooSHJsonPatchIllegalOperationException extends FooSHJsonPatchExcep
     public FooSHJsonPatchIllegalOperationException(FooSHPatchOperation operation) {
         super(HttpStatus.BAD_REQUEST, "The operation '" + operation.toString().toLowerCase() + "' is not allowed on this resource!");
     }
+
+    public FooSHJsonPatchIllegalOperationException(String message) {
+        super(HttpStatus.BAD_REQUEST, message);
+    }
 }

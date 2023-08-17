@@ -15,7 +15,6 @@ import com.vs.foosh.api.model.predictionModel.PredictionModelMappingPatchRequest
 import com.vs.foosh.api.model.variable.VariableModelPostRequest;
 import com.vs.foosh.api.services.IdService;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchFormatException;
-import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalArgumentException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalOperationException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueException;
 
@@ -51,7 +50,7 @@ public class FooSHJsonPatch {
         try {
             this.operation = FooSHPatchOperation.valueOf(operationField.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new FooSHJsonPatchIllegalArgumentException("The operation '" + operationField + "' is not a valid Json Patch operation. Please visit https://www.rfc-editor.org/rfc/rfc6902#section-4 for a list of valid operations.");
+            throw new FooSHJsonPatchIllegalOperationException("The operation '" + operationField + "' is not a valid Json Patch operation. Please visit https://www.rfc-editor.org/rfc/rfc6902#section-4 for a list of valid operations.");
         } catch (NullPointerException e) {
             throw new FooSHJsonPatchFormatException();
         }

@@ -8,7 +8,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchFormatException;
-import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalArgumentException;
+import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalPathException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalOperationException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchOperationException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueException;
@@ -19,7 +19,7 @@ import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsNullExcep
 public class FooSHJsonPatchAdvisor {
     @ExceptionHandler({
         FooSHJsonPatchFormatException.class,
-        FooSHJsonPatchIllegalArgumentException.class,
+        FooSHJsonPatchIllegalPathException.class,
         FooSHJsonPatchIllegalOperationException.class,
         FooSHJsonPatchValueException.class,
         FooSHJsonPatchValueIsEmptyException.class,

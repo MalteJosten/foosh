@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalArgumentException;
+import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalPathException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchOperationException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsEmptyException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsNullException;
@@ -57,7 +57,7 @@ public class PredictionModelService {
         for (FooSHJsonPatch patch: patches) {
             List<String> pathSegments = List.of("/name");
             if (!patch.isValidPath(pathSegments, ThingType.PREDICTION_MODEL)) {
-                throw new FooSHJsonPatchIllegalArgumentException("You can only edit the field 'name'!");
+                throw new FooSHJsonPatchIllegalPathException("You can only edit the field 'name'!");
             }
 
             patchModelName(id, (String) patch.getValue());
@@ -79,7 +79,7 @@ public class PredictionModelService {
             throw new FooSHJsonPatchValueIsEmptyException();
         }
 
-        if (ListService.getPredictionModelList().isUniqueName(patchName, uuid)) {
+        if (ListService.getPredictionModelList().isValidName(patchName, uuid)) {
             ListService.getPredictionModelList().getThing(id).setName(patchName);
             return true;
         }
@@ -172,7 +172,7 @@ public class PredictionModelService {
     private static void checkForCorrectPatchPath(AbstractPredictionModel model, FooSHJsonPatch patch) {
         List<String> allowedPathSegments = List.of("uuid");
         if (!patch.isValidPath(allowedPathSegments, ThingType.PREDICTION_MODEL)) {
-            throw new FooSHJsonPatchIllegalArgumentException("You can only edit an individual mapping entry (using '/{uuid}')!");
+            throw new FooSHJsonPatchIllegalPathException("You can only edit an individual mapping entry (using '/{uuid}')!");
         }
 
         if (patch.getOperation() == FooSHPatchOperation.REPLACE) {
