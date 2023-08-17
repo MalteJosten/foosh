@@ -78,7 +78,7 @@ public class PredictionModelList implements Serializable, IThingList<AbstractPre
     }
 
     @Override
-    public boolean isUniqueName(String name, UUID id) {
+    public boolean isValidName(String name, UUID id) {
         try {
             // Check whether the provided 'name' could be an UUID.
             // Names in form of an UUID are disallowed.

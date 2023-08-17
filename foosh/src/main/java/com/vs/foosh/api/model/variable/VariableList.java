@@ -89,7 +89,7 @@ public class VariableList implements Serializable, IThingList<Variable, Variable
         throw new VariableNotFoundException(identifier);
     }
 
-    public boolean isUniqueName(String name, UUID id) {
+    public boolean isValidName(String name, UUID id) {
         try {
             // Check whether the provided 'name' could be an UUID.
             // Names in form of an UUID are disallowed.

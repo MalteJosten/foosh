@@ -167,14 +167,27 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
         throw new DeviceIdNotFoundException(identifier);
     }
 
+    /**
+     * Add a device to the list of currently registered devices.
+     * The device is only added if its name would unique in the list,i.e., no other device has the same name.
+     * 
+     * A {@link DeviceNameIsNotUniqueException} is thrown, when the name is not unique.
+     * 
+     * @param device the {@link AbstractDevice} to add to {@code devices} 
+     */
     public void addThing(AbstractDevice device) {
-        if (isUniqueName(device.getName(), device.getId())) {
+        if (isValidName(device.getName(), device.getId())) {
             this.devices.add(device);
         } else {
             throw new DeviceNameIsNotUniqueException(device.getId(), device.getDeviceName());
         }
     }
 
+    /**
+     * Given a {@link String} identifier, delete a device from the list of devices.
+     * 
+     * @param identifier either the name or the uuid of the {@link AbstractDevice} that should be removed from {@code devices}
+     */
     public void deleteThing(String identifier) {
         for (AbstractDevice device: getList()) {
             if (device.getId().toString().equals(identifier) || device.getName().equalsIgnoreCase(identifier)) {
@@ -183,22 +196,33 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
         }
     }
 
-    public boolean isUniqueName(String name, UUID id) {
-        // Check whether the provided 'name' could be an UUID.
-        // Names in form of an UUID are disallowed.
+    /**
+     * Check whether the provided {@code name} is valid.
+     * A name is valid if
+     *     - it is not a {@link UUID}
+     *     - it is not used by any other {@link AbstractDevice} in the list of devices
+     * 
+     * If the name is is not unique, a {@link DeviceNameIsNotUniqueException} is thrown.
+     * 
+     * @param name the name of the {@link AbstractDevice} under test
+     * @param uuid the id of the {@link AbstractDevice} under test
+     * @return {@code true} if the name is unique
+     */
+    public boolean isValidName(String name, UUID uuid) {
         try {
+            // Check whether the name is a UUID
             UUID.fromString(name);
             return false;
         } catch (IllegalArgumentException e) {
             for (AbstractDevice d: this.devices) {
                 // Check whether the name is already used
                 if (d.getName().equalsIgnoreCase(name)) {
-                    // If it's already used, check whether it's the same device.
-                    if (d.getId().equals(id)) {
+                    // If it's already used, check whether it's the same device
+                    if (d.getId().equals(uuid)) {
                         return true;
                     }
 
-                    throw new DeviceNameIsNotUniqueException(id, name);
+                    throw new DeviceNameIsNotUniqueException(uuid, name);
                 }
             
             }
@@ -207,6 +231,13 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
         return true;
     }
 
+    /**
+     * Check whether the a device with provided identifier is present in the list of devices.
+     * 
+     * A {@link DeviceIdNotFoundException} is thrown if no {@link AbstractDevice} with matching {@code name} or {@code id} is found.
+     * 
+     * @param identifier the {@code name} or {@code id} of the to be checked {@link AbstractDevice}
+     */
     public void checkIfIdIsPresent(String identifier) {
         for (AbstractDevice device: getList()) {
             if (device.getId().toString().equals(identifier) || device.getName().equalsIgnoreCase(identifier)) {
@@ -217,14 +248,18 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
         throw new DeviceIdNotFoundException(identifier);
     }
 
-    ///
-    /// Check whether the given request contains an unique (new) name.
-    /// If the name is not unique, try and find another unique one by
-    /// appending incrementing numbers to deviceName.
-    ///
+    /**
+     * Check whether the given {@link DeviceNamePatchRequest} contains a valid (new) name.
+     * 
+     * If the name is not unique, try and find another unique one by appending incrementing numbers to the {@code name}.
+     * 
+     * If the {@code UNIQUE_NAME_TIMEOUT} is reached, i.e., no unique name could be constructed, a {@link CouldNotFindUniqueDeviceNameException} is thrown.
+     * 
+     * @param request the {@link DeviceNamePatchRequest} containing the new {@code name} and {@code id} of the {@link AbstractDevice} in question
+     */
     public String findUniqueName(DeviceNamePatchRequest request) {
         StringBuilder name = new StringBuilder(request.name().toLowerCase());
-        UUID id = request.id();
+        UUID id = request.uuid();
 
         // Does the field contain any letters, i.e., is it not empty?
         if (name.toString().trim().isEmpty()) {
@@ -233,7 +268,7 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
 
         for (int i = 0; i < UNIQUE_NAME_TIMEOUT; i++) {
             // Is the name provided by the field unique or the same as the current name?
-            if (isUniqueName(name.toString(), id)) {
+            if (isValidName(name.toString(), id)) {
                 return name.toString();
             } else {
                 name.replace(0, name.length(), getThing(id.toString()).getDeviceName() + (i+1));
@@ -243,6 +278,13 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
         throw new CouldNotFindUniqueDeviceNameException(id, UNIQUE_NAME_TIMEOUT);
     }
 
+    /**
+     * Return the list of self links.
+     * These include all currently available HTTP endpoints for {@code /api/devices/}.
+     * 
+     * @param label the label which is used to construct each {@link LinkEntry}
+     * @return the list with elements of type {@link LinkEntry} of currently available HTTP endpoints for {@code /api/devices/}
+     */
     public List<LinkEntry> getLinks(String label) {
         LinkEntry get    = new LinkEntry(label, LinkBuilderService.getDeviceListLink(), HttpAction.GET, List.of());
         LinkEntry post   = new LinkEntry(label, LinkBuilderService.getDeviceListLink(), HttpAction.POST, List.of("application/json"));
@@ -255,12 +297,22 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
         }
     }
 
+    /**
+     * Update the links of all currently registered devices and call {@link com.vs.foosh.api.model.device.AbstractDevice#setLinks() setLinks()}
+     * for every {@link AbstractDevice} in {@code devices}.
+     */
     public void updateLinks() {
         for (AbstractDevice device: getList()) {
             device.setLinks();
         }
     }
 
+    /**
+     * Implement {@link com.vs.foosh.api.model.misc.IThingListSubject#attach(IThingListObserver) attach(IThingListObserver)}.
+     * The given observer is added to the list of observers.
+     * 
+     * @param observer the {@link IThingListObserver} to be added to {@code observers}
+     */
     @Override
     public void attach(IThingListObserver observer) {
         if (!observers.contains(observer)) {
@@ -268,11 +320,25 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
         }
     }
 
+    /**
+     * Implement {@link com.vs.foosh.api.model.misc.IThingListSubject#detach(IThingListObserver) deatch(IThingListObserver)}.
+     * The given observer is removed from the list of observers.
+     * 
+     * @param observer the {@link IThingListObserver} to be removed from {@code observers}
+     */
     @Override
     public void detach(IThingListObserver observer) {
         observers.remove(observer);
     }
 
+    /**
+     * Implement {@link com.vs.foosh.api.model.misc.IThingListSubject#notifyObservers(AbstractModification) notifyObservers(AbstractModification)}.
+     * 
+     * First, all observers are notified about the modification.
+     * Then, the {@code observers} is cleared.
+     * 
+     * @param modification the {@link AbstractModification} describing the reason for notifying the {@link IThingListObserver}s
+     */
     @Override
     public void notifyObservers(AbstractModification modification) {
         for(IThingListObserver observer: observers) {
