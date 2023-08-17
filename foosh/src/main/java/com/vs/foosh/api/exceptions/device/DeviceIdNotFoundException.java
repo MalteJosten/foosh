@@ -10,7 +10,7 @@ import com.vs.foosh.api.services.ListService;
 public class DeviceIdNotFoundException extends FooSHApiException {
 
     public DeviceIdNotFoundException(String id) {
-        super(HttpStatus.BAD_REQUEST);
+        super(HttpStatus.NOT_FOUND);
 
         this.links.addAll(ListService.getDeviceList().getLinks("devices"));
 
