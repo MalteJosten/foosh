@@ -31,7 +31,7 @@ public class DeviceControllerTest {
     private MockMvc mvc;
 
     ///
-    /// GET /devices/
+    /// GET api/devices/
     ///
 
     @Test
@@ -64,7 +64,7 @@ public class DeviceControllerTest {
     }
 
     ///
-    /// POST /devices/
+    /// POST api/devices/
     ///
 
     @Test
@@ -79,10 +79,9 @@ public class DeviceControllerTest {
     }
 
     @Test
-    void givenAnything_whenPostDevices_thenGetStatus409() throws Exception {
+    void givenDevices_whenPostDevices_thenGetStatus409() throws Exception {
         ListService.getDeviceList().clearList();
         List<AbstractDevice> deviceList = List.of(new AbstractDeviceTest("test-device"));
-        // todo: create test device/device description/smarthomeservice/predictionmodel
         ListService.getDeviceList().setList(deviceList);
 
         mvc.perform(post("/api/devices/").contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -107,7 +106,7 @@ public class DeviceControllerTest {
     }
 
     ///
-    /// PUT /devices/
+    /// PUT api/devices/
     ///
 
     @Test
@@ -126,7 +125,7 @@ public class DeviceControllerTest {
     }
     
     ///
-    /// PATCH /devices/
+    /// PATCH api/devices/
     ///
 
     @Test
@@ -145,7 +144,7 @@ public class DeviceControllerTest {
     }
     
     ///
-    /// DELETE /devices/
+    /// DELETE api/devices/
     ///
 
     @Test
@@ -182,7 +181,7 @@ public class DeviceControllerTest {
     /// ---------------------------------------------------------------------------------- ///
 
     ///
-    /// GET /devices/{id}
+    /// GET api/devices/{id}
     ///
 
     @Test
@@ -228,7 +227,7 @@ public class DeviceControllerTest {
     }
 
     ///
-    /// POST /devices/{id}
+    /// POST api/devices/{id}
     ///
 
     @Test
@@ -261,7 +260,7 @@ public class DeviceControllerTest {
     }
 
     ///
-    /// PUT /devices/{id}
+    /// PUT api/devices/{id}
     ///
 
     @Test
@@ -294,7 +293,7 @@ public class DeviceControllerTest {
     }
 
     ///
-    /// PATCH /devices/{id}
+    /// PATCH api/devices/{id}
     ///
 
     @Test
@@ -459,7 +458,7 @@ public class DeviceControllerTest {
     }
 
     ///
-    /// DELETE /devices/{id}
+    /// DELETE api/devices/{id}
     ///
 
     @Test
