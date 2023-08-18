@@ -63,7 +63,7 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
     /**
      * Set the list of devices.
      * 
-     * @param deviceList the {@link List} of with elements of type {@link AbstractDevice}
+     * @param deviceList the {@link List} with elements of type {@link AbstractDevice}
      */
     public void setList(List<AbstractDevice> deviceList) {
         if (devices != null) {
@@ -151,7 +151,7 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
     }
 
     /**
-     * Search a device in {@code devices} based on its {@code id} and {@code name}.
+     * Search for a device in {@code devices} based on its {@code id} and {@code name}.
      * 
      * @param identifier the identifier to match each {@link AbstractDevice}'s {@code id} and {@code name} against
      * @return the first matched {@link AbstractDevice} or throw a {@link DeviceIdNotFoundException} if no {@link AbstractDevice}
@@ -204,8 +204,8 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
      * 
      * If the name is is not unique, a {@link DeviceNameIsNotUniqueException} is thrown.
      * 
-     * @param name the name of the {@link AbstractDevice} under test
-     * @param uuid the id of the {@link AbstractDevice} under test
+     * @param name the {@code name} of the {@link AbstractDevice} under test
+     * @param uuid the {@code id} of the {@link AbstractDevice} under test
      * @return {@code true} if the name is unique
      */
     public boolean isValidName(String name, UUID uuid) {
@@ -232,11 +232,11 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
     }
 
     /**
-     * Check whether the a device with provided identifier is present in the list of devices.
+     * Check whether the a device with the provided identifier is present in the list of devices.
      * 
      * A {@link DeviceIdNotFoundException} is thrown if no {@link AbstractDevice} with matching {@code name} or {@code id} is found.
      * 
-     * @param identifier the {@code name} or {@code id} of the to be checked {@link AbstractDevice}
+     * @param identifier the {@code name} or {@code id} of the {@link AbstractDevice} in question
      */
     public void checkIfIdIsPresent(String identifier) {
         for (AbstractDevice device: getList()) {
