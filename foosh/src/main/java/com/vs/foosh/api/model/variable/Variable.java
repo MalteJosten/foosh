@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.UUID;
 
 import com.vs.foosh.api.model.misc.AbstractModification;
-import com.vs.foosh.api.model.misc.IThingListObserver;
-import com.vs.foosh.api.model.misc.IThingListSubject;
+import com.vs.foosh.api.model.misc.IThingListSubscriber;
+import com.vs.foosh.api.model.misc.IThingListPublisher;
 import com.vs.foosh.api.model.misc.ModificationType;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
@@ -15,7 +15,7 @@ import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilderService;
 import com.vs.foosh.api.services.ListService;
 
-public class Variable extends Thing implements IThingListObserver, IThingListSubject {
+public class Variable extends Thing implements IThingListSubscriber, IThingListPublisher {
     private List<UUID> models  = new ArrayList<>();
     private List<UUID> devices = new ArrayList<>();
 
@@ -26,7 +26,7 @@ public class Variable extends Thing implements IThingListObserver, IThingListSub
     private List<LinkEntry> varDeviceLinks = new ArrayList<>();
     private List<LinkEntry> varModelLinks  = new ArrayList<>();
 
-    private List<IThingListObserver> observers = new ArrayList<>();
+    private List<IThingListSubscriber> observers = new ArrayList<>();
 
     public Variable(String name, List<UUID> modelIds, List<UUID> deviceIds) {
         this.id      = UUID.randomUUID();
@@ -261,7 +261,7 @@ public class Variable extends Thing implements IThingListObserver, IThingListSub
     }
 
     @Override
-    public void attach(IThingListObserver observer) {
+    public void attach(IThingListSubscriber observer) {
         if (!observers.contains(observer)) {
             observers.add(observer);
             AbstractPredictionModel model = (AbstractPredictionModel) observer;
@@ -272,7 +272,7 @@ public class Variable extends Thing implements IThingListObserver, IThingListSub
     }
 
     @Override
-    public void detach(IThingListObserver observer) {
+    public void detach(IThingListSubscriber observer) {
         observers.remove(observer);
         AbstractPredictionModel model = (AbstractPredictionModel) observer;
         models.remove(model.getId());
@@ -282,7 +282,7 @@ public class Variable extends Thing implements IThingListObserver, IThingListSub
 
     @Override
     public void notifyObservers(AbstractModification modification) {
-        for(IThingListObserver observer: observers) {
+        for(IThingListSubscriber observer: observers) {
             observer.update(modification);
         }
 

@@ -4,7 +4,7 @@ package com.vs.foosh.api.model.misc;
  * A container for a {@link ModificationType}.
  * It is used for indicating the type of change/modification when communicating with an observer.
  * 
- * @see com.vs.foosh.api.model.misc.IThingListObserver
+ * @see com.vs.foosh.api.model.misc.IThingListSubscriber
  * @see com.vs.foosh.api.model.misc.IThingListSubject
  */
 public abstract class AbstractModification {

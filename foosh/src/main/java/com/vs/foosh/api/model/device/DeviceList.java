@@ -10,8 +10,8 @@ import com.vs.foosh.api.exceptions.device.DeviceIdNotFoundException;
 import com.vs.foosh.api.exceptions.device.DeviceNameIsNotUniqueException;
 import com.vs.foosh.api.model.misc.AbstractModification;
 import com.vs.foosh.api.model.misc.IThingList;
-import com.vs.foosh.api.model.misc.IThingListObserver;
-import com.vs.foosh.api.model.misc.IThingListSubject;
+import com.vs.foosh.api.model.misc.IThingListSubscriber;
+import com.vs.foosh.api.model.misc.IThingListPublisher;
 import com.vs.foosh.api.model.misc.ListModification;
 import com.vs.foosh.api.model.misc.ModificationType;
 import com.vs.foosh.api.model.misc.Thing;
@@ -23,7 +23,7 @@ import com.vs.foosh.api.services.LinkBuilderService;
  * A container holding all currently registered {@link AbstractDevice}s with a bunch of functions allowing setting, retrieval, and modification of
  * the managed devices.
  * 
- * It implements {@link IThingListSubject} as it can be observed by objects implementing the {@link IThingListObserver}.
+ * It implements {@link IThingListSubject} as it can be observed by objects implementing the {@link IThingListSubscriber}.
  * @see <a href="https://refactoring.guru/design-patterns/observer">Observer Pattern</a>
  * 
  * It implements {@link IThingList}<{@link AbstractDevice}, {@link DeviceDisplayRepresentation}> to give the class capabilities of a list of {@link Thing}s.
@@ -32,7 +32,7 @@ import com.vs.foosh.api.services.LinkBuilderService;
  * @see com.vs.foosh.api.services.PersistentDataService#saveDeviceList()
  * @see com.vs.foosh.api.services.PersistentDataService#hasSavedDeviceList()
  */
-public class DeviceList implements IThingListSubject, IThingList<AbstractDevice, DeviceDisplayRepresentation>, Serializable {
+public class DeviceList implements IThingListPublisher, IThingList<AbstractDevice, DeviceDisplayRepresentation>, Serializable {
 
     /**
      * The list containing all registered {@link AbstractDevice}s.
@@ -48,9 +48,9 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
 
 
     /**
-     * The list of observers of type {@link IThingListObserver}
+     * The list of observers of type {@link IThingListSubscriber}
      */
-    private List<IThingListObserver> observers = new ArrayList<>();
+    private List<IThingListSubscriber> observers = new ArrayList<>();
 
 
     /**
@@ -308,26 +308,26 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
     }
 
     /**
-     * Implement {@link com.vs.foosh.api.model.misc.IThingListSubject#attach(IThingListObserver) attach(IThingListObserver)}.
+     * Implement {@link com.vs.foosh.api.model.misc.IThingListSubject#attach(IThingListSubscriber) attach(IThingListObserver)}.
      * The given observer is added to the list of observers.
      * 
-     * @param observer the {@link IThingListObserver} to be added to {@code observers}
+     * @param observer the {@link IThingListSubscriber} to be added to {@code observers}
      */
     @Override
-    public void attach(IThingListObserver observer) {
+    public void attach(IThingListSubscriber observer) {
         if (!observers.contains(observer)) {
             observers.add(observer);
         }
     }
 
     /**
-     * Implement {@link com.vs.foosh.api.model.misc.IThingListSubject#detach(IThingListObserver) deatch(IThingListObserver)}.
+     * Implement {@link com.vs.foosh.api.model.misc.IThingListSubject#detach(IThingListSubscriber) deatch(IThingListObserver)}.
      * The given observer is removed from the list of observers.
      * 
-     * @param observer the {@link IThingListObserver} to be removed from {@code observers}
+     * @param observer the {@link IThingListSubscriber} to be removed from {@code observers}
      */
     @Override
-    public void detach(IThingListObserver observer) {
+    public void detach(IThingListSubscriber observer) {
         observers.remove(observer);
     }
 
@@ -337,11 +337,11 @@ public class DeviceList implements IThingListSubject, IThingList<AbstractDevice,
      * First, all observers are notified about the modification.
      * Then, the {@code observers} is cleared.
      * 
-     * @param modification the {@link AbstractModification} describing the reason for notifying the {@link IThingListObserver}s
+     * @param modification the {@link AbstractModification} describing the reason for notifying the {@link IThingListSubscriber}s
      */
     @Override
     public void notifyObservers(AbstractModification modification) {
-        for(IThingListObserver observer: observers) {
+        for(IThingListSubscriber observer: observers) {
             observer.update(modification);
         }
 

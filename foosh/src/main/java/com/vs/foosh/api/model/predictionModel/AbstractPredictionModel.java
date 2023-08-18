@@ -10,7 +10,7 @@ import java.util.UUID;
 import com.vs.foosh.api.exceptions.predictionModel.CouldNotFindVariableParameterMappingException;
 import com.vs.foosh.api.exceptions.predictionModel.ParameterMappingAlreadyPresentException;
 import com.vs.foosh.api.model.misc.AbstractModification;
-import com.vs.foosh.api.model.misc.IThingListObserver;
+import com.vs.foosh.api.model.misc.IThingListSubscriber;
 import com.vs.foosh.api.model.misc.ModificationType;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.variable.VariableModification;
@@ -21,7 +21,7 @@ import com.vs.foosh.api.services.LinkBuilderService;
 import com.vs.foosh.api.services.ListService;
 import com.vs.foosh.api.services.PersistentDataService;
 
-public abstract class AbstractPredictionModel extends Thing implements IThingListObserver {
+public abstract class AbstractPredictionModel extends Thing implements IThingListSubscriber {
     private List<UUID> variableIds  = new ArrayList<>();
     private List<String> parameters = new ArrayList<>();
 
