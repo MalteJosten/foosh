@@ -16,17 +16,17 @@ import com.vs.foosh.api.services.LinkBuilderService;
 import com.vs.foosh.api.services.ListService;
 
 public class Variable extends Thing implements IThingListSubscriber, IThingListPublisher {
-    private List<UUID> models  = new ArrayList<>();
-    private List<UUID> devices = new ArrayList<>();
+    protected List<UUID> models  = new ArrayList<>();
+    protected List<UUID> devices = new ArrayList<>();
 
-    private List<LinkEntry> modelLinks     = new ArrayList<>();
-    private List<LinkEntry> deviceLinks    = new ArrayList<>();
-    private List<LinkEntry> links          = new ArrayList<>();
-    private List<LinkEntry> extLinks       = new ArrayList<>();
-    private List<LinkEntry> varDeviceLinks = new ArrayList<>();
-    private List<LinkEntry> varModelLinks  = new ArrayList<>();
+    protected List<LinkEntry> modelLinks     = new ArrayList<>();
+    protected List<LinkEntry> deviceLinks    = new ArrayList<>();
+    protected List<LinkEntry> links          = new ArrayList<>();
+    protected List<LinkEntry> extLinks       = new ArrayList<>();
+    protected List<LinkEntry> varDeviceLinks = new ArrayList<>();
+    protected List<LinkEntry> varModelLinks  = new ArrayList<>();
 
-    private List<IThingListSubscriber> observers = new ArrayList<>();
+    protected List<IThingListSubscriber> observers = new ArrayList<>();
 
     public Variable(String name, List<UUID> modelIds, List<UUID> deviceIds) {
         this.id      = UUID.randomUUID();
@@ -152,7 +152,7 @@ public class Variable extends Thing implements IThingListSubscriber, IThingListP
         updateVarDeviceLinks();
     }
     
-    private void updateSelfLinks() {
+    protected void updateSelfLinks() {
         LinkEntry getId    = new LinkEntry("selfStatic", LinkBuilderService.getVariableLink(this.id.toString()), HttpAction.GET, List.of());
         LinkEntry patchId  = new LinkEntry("selfStatic", LinkBuilderService.getVariableLink(this.id.toString()), HttpAction.PATCH, List.of("application/json"));
         LinkEntry deleteId = new LinkEntry("selfStatic", LinkBuilderService.getVariableLink(this.id.toString()), HttpAction.DELETE, List.of());
@@ -167,7 +167,7 @@ public class Variable extends Thing implements IThingListSubscriber, IThingListP
         links.addAll(List.of(getId, patchId, deleteId, getName, deleteName));
     }
 
-    private void updateDeviceLinks() {
+    protected void updateDeviceLinks() {
         if (deviceLinks != null || !deviceLinks.isEmpty()) {
             deviceLinks.clear();
         }
@@ -177,7 +177,7 @@ public class Variable extends Thing implements IThingListSubscriber, IThingListP
         }
     }
 
-    private void updateModelLinks() {
+    protected void updateModelLinks() {
         if (modelLinks != null || !modelLinks.isEmpty()) {
             modelLinks.clear();
         }
@@ -187,7 +187,7 @@ public class Variable extends Thing implements IThingListSubscriber, IThingListP
         }
     }
 
-    private void updateExtLinks() {
+    protected void updateExtLinks() {
         if (extLinks != null || !extLinks.isEmpty()) {
             extLinks.clear();
         }
@@ -195,7 +195,7 @@ public class Variable extends Thing implements IThingListSubscriber, IThingListP
         extLinks.addAll(ListService.getVariableList().getLinks("variables"));
     }
 
-    private void updateVarDeviceLinks() {
+    protected void updateVarDeviceLinks() {
         LinkEntry get    = new LinkEntry("devices", LinkBuilderService.getVariableDevicesLink(this.id.toString()), HttpAction.GET, List.of());
         LinkEntry post   = new LinkEntry("devices", LinkBuilderService.getVariableDevicesLink(this.id.toString()), HttpAction.POST, List.of("application/json"));
         LinkEntry patch  = new LinkEntry("devices", LinkBuilderService.getVariableDevicesLink(this.id.toString()), HttpAction.PATCH, List.of("application/json-patch+json"));
@@ -213,7 +213,7 @@ public class Variable extends Thing implements IThingListSubscriber, IThingListP
         }
     }
 
-    private void updateVarModelLinks() {
+    protected void updateVarModelLinks() {
         LinkEntry get    = new LinkEntry("models", LinkBuilderService.getVariableModelsLink(this.id.toString()), HttpAction.GET, List.of());
         LinkEntry post   = new LinkEntry("models", LinkBuilderService.getVariableModelsLink(this.id.toString()), HttpAction.POST, List.of("application/json"));
         LinkEntry patch  = new LinkEntry("models", LinkBuilderService.getVariableModelsLink(this.id.toString()), HttpAction.PATCH, List.of("application/json-patch+json"));

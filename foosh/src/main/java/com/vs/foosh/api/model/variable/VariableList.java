@@ -88,6 +88,15 @@ public class VariableList implements Serializable, IThingList<Variable, Variable
 
         throw new VariableNotFoundException(identifier);
     }
+    
+    /**
+     * Return {@code true} if {@code variables} is {@code null} or empty.
+     * 
+     * @return {@code true} if {@code variables} is {@code null} or empty.
+     */
+    public boolean isListEmpty() {
+        return (variables == null || variables.isEmpty());
+    }
 
     public boolean isValidName(String name, UUID id) {
         try {
