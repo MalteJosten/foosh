@@ -35,7 +35,7 @@ public class DeviceService {
 
     public static ResponseEntity<Object> postDevices(SmartHomeCredentials credentials) {
         if (!ListService.getDeviceList().isListEmpty()) {
-            String message = "There are already registered devices! Please use PUT/PATCH on /devices/ to update the list.";
+            String message = "There are already registered devices! Please use PATCH on /devices/ to update the list.";
 
             Map<String, Object> responseBody = new HashMap<>();
             responseBody.put("message", message);
