@@ -28,13 +28,14 @@ public class ApplicationConfig {
     private static final String HOST = "localhost";
     private static final int DEFAULT_PORT = 8080;
     private static int port;
-    private static Path SAVE_DIR_PATH = Paths.get(System.getProperty("user.home") + "/foosh").toAbsolutePath();
+    private static Path SAVE_DIR_PATH = Paths.get(System.getProperty("user.home") + File.separator + "foosh").toAbsolutePath();
 
     private static SmartHomeCredentials smartHomeCredentials;
     
     @Bean
     private static void setup() {
         readInApplicationProperties();
+        PersistentDataService.setup();
         tryToLoadSaveFiles();
     }
 
@@ -48,9 +49,6 @@ public class ApplicationConfig {
 
             String smartHomeCredentialPath = config.getProperty("smartHomeCredentialPath");
             setupSmartHomeCredentials(smartHomeCredentialPath);
-
-            setupSaveDirectory();
-
         } catch (IOException e) {
             port = DEFAULT_PORT;
             System.out.println(
@@ -112,18 +110,6 @@ public class ApplicationConfig {
         }
     }
     
-    private static void setupSaveDirectory()  {
-        File saveDir = new File(Paths.get(System.getProperty("user.home")).toAbsolutePath().toString());
-        saveDir.mkdirs();
-
-        File saveFile = new File(Paths.get(System.getProperty("user.home") + "/save.json").toAbsolutePath().toString());
-        try {
-            saveFile.createNewFile();
-        } catch (IOException e) {
-            System.err.println("[ERROR] Something went wrong while creating empty device save file " + saveFile.getAbsolutePath());
-        }
-    }
-
     private static void tryToLoadSaveFiles() {
         ReadSaveFileResult<DeviceList> devicesResult = PersistentDataService.hasSavedDeviceList();
         if (devicesResult.getSuccess()) {
@@ -152,27 +138,31 @@ public class ApplicationConfig {
         return smartHomeCredentials;
     }
 
+    public static Path getSaveDirPath() {
+        return SAVE_DIR_PATH;
+    }
+
     public static Path getDeviceSavePath() {
-        return Paths.get(SAVE_DIR_PATH.toString() + "/devices.json");
+        return Paths.get(SAVE_DIR_PATH.toString() + File.separator + "devices.json");
     }
 
     public static Path getDeleteDevicePath() {
-        return Paths.get(SAVE_DIR_PATH.toString() + "/devices.old");
+        return Paths.get(SAVE_DIR_PATH.toString() + File.separator + "devices.old");
     }
 
     public static Path getVariableSavePath() {
-        return Paths.get(SAVE_DIR_PATH.toString() + "/variables.json");
+        return Paths.get(SAVE_DIR_PATH.toString() + File.separator + "variables.json");
     }
 
     public static Path getDeleteVariablePath() {
-        return Paths.get(SAVE_DIR_PATH.toString() + "/variables.old");
+        return Paths.get(SAVE_DIR_PATH.toString() + File.separator + "variables.old");
     }
 
     public static Path getPredictionModelSavePath() {
-        return Paths.get(SAVE_DIR_PATH.toString() + "/models.json");
+        return Paths.get(SAVE_DIR_PATH.toString() + File.separator + "models.json");
     }
 
     public static Path getDeletePredictionModelPath() {
-        return Paths.get(SAVE_DIR_PATH.toString() + "/models.old");
+        return Paths.get(SAVE_DIR_PATH.toString() + File.separator + "models.old");
     }
 }

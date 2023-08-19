@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.vs.foosh.api.ApplicationConfig;
 import com.vs.foosh.api.exceptions.misc.CouldNotDeleteCollectionException;
 import com.vs.foosh.api.exceptions.misc.SaveFileNotFoundException;
+import com.vs.foosh.api.exceptions.misc.SavingDirectoryException;
 import com.vs.foosh.api.exceptions.misc.SavingToFileIOException;
 import com.vs.foosh.api.model.device.DeviceList;
 import com.vs.foosh.api.model.misc.ReadSaveFileResult;
@@ -22,6 +23,14 @@ import com.vs.foosh.api.model.variable.VariableList;
 
 @Service
 public class PersistentDataService {
+    public static void setup() {
+        try {
+            Files.createDirectories(ApplicationConfig.getSaveDirPath());
+        } catch (IOException e) {
+            throw new SavingDirectoryException(ApplicationConfig.getSaveDirPath());
+        }
+    }
+
     public static void saveAll() {
         saveDeviceList();
         saveVariableList();
@@ -110,9 +119,9 @@ public class PersistentDataService {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ApplicationConfig.getPredictionModelSavePath().toFile()))) {
             oos.writeObject(ListService.getPredictionModelList());
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
             throw new SaveFileNotFoundException("predictionModels");
         } catch (IOException e) {
-            System.err.println(e);
             throw new SavingToFileIOException("predictionModels");
         }
     } 

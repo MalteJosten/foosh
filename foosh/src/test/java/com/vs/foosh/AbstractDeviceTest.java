@@ -10,7 +10,6 @@ public class AbstractDeviceTest extends AbstractDevice{
 
     @Override
     protected void setObjectFields() {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'setObjectFields'");
     }
     
