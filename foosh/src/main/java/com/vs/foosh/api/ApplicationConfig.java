@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
@@ -12,7 +11,6 @@ import java.util.Properties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vs.foosh.api.model.device.DeviceList;
 import com.vs.foosh.api.model.misc.ReadSaveFileResult;
 import com.vs.foosh.api.model.predictionModel.PredictionModelList;
@@ -39,6 +37,19 @@ public class ApplicationConfig {
         tryToLoadSaveFiles();
     }
 
+    public static void setSmartHomeCredentials(SmartHomeCredentials credentials) {
+        smartHomeCredentials = credentials;
+
+        if (smartHomeCredentials.getUri() == null || smartHomeCredentials.getUri().equals("")) {
+            System.err.println(
+                    "[ERROR] Field 'uri' of the provided SmartHomeCredentials is either empty or non-existent! "
+                            + "This might become a problem when trying to communicate with the SmartHome API.\n"
+                            + "[ADVICE] Please set a correct path and restart the server!");
+        } else {
+            System.out.println("[INFO] Successfully set smart home credentials.");
+        }
+    }
+
     private static void readInApplicationProperties() {
         Properties config = new Properties();
         try (InputStream is = new FileInputStream(new File("src/main/resources/application.properties"))) {
@@ -46,9 +57,6 @@ public class ApplicationConfig {
 
             String serverPort = config.getProperty("server.port");
             setupServerPort(serverPort);
-
-            String smartHomeCredentialPath = config.getProperty("smartHomeCredentialPath");
-            setupSmartHomeCredentials(smartHomeCredentialPath);
         } catch (IOException e) {
             port = DEFAULT_PORT;
             System.out.println(
@@ -88,28 +96,6 @@ public class ApplicationConfig {
         }
     }
 
-    private static void setupSmartHomeCredentials(String path) {
-        if (path == null || path.equals("")) {
-            System.err.println(
-                    "[ERROR] Field 'smartHomeCredentialsPath' (" + path
-                            + ") in application.properties is either empty or non-existent! This might become a problem when trying to communicate with the SmartHome API.\n"
-                            + "[ADVICE] Please set a correct path and restart the server!");
-            return;
-        }
-
-        File secrets = new File(path);
-        if (secrets.exists() && !secrets.isDirectory()) {
-            try {
-                byte[] jsonData = Files.readAllBytes(Paths.get("src/main/java/com/vs/foosh/custom/secrets.json"));
-                ObjectMapper mapper = new ObjectMapper();
-
-                smartHomeCredentials = mapper.readValue(jsonData, SmartHomeCredentials.class);
-            } catch (IOException e) {
-                System.err.println("[ERROR] Something went wrong while reading secrets.json:\n" + e);
-            }
-        }
-    }
-    
     private static void tryToLoadSaveFiles() {
         ReadSaveFileResult<DeviceList> devicesResult = PersistentDataService.hasSavedDeviceList();
         if (devicesResult.getSuccess()) {
