@@ -19,6 +19,7 @@ import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilderService;
 
+// TODO: IThingListPublisher
 /**
  * A container holding all currently registered {@link AbstractDevice}s with a bunch of functions allowing setting, retrieval, and modification of
  * the managed devices.
@@ -33,7 +34,6 @@ import com.vs.foosh.api.services.LinkBuilderService;
  * @see com.vs.foosh.api.services.PersistentDataService#hasSavedDeviceList()
  */
 public class DeviceList implements IThingListPublisher, IThingList<AbstractDevice, DeviceDisplayRepresentation>, Serializable {
-
     /**
      * The list containing all registered {@link AbstractDevice}s.
      */
@@ -65,6 +65,7 @@ public class DeviceList implements IThingListPublisher, IThingList<AbstractDevic
      * 
      * @param deviceList the {@link List} with elements of type {@link AbstractDevice}
      */
+    @Override
     public void setList(List<AbstractDevice> deviceList) {
         if (devices != null) {
             clearList();
@@ -78,6 +79,7 @@ public class DeviceList implements IThingListPublisher, IThingList<AbstractDevic
      * 
      * @return a {@link List} with elements of type {@link AbstractDevice}
      */
+    @Override
     public List<AbstractDevice> getList() {
         return this.devices;
     }
@@ -87,6 +89,7 @@ public class DeviceList implements IThingListPublisher, IThingList<AbstractDevic
      * 
      * @return a {@link List} with elements of type {@link AbstractDevice} as a {@link Thing}
      */
+    @Override
     public List<Thing> getAsThings() {
         List<Thing> things = new ArrayList<>();
 
@@ -121,6 +124,7 @@ public class DeviceList implements IThingListPublisher, IThingList<AbstractDevic
      * 
      * @see #notifyObservers(AbstractModification)
      */
+    @Override
     public void clearList() {
         notifyObservers(new ListModification(ModificationType.DELETION)); 
         this.devices.clear();
@@ -131,6 +135,7 @@ public class DeviceList implements IThingListPublisher, IThingList<AbstractDevic
      * 
      * @return a {@link List} with elements of type {@link DeviceDisplayRepresentation}
      */
+    @Override
     public List<DeviceDisplayRepresentation> getDisplayListRepresentation() {
         List<DeviceDisplayRepresentation> displayRepresentation = new ArrayList<>();
 
@@ -151,12 +156,13 @@ public class DeviceList implements IThingListPublisher, IThingList<AbstractDevic
     }
 
     /**
-     * Search for a device in {@code devices} based on its {@code id} and {@code name}.
+     * Search for a device in {@code devices} based on its {@code id} or {@code name}.
      * 
      * @param identifier the identifier to match each {@link AbstractDevice}'s {@code id} and {@code name} against
      * @return the first matched {@link AbstractDevice} or throw a {@link DeviceIdNotFoundException} if no {@link AbstractDevice}
      * with matching fields was found.
      */
+    @Override
     public AbstractDevice getThing(String identifier) {
         for (AbstractDevice device: getList()) {
             if (device.getId().toString().equals(identifier) || device.getName().equalsIgnoreCase(identifier)) {
@@ -175,6 +181,7 @@ public class DeviceList implements IThingListPublisher, IThingList<AbstractDevic
      * 
      * @param device the {@link AbstractDevice} to add to {@code devices} 
      */
+    @Override
     public void addThing(AbstractDevice device) {
         if (isValidName(device.getName(), device.getId())) {
             this.devices.add(device);
@@ -188,6 +195,7 @@ public class DeviceList implements IThingListPublisher, IThingList<AbstractDevic
      * 
      * @param identifier either the name or the uuid of the {@link AbstractDevice} that should be removed from {@code devices}
      */
+    @Override
     public void deleteThing(String identifier) {
         for (AbstractDevice device: getList()) {
             if (device.getId().toString().equals(identifier) || device.getName().equalsIgnoreCase(identifier)) {
@@ -208,6 +216,7 @@ public class DeviceList implements IThingListPublisher, IThingList<AbstractDevic
      * @param uuid the {@code id} of the {@link AbstractDevice} under test
      * @return {@code true} if the name is unique
      */
+    @Override
     public boolean isValidName(String name, UUID uuid) {
         try {
             // Check whether the name is a UUID
@@ -285,6 +294,7 @@ public class DeviceList implements IThingListPublisher, IThingList<AbstractDevic
      * @param label the label which is used to construct each {@link LinkEntry}
      * @return the list with elements of type {@link LinkEntry} of currently available HTTP endpoints for {@code /api/devices/}
      */
+    @Override
     public List<LinkEntry> getLinks(String label) {
         LinkEntry get    = new LinkEntry(label, LinkBuilderService.getDeviceListLink(), HttpAction.GET, List.of());
         LinkEntry post   = new LinkEntry(label, LinkBuilderService.getDeviceListLink(), HttpAction.POST, List.of("application/json"));
@@ -301,6 +311,7 @@ public class DeviceList implements IThingListPublisher, IThingList<AbstractDevic
      * Update the links of all currently registered devices and call {@link com.vs.foosh.api.model.device.AbstractDevice#setLinks() setLinks()}
      * for every {@link AbstractDevice} in {@code devices}.
      */
+    @Override
     public void updateLinks() {
         for (AbstractDevice device: getList()) {
             device.setLinks();

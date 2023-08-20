@@ -5,11 +5,29 @@ import java.util.UUID;
 
 import com.vs.foosh.api.exceptions.predictionModel.MalformedParameterMappingException;
 
+/**
+ * A class containing a request to change a {@link ParameterMapping}.
+ */
 public class PredictionModelMappingPatchRequest {
+    /**
+     * The name of the parameter.
+     */
     private String parameter;
+    
+    /**
+     * The {@link UUID} of the {@link AbstractDevice}.
+     */
     private UUID deviceId;
 
 
+    /**
+     * Create a {@code PredictionModelMappingPatchRequest}.
+     * 
+     * If the request is malformed, a {@link MalformedParameterMappingException} is thrown.
+     * 
+     * @param modelId the identifier of the {@link AbstractPredicitonModel}
+     * @param mapping a {@link Map} containing the mapping from {@code parameter} to {@code deviceId}
+     */
     public PredictionModelMappingPatchRequest(String modelId, Map<String, String> mapping) {
         String pParameter = mapping.get("parameter");
         if (pParameter == null) {
@@ -32,10 +50,20 @@ public class PredictionModelMappingPatchRequest {
         }
     }
 
+    /**
+     * Return the parameter name.
+     * 
+     * @return the field {@code parameter}
+     */
     public String getParameter() {
         return this.parameter;
     }
 
+    /**
+     * Return the device ID.
+     * 
+     * @return the field {@code deviceId}
+     */
     public UUID getDeviceId() {
         return this.deviceId;
     }
