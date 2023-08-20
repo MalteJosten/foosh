@@ -29,7 +29,7 @@ public class PredictionModelSR extends AbstractPredictionModel {
 
     @Override
     public List<SmartHomeInstruction> makePrediction(UUID variableId, String value) {
-        List<ParameterMapping> mappings = getMappings(variableId);
+        List<ParameterMapping> mappings = getMappings();
 
         if (mappings.isEmpty()) {
             throw new CouldNotMakePredictionException(

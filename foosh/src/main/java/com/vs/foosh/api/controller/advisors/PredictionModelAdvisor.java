@@ -12,6 +12,7 @@ import com.vs.foosh.api.exceptions.predictionModel.CouldNotFindVariableParameter
 import com.vs.foosh.api.exceptions.predictionModel.MalformedParameterMappingException;
 import com.vs.foosh.api.exceptions.predictionModel.ParameterMappingAlreadyPresentException;
 import com.vs.foosh.api.exceptions.predictionModel.ParameterMappingDeviceException;
+import com.vs.foosh.api.exceptions.predictionModel.ParameterMappingNotFoundException;
 import com.vs.foosh.api.exceptions.predictionModel.PredictionModelNameIsNotUniqueException;
 import com.vs.foosh.api.exceptions.predictionModel.PredictionModelNameMustNotBeAnUuidException;
 import com.vs.foosh.api.exceptions.predictionModel.PredictionModelNotFoundException;
@@ -25,6 +26,7 @@ public class PredictionModelAdvisor extends ResponseEntityExceptionHandler {
         CouldNotFindVariableParameterMappingException.class,
         ParameterMappingDeviceException.class,
         ParameterMappingAlreadyPresentException.class,
+        ParameterMappingNotFoundException.class,
         PredictionModelNotFoundException.class,
         PredictionModelValueException.class,
         PredictionModelNameMustNotBeAnUuidException.class,

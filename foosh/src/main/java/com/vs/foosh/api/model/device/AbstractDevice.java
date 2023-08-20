@@ -33,12 +33,12 @@ public abstract class AbstractDevice extends Thing {
 
 
     /**
-     * The list of {@link LinkEntry} which all point to the device's own API URIs
+     * The {@link List} of {@link LinkEntry} which all point to the device's own API URIs
      */
     protected List<LinkEntry> links = new ArrayList<>();
 
     /**
-     * The list of {@link LinkEntry} which all point to the device collection's API URIs
+     * The {@link List} of {@link LinkEntry} which all point to the device collection's API URIs
      */
     protected List<LinkEntry> extLinks = new ArrayList<>();
 
