@@ -26,6 +26,9 @@ import com.vs.foosh.api.services.DeviceService;
 import com.vs.foosh.api.services.LinkBuilderService;
 import com.vs.foosh.api.services.ListService;
 
+/**
+ * A {@link @RestController} that handles HTTP requests for the routes {@code /api/devices/} and {@code /api/devices/{id}}.
+ */
 @RestController
 @RequestMapping(value="/api/devices")
 public class DeviceController {
