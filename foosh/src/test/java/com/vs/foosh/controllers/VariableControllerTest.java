@@ -48,7 +48,7 @@ public class VariableControllerTest {
     }
 
     @Test
-    void givenNoDevices_whenGetVars_thenGetEmptyVarArray() throws Exception {
+    void givenNoVariables_whenGetVars_thenGetEmptyVarArray() throws Exception {
         ListService.getVariableList().clearList();
         
         mvc.perform(get("/api/vars/"))
