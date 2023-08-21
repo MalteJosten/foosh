@@ -70,6 +70,12 @@ public class MyPredictionModel extends AbstractPredictionModel {
         int nowHours   = now.get(Calendar.HOUR_OF_DAY);
         int nowMinutes = now.get(Calendar.MINUTE);
 
+        // We need to substract 2 hours in order to convert hours from UTC+2 to UTC+0
+        nowHours -= 2;
+        if (nowHours < 0) {
+            nowHours = 24 - nowHours;
+        }
+
         int minutesOfDay = nowHours * 60 + nowMinutes;
 
         float offValue = lampOffValue((float) minutesOfDay);
