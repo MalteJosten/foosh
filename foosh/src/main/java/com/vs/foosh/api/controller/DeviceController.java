@@ -42,6 +42,8 @@ public class DeviceController {
     /**
      * Handle incoming {@code GET} requests on route {@code /api/devices/} using {@link GetMapping}.
      * 
+     * Retrieve the list of {@link AbstractDevice}s.
+     * 
      * @return the HTTP response as a {@link ResponseEntity}
      */
     @GetMapping(value = "/",
@@ -52,6 +54,8 @@ public class DeviceController {
 
     /**
      * Handle incoming {@code POST} requests on route {@code /api/devices/} using {@link PostMapping}.
+     * 
+     *  Retrieve the list of smart home devices from the smart home API and store it.
      * 
      * @apiNote It only accepts {@code application/json} {@link MediaType}s.
      * 
@@ -96,6 +100,8 @@ public class DeviceController {
 
     /**
      * Handle incoming {@code DELETE} requests on route {@code /api/devices} using {@link DeleteMapping}.
+     * 
+     * Delete the list of {@link AbstractDevice}s.
      *
      * @return the HTTP response as a {@link ResponseEntity}
      */
@@ -111,6 +117,8 @@ public class DeviceController {
 
     /**
      * Handle incoming {@code GET} requests on route {@code /api/devices/{id}} using {@link GetMapping}.
+     * 
+     * Get a specific {@link AbstractDevice}.
      * 
      * @apiNote {id} in the route can be either the {@link AbstractDevice}'s {@code name} or {@code id}.
      * 
@@ -168,6 +176,8 @@ public class DeviceController {
 
     /**
      * Handle incoming {@code PATCH} requests on route {@code /api/devices/{id}} using {@link PatchMapping}.
+     * 
+     * Patch (Edit) the name of a specific {@link AbstractDevice}.
      * 
      * @apiNote It only accepts {@code application/json-patch+json} Content-Type.
      * @see <a href="https://www.rfc-editor.org/rfc/rfc6902">RFC 6902: JavaScript Object Notation Patch</a>
