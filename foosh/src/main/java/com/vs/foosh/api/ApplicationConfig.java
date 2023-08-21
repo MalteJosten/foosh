@@ -19,7 +19,7 @@ import com.vs.foosh.api.model.web.SmartHomeCredentials;
 import com.vs.foosh.api.services.LinkBuilderService;
 import com.vs.foosh.api.services.ListService;
 import com.vs.foosh.api.services.PersistentDataService;
-import com.vs.foosh.custom.PredictionModelSR;
+import com.vs.foosh.custom.MyPredictionModel;
 
 @Configuration
 public class ApplicationConfig {
@@ -114,7 +114,7 @@ public class ApplicationConfig {
             ListService.setPredictionModelList(modelResult.getData());
             System.out.println("[INFO] Found and loaded predictionModel save file.");
         } else {
-            ListService.getPredictionModelList().addThing(new PredictionModelSR());
+            ListService.getPredictionModelList().addThing(new MyPredictionModel());
             PersistentDataService.savePredictionModelList();
             System.out.println("[INFO] Did not found predictionModel save file. Created predictionModels from source.");
         }
