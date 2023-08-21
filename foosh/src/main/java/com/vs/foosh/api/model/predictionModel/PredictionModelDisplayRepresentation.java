@@ -42,7 +42,7 @@ public class PredictionModelDisplayRepresentation {
     /**
      * Return the list of links.
      * 
-     * {@link @JsonProperty} is used to name the field {@code links} "_links" in (de)serialization.
+     * {@link JsonProperty} is used to name the field {@code links} "_links" in (de)serialization.
      * 
      * @return the field {@code links}
      */

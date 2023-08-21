@@ -29,7 +29,7 @@ public class PredictionModelMappingPostRequest {
      * Create an empty {@code PredictionModelMappingPostRequest}.
      * 
      * It is used by Spring to create a {@code PredictionModelMappingPostRequest} if it is passed as
-     * a {@link @RequestBody} into a HTTP function.
+     * a {@link RequestBody} into a HTTP function.
      */
     public PredictionModelMappingPostRequest() {}
 

@@ -27,7 +27,7 @@ import com.vs.foosh.api.services.LinkBuilderService;
 import com.vs.foosh.api.services.ListService;
 
 /**
- * A {@link @RestController} that handles HTTP requests for the routes {@code /api/devices/} and {@code /api/devices/{id}}.
+ * A {@link RestController} that handles HTTP requests for the routes {@code /api/devices/} and {@code /api/devices/{id}}.
  */
 @RestController
 @RequestMapping(value="/api/devices")
@@ -40,7 +40,7 @@ public class DeviceController {
     //
 
     /**
-     * Handle incoming {@code GET} requests on route {@code /api/devices/} using {@link @GetMapping}.
+     * Handle incoming {@code GET} requests on route {@code /api/devices/} using {@link GetMapping}.
      * 
      * @return the HTTP response as a {@link ResponseEntity}
      */
@@ -51,7 +51,7 @@ public class DeviceController {
     }
 
     /**
-     * Handle incoming {@code POST} requests on route {@code /api/devices/} using {@link @PostMapping}.
+     * Handle incoming {@code POST} requests on route {@code /api/devices/} using {@link PostMapping}.
      * 
      * @apiNote It only accepts {@code application/json} {@link MediaType}s.
      * 
@@ -69,7 +69,7 @@ public class DeviceController {
     }
 
     /**
-     * Handle incoming {@code PUT} requests on route {@code /api/devices/} using {@link @PutMapping}.
+     * Handle incoming {@code PUT} requests on route {@code /api/devices/} using {@link PutMapping}.
      * 
      * @apiNote Using {@code PUT} on this route is not allowed. Hence, a {@link HttpMappingNotAllowedException} is thrown.
      */
@@ -82,7 +82,7 @@ public class DeviceController {
     }
 
     /**
-     * Handle incoming {@code PATCH} requests on route {@code /api/devices} using {@link @PatchMapping}.
+     * Handle incoming {@code PATCH} requests on route {@code /api/devices} using {@link PatchMapping}.
      * 
      * @apiNote Using {@code PATCH} on this route is not allowed. Hence, a {@link HttpMappingNotAllowedException} is thrown.
      */
@@ -95,7 +95,7 @@ public class DeviceController {
     }
 
     /**
-     * Handle incoming {@code DELETE} requests on route {@code /api/devices} using {@link @DeleteMapping}.
+     * Handle incoming {@code DELETE} requests on route {@code /api/devices} using {@link DeleteMapping}.
      *
      * @return the HTTP response as a {@link ResponseEntity}
      */
@@ -110,7 +110,7 @@ public class DeviceController {
     //
 
     /**
-     * Handle incoming {@code GET} requests on route {@code /api/devices/{id}} using {@link @GetMapping}.
+     * Handle incoming {@code GET} requests on route {@code /api/devices/{id}} using {@link GetMapping}.
      * 
      * @apiNote {id} in the route can be either the {@link AbstractDevice}'s {@code name} or {@code id}.
      * 
@@ -124,7 +124,7 @@ public class DeviceController {
     }
 
     /**
-     * Handle incoming {@code POST} requests on route {@code /api/devices/{id}} using {@link @PostMapping}.
+     * Handle incoming {@code POST} requests on route {@code /api/devices/{id}} using {@link PostMapping}.
      * 
      * @apiNote Using {@code POST} on this route is not allowed. Hence, a {@link HttpmAppingNotAllowedException} is thrown.
      *
@@ -145,7 +145,7 @@ public class DeviceController {
     }
 
     /**
-     * Handle incoming {@code PUT} requests on route {@code /api/devices/{id}} using {@link @PutMapping}.
+     * Handle incoming {@code PUT} requests on route {@code /api/devices/{id}} using {@link PutMapping}.
      * 
      * @apiNote Using {@code PUT} on this route is not allowed. Hence, a {@link HttpmAppingNotAllowedException} is thrown.
      *
@@ -167,7 +167,7 @@ public class DeviceController {
     }
 
     /**
-     * Handle incoming {@code PATCH} requests on route {@code /api/devices/{id}} using {@link @PatchMapping}.
+     * Handle incoming {@code PATCH} requests on route {@code /api/devices/{id}} using {@link PatchMapping}.
      * 
      * @apiNote It only accepts {@code application/json-patch+json} Content-Type.
      * @see <a href="https://www.rfc-editor.org/rfc/rfc6902">RFC 6902: JavaScript Object Notation Patch</a>
@@ -185,7 +185,7 @@ public class DeviceController {
     }
 
     /**
-     * Handle incoming {@code DELETE} requests on route {@code /api/devices/{id}} using {@link @DeleteMapping}.
+     * Handle incoming {@code DELETE} requests on route {@code /api/devices/{id}} using {@link DeleteMapping}.
      * 
      * @apiNote Using {@code DELETE} on this route is not allowed. Hence, a {@link HttpmAppingNotAllowedException} is thrown.
      *

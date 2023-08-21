@@ -56,7 +56,7 @@ public class ParameterMapping implements Serializable {
     /**
      * Return the mapping between {@code parameter} and {@code deviceId} ({@link AbstractDevice}) as a {@link Map}.
      * 
-     * {@link @JsonIgnore} so this method is ignored when (de)serializing.
+     * {@link JsonIgnore} so this method is ignored when (de)serializing.
      * 
      * @return a {@link Map} with one entry
      */

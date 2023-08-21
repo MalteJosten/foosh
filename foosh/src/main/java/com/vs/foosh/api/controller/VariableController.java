@@ -28,7 +28,7 @@ import com.vs.foosh.api.services.ListService;
 import com.vs.foosh.api.services.VariableService;
 
 /**
- * A {@link @RestController} that handles HTTP requests for the routes {@code /api/vars/}, {@code /api/vars/{id}}, {@code /api/vars/{id}/devices/}, and {@code /api/vars/{id}/models/}.
+ * A {@link RestController} that handles HTTP requests for the routes {@code /api/vars/}, {@code /api/vars/{id}}, {@code /api/vars/{id}/devices/}, and {@code /api/vars/{id}/models/}.
  */
 @RestController
 @RequestMapping(value = "/api/vars")
@@ -41,7 +41,7 @@ public class VariableController {
     ///
 
     /**
-     * Handle incoming {@code GET} requests on route {@code /api/vars/} using {@link @GetMapping}.
+     * Handle incoming {@code GET} requests on route {@code /api/vars/} using {@link GetMapping}.
      * 
      * Retrieve the list of {@link Variable}s.
      * 
@@ -54,7 +54,7 @@ public class VariableController {
     }
 
     /**
-     * Handle incoming {@code POST} requests on route {@code /api/vars/} using {@link @PostMapping}.
+     * Handle incoming {@code POST} requests on route {@code /api/vars/} using {@link PostMapping}.
      * 
      * One can post multiple {@link Variable}s at once.
      * 
@@ -73,7 +73,7 @@ public class VariableController {
     }
 
     /**
-     * Handle incoming {@code POST} requests on route {@code /api/vars/} using {@link @PostMapping}.
+     * Handle incoming {@code POST} requests on route {@code /api/vars/} using {@link PostMapping}.
      * 
      * One can post a single {@link Variable}.
      * 
@@ -92,7 +92,7 @@ public class VariableController {
     }
 
     /**
-     * Handle incoming {@code PUT} requests on route {@code /api/vars/} using {@link @PutMapping}.
+     * Handle incoming {@code PUT} requests on route {@code /api/vars/} using {@link PutMapping}.
      * 
      * @apiNote Using {@code PUT} on this route is not allowed. Hence, a {@link HttpMappingNotAllowedException} is thrown.
      */
@@ -105,7 +105,7 @@ public class VariableController {
     }
 
     /**
-     * Handle incoming {@code PATCH} requests on route {@code /api/vars/} using {@link @PatchMapping}.
+     * Handle incoming {@code PATCH} requests on route {@code /api/vars/} using {@link PatchMapping}.
      * 
      * @apiNote Using {@code PATCH} on this route is not allowed. Hence, a {@link HttpMappingNotAllowedException} is thrown.
      */
@@ -118,7 +118,7 @@ public class VariableController {
     }
 
     /**
-     * Handle incoming {@code DELETE} requests on route {@code /api/vars} using {@link @DeleteMapping}.
+     * Handle incoming {@code DELETE} requests on route {@code /api/vars} using {@link DeleteMapping}.
      * 
      * Delete the list of {@link Variable}s.
      *
@@ -135,7 +135,7 @@ public class VariableController {
     ///
 
     /**
-     * Handle incoming {@code GET} requests on route {@code /api/vars/{id}} using {@link @GetMapping}.
+     * Handle incoming {@code GET} requests on route {@code /api/vars/{id}} using {@link GetMapping}.
      * 
      * Get a specific {@link Variable}.
      * 
@@ -151,7 +151,7 @@ public class VariableController {
     }
 
     /**
-     * Handle incoming {@code POST} requests on route {@code /api/vars/{id}} using {@link @PostMapping}.
+     * Handle incoming {@code POST} requests on route {@code /api/vars/{id}} using {@link PostMapping}.
      * 
      * Retrieve (and execute) smart home API instructions, given a desired value of a {@link Variable}.
      * 
@@ -171,7 +171,7 @@ public class VariableController {
     }
 
     /**
-     * Handle incoming {@code PUT} requests on route {@code /api/vars/{id}} using {@link @PutMapping}.
+     * Handle incoming {@code PUT} requests on route {@code /api/vars/{id}} using {@link PutMapping}.
      * 
      * @apiNote Using {@code PUT} on this route is not allowed. Hence, a {@link HttpMappingNotAllowedException} is thrown.
      * @apiNote {id} in the route can be either the {@link Variable}'s {@code name} or {@code id}.
@@ -187,7 +187,7 @@ public class VariableController {
     }
 
     /**
-     * Handle incoming {@code PATCH} requests on route {@code /api/vars/{id}} using {@link @PatchMapping}.
+     * Handle incoming {@code PATCH} requests on route {@code /api/vars/{id}} using {@link PatchMapping}.
      * 
      * Patch (Edit) the name of a specific {@link Variable}.
      * 
@@ -208,7 +208,7 @@ public class VariableController {
     }
 
     /**
-     * Handle incoming {@code DELETE} requests on route {@code /api/vars/{id}} using {@link @DeleteMapping}.
+     * Handle incoming {@code DELETE} requests on route {@code /api/vars/{id}} using {@link DeleteMapping}.
      * 
      * Delete a specific {@link Variable}.
      * 
@@ -229,7 +229,7 @@ public class VariableController {
     ///
     
     /**
-     * Handle incoming {@code GET} requests on route {@code /api/vars/{id}/devices/} using {@link @GetMapping}.
+     * Handle incoming {@code GET} requests on route {@code /api/vars/{id}/devices/} using {@link GetMapping}.
      * 
      * Retrieve the list of {@link AbstractDevice}s linked to a specific {@link Variable}.
      * 
@@ -245,7 +245,7 @@ public class VariableController {
     }
 
     /**
-     * Handle incoming {@code POST} requests on route {@code /api/vars/{id}/devices/} using {@link @PostMapping}.
+     * Handle incoming {@code POST} requests on route {@code /api/vars/{id}/devices/} using {@link PostMapping}.
      * 
      * Set and link a list of {@link AbstractDevice}s to a specific {@link Variable}.
      * 
@@ -265,7 +265,7 @@ public class VariableController {
     }
 
     /**
-     * Handle incoming {@code PUT} requests on route {@code /api/vars/{id}/devices/} using {@link @PutMapping}.
+     * Handle incoming {@code PUT} requests on route {@code /api/vars/{id}/devices/} using {@link PutMapping}.
      * 
      * @apiNote Using {@code PUT} on this route is not allowed. Hence, a {@link HttpMappingNotAllowedException} is thrown.
      * @apiNote {id} in the route can be either the {@link Variable}'s {@code name} or {@code id}.
@@ -287,7 +287,7 @@ public class VariableController {
     }
 
     /**
-     * Handle incoming {@code PATCH} requests on route {@code /api/vars/{id}/devices/} using {@link @PatchMapping}.
+     * Handle incoming {@code PATCH} requests on route {@code /api/vars/{id}/devices/} using {@link PatchMapping}.
      * 
      * Patch (Edit) the list of linked {@link AbstractDevice}s for a specific {@link Variable}.
      * 
@@ -308,7 +308,7 @@ public class VariableController {
     }
 
     /**
-     * Handle incoming {@code DELETE} requests on route {@code /api/vars/{id}/devices/} using {@link @DeleteMapping}.
+     * Handle incoming {@code DELETE} requests on route {@code /api/vars/{id}/devices/} using {@link DeleteMapping}.
      * 
      * Delete the list of {@link AbstractDevice}s linked to a specific {@link Variable}.
      * 
