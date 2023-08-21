@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.vs.foosh.VariableTest;
 import com.vs.foosh.api.services.ListService;
+import com.vs.foosh.api.services.PersistentDataService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
@@ -25,6 +27,13 @@ public class VariableControllerTest {
     
     @Autowired
     private MockMvc mvc;
+
+    @BeforeAll
+    static void setup() {
+        ListService.getDeviceList().clearList();
+        ListService.getVariableList().clearList();
+        PersistentDataService.hasSavedPredictionModelList();
+    }
 
     ///
     /// GET /api/vars/

@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -17,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.vs.foosh.api.services.ListService;
+import com.vs.foosh.api.services.PersistentDataService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
@@ -24,6 +26,13 @@ public class PredictionModelControllerTest {
     
     @Autowired
     private MockMvc mvc;
+
+    @BeforeAll
+    static void setup() {
+        ListService.getDeviceList().clearList();
+        ListService.getVariableList().clearList();
+        PersistentDataService.hasSavedPredictionModelList();
+    }
 
     ///
     /// GET api/models/
@@ -53,9 +62,11 @@ public class PredictionModelControllerTest {
         mvc.perform(get("/api/models/"))
             .andExpect(status().isOk())
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.models").isArray())
-            .andExpect(jsonPath("$.models").isEmpty())
+            .andExpect(jsonPath("$.predictionModels").isArray())
+            .andExpect(jsonPath("$.predictionModels").isEmpty())
             .andExpect(jsonPath("$._links").exists());
+
+        PersistentDataService.hasSavedPredictionModelList();
     }
 
     ///
