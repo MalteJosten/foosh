@@ -221,6 +221,51 @@ public class VariableControllerTest {
     /// GET /api/vars/{id}
     ///
 
+    @Test
+    void givenAnEmptyList_whenGetVar_thenGetProblemDetailWithStatus404() throws Exception {
+        ListService.getVariableList().clearList();
+
+        mvc.perform(get("/api/vars/test-var"))
+            .andExpect(content().contentTypeCompatibleWith("application/problem+json"))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void givenAListWithVariable_whenGetVarWithUuid_thenGetVariable() throws Exception {
+        ListService.getVariableList().clearList();
+        VariableTest variable = new VariableTest("test-var");
+        ListService.getVariableList().addThing(variable);
+
+        mvc.perform(get("/api/vars/" + variable.getId()))
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.variable") .exists())
+            .andExpect(jsonPath("$.variable.id").value(variable.getId().toString()))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    void givenAListWithVariable_whenGetVarWithName_thenGetVariable() throws Exception {
+        ListService.getVariableList().clearList();
+        VariableTest variable = new VariableTest("test-var");
+        ListService.getVariableList().addThing(variable);
+
+        mvc.perform(get("/api/vars/" + variable.getName()))
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.variable").exists())
+            .andExpect(jsonPath("$.variable.name").value(variable.getName()))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    void givenAListWithoutVariable_whenGetVarWithName_thenGetProblemDetailWithStatus404() throws Exception {
+        ListService.getVariableList().clearList();
+        ListService.getVariableList().addThing(new VariableTest("test-var"));
+
+        mvc.perform(get("/api/vars/var-name"))
+            .andExpect(content().contentTypeCompatibleWith("application/problem+json"))
+            .andExpect(status().isNotFound());
+    }
+
     ///
     /// POST /api/vars/{id}
     ///
