@@ -96,13 +96,13 @@ public class MyPredictionModel extends AbstractPredictionModel {
         if (time <= 210) {
             return 1.25f;
         } else if (time <= 420) {
-            return 0.3602f * time - 74.34f;
+            return 0.3602f   * time - 74.34f;
         } else if (time <= 980) {
-            return 0.0295f * time + 64.57f;
+            return 0.0295f   * time + 64.57f;
         } else if (time <= 1170) {
             return -0.04815f * time + 565.3242f;
         } else {
-            return -0.0029f * time + 5.38f;
+            return -0.0029f  * time + 5.38f;
         }
     }
 
