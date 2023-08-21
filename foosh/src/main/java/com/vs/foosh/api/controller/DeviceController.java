@@ -173,6 +173,7 @@ public class DeviceController {
      * @see <a href="https://www.rfc-editor.org/rfc/rfc6902">RFC 6902: JavaScript Object Notation Patch</a>
      *
      * @param id the identifier of the the {@link Variable}
+     * @param patchMappings a Json Patch Document
      * 
      * @return the HTTP response as a {@link ResponseEntity}
      */

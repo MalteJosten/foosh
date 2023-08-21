@@ -27,20 +27,43 @@ import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.ListService;
 import com.vs.foosh.api.services.VariableService;
 
+/**
+ * A {@link @RestController} that handles HTTP requests for the routes {@code /api/vars/}, {@code /api/vars/{id}}, {@code /api/vars/{id}/devices/}, and {@code /api/vars/{id}/models/}.
+ */
 @RestController
 @RequestMapping(value = "/api/vars")
 public class VariableController {
+
+    private final String route = "/api/vars/";
 
     ///
     /// Variable Collection
     ///
 
+    /**
+     * Handle incoming {@code GET} requests on route {@code /api/vars/} using {@link @GetMapping}.
+     * 
+     * Retrieve the list of {@link Variable}s.
+     * 
+     * @return the HTTP response as a {@link ResponseEntity}
+     */
     @GetMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getVars() {
         return VariableService.getVariables();
     }
 
+    /**
+     * Handle incoming {@code POST} requests on route {@code /api/vars/} using {@link @PostMapping}.
+     * 
+     * One can post multiple {@link Variable}s at once.
+     * 
+     * @apiNote It only accepts {@code application/json} {@link MediaType}s.
+     *          It is called with the header field {@code batch} set to {@code true}.
+     * 
+     * @param requests the list with elements of type {@link VariablePostRequest}
+     * @return the HTTP response as a {@link ResponseEntity}
+     */
     @PostMapping(value = "/",
             headers  = "batch=true",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -49,6 +72,17 @@ public class VariableController {
         return VariableService.addVariables(requests);
     }
 
+    /**
+     * Handle incoming {@code POST} requests on route {@code /api/vars/} using {@link @PostMapping}.
+     * 
+     * One can post a single {@link Variable}.
+     * 
+     * @apiNote It only accepts {@code application/json} {@link MediaType}s.
+     *          It is called with the header field {@code batch} set to {@code false}.
+     * 
+     * @param request the {@link VariablePostRequest}
+     * @return the HTTP response as a {@link ResponseEntity}
+     */
     @PostMapping(value = "/",
             headers  = "batch=false",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -57,23 +91,39 @@ public class VariableController {
         return VariableService.addVariable(request);
     }
 
-
+    /**
+     * Handle incoming {@code PUT} requests on route {@code /api/vars/} using {@link @PutMapping}.
+     * 
+     * @apiNote Using {@code PUT} on this route is not allowed. Hence, a {@link HttpMappingNotAllowedException} is thrown.
+     */
     @PutMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> putVars() {
+    public void putVars() {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /vars/! Use DELETE and POST to replace the list of variables.",
+                "You cannot use PUT on " + route + "! Use DELETE and POST to replace the list of variables.",
                 ListService.getVariableList().getLinks("self"));
     }
 
+    /**
+     * Handle incoming {@code PATCH} requests on route {@code /api/vars/} using {@link @PatchMapping}.
+     * 
+     * @apiNote Using {@code PATCH} on this route is not allowed. Hence, a {@link HttpMappingNotAllowedException} is thrown.
+     */
     @PatchMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> patchVars() {
+    public void patchVars() {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PATCH on /vars/! Either use PATCH on /vars/{id} to update a variable's name or DELETE and POST on /vars/ to replace the list of variables.",
+                "You cannot use PATCH on " + route + "! Either use PATCH on /vars/{id} to update a variable's name or DELETE and POST on /vars/ to replace the list of variables.",
                 ListService.getVariableList().getLinks("self"));
     }
 
+    /**
+     * Handle incoming {@code DELETE} requests on route {@code /api/vars} using {@link @DeleteMapping}.
+     * 
+     * Delete the list of {@link Variable}s.
+     *
+     * @return the HTTP response as a {@link ResponseEntity}
+     */
     @DeleteMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteVars() {
@@ -84,13 +134,35 @@ public class VariableController {
     /// Variable
     ///
 
+    /**
+     * Handle incoming {@code GET} requests on route {@code /api/vars/{id}} using {@link @GetMapping}.
+     * 
+     * Get a specific {@link Variable}.
+     * 
+     * @apiNote {id} in the route can be either the {@link Variable}'s {@code name} or {@code id}.
+     * 
+     * @param id the identifier of the the {@link Variable}
+     * @return the HTTP repsonse as a {@link ResponseEntity}
+     */
     @GetMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getVar(@PathVariable("id") String id) {
         return VariableService.getVariable(id);
     }
 
-    /// Note: Default value for field 'execute': false
+    /**
+     * Handle incoming {@code POST} requests on route {@code /api/vars/{id}} using {@link @PostMapping}.
+     * 
+     * Retrieve (and execute) smart home API instructions, given a desired value of a {@link Variable}.
+     * 
+     * @apiNote It only accepts {@code application/json} {@link MediaType}s.
+     * @apiNote {id} in the route can be either the {@link Variable}'s {@code name} or {@code id}.
+     * 
+     * @param id the identifier of the the {@link Variable}
+     * @param request the {@link VariablePredictionRequest}
+     * 
+     * @return the HTTP repsonse as a {@link ResponseEntity}
+     */
     @PostMapping(value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -98,14 +170,36 @@ public class VariableController {
         return VariableService.startVariablePrediction(id, request);
     }
 
+    /**
+     * Handle incoming {@code PUT} requests on route {@code /api/vars/{id}} using {@link @PutMapping}.
+     * 
+     * @apiNote Using {@code PUT} on this route is not allowed. Hence, a {@link HttpMappingNotAllowedException} is thrown.
+     * @apiNote {id} in the route can be either the {@link Variable}'s {@code name} or {@code id}.
+     * 
+     * @param id the identifier of the the {@link Variable}
+     */
     @PutMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> putVar(@PathVariable("id") String id) {
+    public void putVar(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /vars/" + id.replace(" ", "%20") +  "! Either use PATCH to update or DELETE and POST to replace a variable.",
+                "You cannot use PUT on " + route + id.replace(" ", "%20") +  "! Either use PATCH to update or DELETE and POST to replace a variable.",
                 ListService.getVariableList().getThing(id).getSelfLinks());
     }
 
+    /**
+     * Handle incoming {@code PATCH} requests on route {@code /api/vars/{id}} using {@link @PatchMapping}.
+     * 
+     * Patch (Edit) the name of a specific {@link Variable}.
+     * 
+     * @apiNote It only accepts {@code application/json-patch+json} {@link MediaType}s.
+     * @see <a href="https://www.rfc-editor.org/rfc/rfc6902">RFC 6902: JavaScript Object Notation Patch</a>
+     * @apiNote {id} in the route can only be the {@link Variable}'s {@code id}.
+     * 
+     * @param id the identifier of the the {@link Variable}
+     * @param request the {@link VariablePredictionRequest}
+     * 
+     * @return the HTTP response as a {@link ResponseEntity}
+     */
     @PatchMapping(value = "/{id}",
             consumes = "application/json-patch+json",
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -113,6 +207,16 @@ public class VariableController {
         return VariableService.patchVariable(uuid.toString(), patchMappings);
     }
 
+    /**
+     * Handle incoming {@code DELETE} requests on route {@code /api/vars/{id}} using {@link @DeleteMapping}.
+     * 
+     * Delete a specific {@link Variable}.
+     * 
+     * @apiNote Using {@code DELETE} on this route is not allowed. Hence, a {@link HttpmAppingNotAllowedException} is thrown.
+     * @apiNote {id} in the route can be either the {@link Variable}'s {@code name} or {@code id}.
+     * 
+     * @param id the identifier of the the {@link Variable}
+     */
     @DeleteMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteVar(@PathVariable("id") String id) {
@@ -123,13 +227,36 @@ public class VariableController {
     ///
     /// Devices
     ///
-
+    
+    /**
+     * Handle incoming {@code GET} requests on route {@code /api/vars/{id}/devices/} using {@link @GetMapping}.
+     * 
+     * Retrieve the list of {@link AbstractDevice}s linked to a specific {@link Variable}.
+     * 
+     * @apiNote {id} in the route can be either the {@link Variable}'s {@code name} or {@code id}.
+     * 
+     * @param id the identifier of the the {@link Variable}
+     * @return the HTTP repsonse as a {@link ResponseEntity}
+     */
     @GetMapping(value = "/{id}/devices/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getVarDevices(@PathVariable("id") String id) {
         return VariableService.getVariableDevices(id);
     }
 
+    /**
+     * Handle incoming {@code POST} requests on route {@code /api/vars/{id}/devices/} using {@link @PostMapping}.
+     * 
+     * Set and link a list of {@link AbstractDevice}s to a specific {@link Variable}.
+     * 
+     * @apiNote It only accepts {@code application/json} {@link MediaType}s.
+     * @apiNote {id} in the route can be either the {@link Variable}'s {@code name} or {@code id}.
+     * 
+     * @param id the identifier of the the {@link Variable}
+     * @param request the {@link VariableDevicesPostRequest}
+     * 
+     * @return the HTTP repsonse as a {@link ResponseEntity}
+     */
     @PostMapping(value = "/{id}/devices/",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -137,9 +264,17 @@ public class VariableController {
         return VariableService.postVariableDevices(id, request);
     }
 
+    /**
+     * Handle incoming {@code PUT} requests on route {@code /api/vars/{id}/devices/} using {@link @PutMapping}.
+     * 
+     * @apiNote Using {@code PUT} on this route is not allowed. Hence, a {@link HttpMappingNotAllowedException} is thrown.
+     * @apiNote {id} in the route can be either the {@link Variable}'s {@code name} or {@code id}.
+     * 
+     * @param id the identifier of the the {@link Variable}
+     */
     @PutMapping(value = "/{id}/devices/",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> putVarDevices(@PathVariable("id") String id) {
+    public void putVarDevices(@PathVariable("id") String id) {
         Variable variable = ListService.getVariableList().getThing(id);
 
         List<LinkEntry> links = new ArrayList<>();
@@ -147,10 +282,24 @@ public class VariableController {
         links.addAll(variable.getDeviceLinks());
 
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /vars/" + id.replace(" ", "%20") +  "/devices/! Either use PATCH to update or DELETE and POST to replace the list of associated devices.",
+                "You cannot use PUT on " + route + id.replace(" ", "%20") +  "/devices/! Either use PATCH to update or DELETE and POST to replace the list of associated devices.",
                 links);
     }
-    
+
+    /**
+     * Handle incoming {@code PATCH} requests on route {@code /api/vars/{id}/devices/} using {@link @PatchMapping}.
+     * 
+     * Patch (Edit) the list of linked {@link AbstractDevice}s for a specific {@link Variable}.
+     * 
+     * @apiNote It only accepts {@code application/json-patch+json} {@link MediaType}s.
+     * @see <a href="https://www.rfc-editor.org/rfc/rfc6902">RFC 6902: JavaScript Object Notation Patch</a>
+     * @apiNote {id} in the route can only be the {@link Variable}'s {@code id}.
+     * 
+     * @param id the identifier of the the {@link Variable}
+     * @param patchMappings a Json Patch Document
+     * 
+     * @return the HTTP response as a {@link ResponseEntity}
+     */
     @PatchMapping(value = "/{id}/devices/",
             consumes = "application/json-patch+json",
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -158,6 +307,16 @@ public class VariableController {
         return VariableService.patchVariableDevices(id, patchMappings);
     }
 
+    /**
+     * Handle incoming {@code DELETE} requests on route {@code /api/vars/{id}/devices/} using {@link @DeleteMapping}.
+     * 
+     * Delete the list of {@link AbstractDevice}s linked to a specific {@link Variable}.
+     * 
+     * @apiNote Using {@code DELETE} on this route is not allowed. Hence, a {@link HttpmAppingNotAllowedException} is thrown.
+     * @apiNote {id} in the route can be either the {@link Variable}'s {@code name} or {@code id}.
+     * 
+     * @param id the identifier of the the {@link Variable}
+     */
     @DeleteMapping(value = "/{id}/devices/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteVarDevices(@PathVariable("id") String id) {
@@ -168,18 +327,50 @@ public class VariableController {
     /// Models
     ///
 
+    /**
+     * Handle incoming {@code GET} requests on route {@code /api/vars/{id}/models/} using {@link GetMapping}.
+     * 
+     * Retrieve the list of {@link AbstractPredictionModel}s associated to a specific {@link Variable}.
+     * 
+     * @apiNote {id} in the route can be either the {@link Variable}'s {@code name} or {@code id}.
+     * 
+     * @param id the identifier of the the {@link Variable}
+     * @return the HTTP repsonse as a {@link ResponseEntity}
+     */
     @GetMapping(value = "/{id}/models/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getVarModels(@PathVariable("id") String id) {
         return VariableService.getVariableModels(id);
     }
 
+    /**
+     * Handle incoming {@code POST} requests on route {@code /api/vars/{id}/models/} using {@link PostMapping}.
+     * 
+     * Associate a specific {@link Variable} to an {@link AbstractPredictionModel}.
+     * 
+     * @apiNote It only accepts {@code application/json} {@link MediaType}s.
+     * @apiNote {id} in the route can be either the {@link Variable}'s {@code name} or {@code id}.
+     * 
+     * @param id the identifier of the the {@link Variable}
+     * @param request the {@link VariableModelPostRequest}
+     * 
+     * @return the HTTP repsonse as a {@link ResponseEntity}
+     */
     @PostMapping(value = "/{id}/models/",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> postVarModels(@PathVariable("id") String id, @RequestBody VariableModelPostRequest request) {
         return VariableService.addVariableModel(id, request);
     }
+
+    /**
+     * Handle incoming {@code PUT} requests on route {@code /api/vars/{id}/models/} using {@link PutMapping}.
+     * 
+     * @apiNote Using {@code PUT} on this route is not allowed. Hence, a {@link HttpMappingNotAllowedException} is thrown.
+     * @apiNote {id} in the route can be either the {@link Variable}'s {@code name} or {@code id}.
+     * 
+     * @param id the identifier of the the {@link Variable}
+     */
     @PutMapping(value = "/{id}/models/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> putVarModels(@PathVariable("id") String id) {
@@ -190,10 +381,24 @@ public class VariableController {
         links.addAll(variable.getModelLinks());
 
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /vars/" + id + "/models/! Either use PATCH or DELETE and POST instead.",
+                "You cannot use PUT on " + route  + id + "/models/! Either use PATCH or DELETE and POST instead.",
                 links);
     }
 
+    /**
+     * Handle incoming {@code PATCH} requests on route {@code /api/vars/{id}/models/} using {@link PatchMapping}.
+     * 
+     * Patch (Edit) the link between a specific {@link Variable} and its associated {@link AbstractPredictionModel}s.
+     * 
+     * @apiNote It only accepts {@code application/json-patch+json} {@link MediaType}s.
+     * @see <a href="https://www.rfc-editor.org/rfc/rfc6902">RFC 6902: JavaScript Object Notation Patch</a>
+     * @apiNote {id} in the route can only be the {@link Variable}'s {@code id}.
+     * 
+     * @param id the identifier of the the {@link Variable}
+     * @param patchMappings a Json Patch Document
+     * 
+     * @return the HTTP response as a {@link ResponseEntity}
+     */
     @PatchMapping(value = "/{id}/models/",
             consumes = "application/json-patch+json",
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -201,6 +406,16 @@ public class VariableController {
         return VariableService.patchVariableModels(id, patchMappings);
     }
 
+    /**
+     * Handle incoming {@code DELETE} requests on route {@code /api/vars/{id}/models/} using {@link DeleteMapping}.
+     * 
+     * Delete the list of associated {@link AbstractPredictionModel}s for a specific {@link Variable}.
+     * 
+     * @apiNote Using {@code DELETE} on this route is not allowed. Hence, a {@link HttpmAppingNotAllowedException} is thrown.
+     * @apiNote {id} in the route can be either the {@link Variable}'s {@code name} or {@code id}.
+     * 
+     * @param id the identifier of the the {@link Variable}
+     */
     @DeleteMapping(value = "/{id}/models/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteVarModels(@PathVariable("id") String id) {
