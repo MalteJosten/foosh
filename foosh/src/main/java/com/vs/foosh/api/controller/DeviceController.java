@@ -114,6 +114,7 @@ public class DeviceController {
      * 
      * @apiNote {id} in the route can be either the {@link AbstractDevice}'s {@code name} or {@code id}.
      * 
+     * @param id the identifier of the the {@link Variable}
      * @return the HTTP repsonse as a {@link ResponseEntity}
      */
     @GetMapping(value = "/{id}",
@@ -126,6 +127,8 @@ public class DeviceController {
      * Handle incoming {@code POST} requests on route {@code /api/devices/{id}} using {@link @PostMapping}.
      * 
      * @apiNote Using {@code POST} on this route is not allowed. Hence, a {@link HttpmAppingNotAllowedException} is thrown.
+     *
+     * @param id the identifier of the the {@link Variable}
      */
     @PostMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -141,10 +144,12 @@ public class DeviceController {
                 links);
     }
 
-    /*y*
+    /**
      * Handle incoming {@code PUT} requests on route {@code /api/devices/{id}} using {@link @PutMapping}.
      * 
      * @apiNote Using {@code PUT} on this route is not allowed. Hence, a {@link HttpmAppingNotAllowedException} is thrown.
+     *
+     * @param id the identifier of the the {@link Variable}
      */
     @PutMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -166,6 +171,8 @@ public class DeviceController {
      * 
      * @apiNote It only accepts {@code application/json-patch+json} Content-Type.
      * @see <a href="https://www.rfc-editor.org/rfc/rfc6902">RFC 6902: JavaScript Object Notation Patch</a>
+     *
+     * @param id the identifier of the the {@link Variable}
      * 
      * @return the HTTP response as a {@link ResponseEntity}
      */
@@ -180,6 +187,8 @@ public class DeviceController {
      * Handle incoming {@code DELETE} requests on route {@code /api/devices/{id}} using {@link @DeleteMapping}.
      * 
      * @apiNote Using {@code DELETE} on this route is not allowed. Hence, a {@link HttpmAppingNotAllowedException} is thrown.
+     *
+     * @param id the identifier of the the {@link Variable}
      */
     @DeleteMapping("/{id}")
     public void deviceDelete(@PathVariable("id") String id) {
