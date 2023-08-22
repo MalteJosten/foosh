@@ -36,6 +36,12 @@ public class PersistentDataService {
         saveVariableList();
         savePredictionModelList();
     }
+
+    public static void deleteAll() {
+        deleteDeviceListSave();
+        deleteVariableListSave();
+        deletePredictionModelListSave();
+    }
     
     public static void saveDeviceList() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ApplicationConfig.getDeviceSavePath().toFile()))) {
@@ -141,6 +147,17 @@ public class PersistentDataService {
         }
 
         return result;
+    }
+
+   public static void deletePredictionModelListSave() {
+        if (Files.exists(ApplicationConfig.getPredictionModelSavePath())) {
+            try {
+                Files.copy(ApplicationConfig.getPredictionModelSavePath(), ApplicationConfig.getDeletePredictionModelPath(), StandardCopyOption.REPLACE_EXISTING);
+                Files.delete(ApplicationConfig.getPredictionModelSavePath());
+            } catch (IOException e) {
+                throw new CouldNotDeleteCollectionException();
+            }
+        }
     }
 
 }
