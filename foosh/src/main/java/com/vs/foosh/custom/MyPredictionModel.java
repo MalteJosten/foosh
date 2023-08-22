@@ -20,7 +20,7 @@ public class MyPredictionModel extends AbstractPredictionModel {
 
     public MyPredictionModel() {
         this.id   = UUID.randomUUID();
-        this.name = "Symbolic Regression Model";
+        this.name = "my-model";
 
         float[] myBounds = {0, 100};
         this.valueBounds = myBounds;
