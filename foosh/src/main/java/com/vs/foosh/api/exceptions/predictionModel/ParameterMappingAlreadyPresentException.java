@@ -8,7 +8,7 @@ import com.vs.foosh.api.services.ListService;
 public class ParameterMappingAlreadyPresentException extends FooSHApiException {
 
     public ParameterMappingAlreadyPresentException(String message) {
-        super(message, HttpStatus.BAD_REQUEST);
+        super(message, HttpStatus.CONFLICT);
         
         this.links.addAll(ListService.getPredictionModelList().getLinks("models"));
     }
