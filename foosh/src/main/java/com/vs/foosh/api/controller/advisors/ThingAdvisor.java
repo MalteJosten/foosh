@@ -22,6 +22,7 @@ import com.vs.foosh.api.exceptions.predictionModel.ParameterMappingNotFoundExcep
 import com.vs.foosh.api.exceptions.predictionModel.PredictionModelNameIsNotUniqueException;
 import com.vs.foosh.api.exceptions.predictionModel.PredictionModelNameMustNotBeAnUuidException;
 import com.vs.foosh.api.exceptions.predictionModel.PredictionModelNotFoundException;
+import com.vs.foosh.api.exceptions.predictionModel.PredictionModelPostMappingException;
 import com.vs.foosh.api.exceptions.predictionModel.PredictionModelValueException;
 import com.vs.foosh.api.exceptions.variable.CouldNotMakePredictionException;
 import com.vs.foosh.api.exceptions.variable.MalformedVariableModelPostRequestException;
@@ -61,7 +62,8 @@ public class ThingAdvisor extends ResponseEntityExceptionHandler {
         PredictionModelNotFoundException.class,
         PredictionModelValueException.class,
         PredictionModelNameMustNotBeAnUuidException.class,
-        PredictionModelNameIsNotUniqueException.class
+        PredictionModelNameIsNotUniqueException.class,
+        PredictionModelPostMappingException.class
     })
     public ResponseEntity<Object> handlePredictionModelException(FooSHApiException exception, WebRequest request) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(exception.getStatus(), exception.getMessage());

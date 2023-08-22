@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.List;
 import java.util.UUID;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,6 +24,7 @@ import com.vs.foosh.AbstractDeviceTest;
 import com.vs.foosh.api.model.device.AbstractDevice;
 import com.vs.foosh.api.services.ListService;
 import com.vs.foosh.api.services.PersistentDataService;
+import com.vs.foosh.custom.MyPredictionModel;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
@@ -32,11 +33,13 @@ public class DeviceControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    @BeforeAll
-    static void setup() {
-        ListService.getDeviceList().clearList();
-        ListService.getVariableList().clearList();
-        PersistentDataService.hasSavedPredictionModelList();
+    @BeforeEach
+    void setup() {
+        ListService.getPredictionModelList().getList().clear();
+        ListService.getDeviceList().getList().clear();
+        ListService.getVariableList().getList().clear();
+        PersistentDataService.deleteAll();
+        ListService.getPredictionModelList().addThing(new MyPredictionModel());
     }
 
     ///
@@ -306,7 +309,7 @@ public class DeviceControllerTest {
     ///
 
     @Test
-    void givenAnything_whenPatchWithNonJSON_thenGetProblemDetailWithStatus415() throws Exception {
+    void givenAnything_whenPatchWithNonJsonPatch_thenGetProblemDetailWithStatus415() throws Exception {
         mvc.perform(patch("/api/devices/test-device").contentType(MediaType.TEXT_PLAIN))
             .andExpect(content().contentTypeCompatibleWith("application/problem+json"))
             .andExpect(status().isUnsupportedMediaType());

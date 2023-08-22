@@ -15,6 +15,7 @@ import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchIllegalPathExcep
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchOperationException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsEmptyException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsNullException;
+import com.vs.foosh.api.exceptions.predictionModel.PredictionModelPostMappingException;
 import com.vs.foosh.api.model.misc.ThingType;
 import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
 import com.vs.foosh.api.model.predictionModel.ParameterMapping;
@@ -216,6 +217,14 @@ public class PredictionModelService {
     }
 
     private static void setMappings(AbstractPredictionModel model, PredictionModelMappingPostRequest request) {
+        if (request.getVariableId() == null) {
+            throw new PredictionModelPostMappingException(model.getId().toString(), "Please provide a field 'variableId' with a Variable ID!");
+        }
+
+        if (request.getMappings() == null) {
+            throw new PredictionModelPostMappingException(model.getId().toString(), "Please provide a field 'mappings' with a list of parameter mappings!");
+        }
+
         request.validate(model.getId().toString(), ListService.getVariableList().getThing(request.getVariableId().toString()).getDeviceIds());
 
         model.addMapping(request.getVariableId(), request.getMappings()); 

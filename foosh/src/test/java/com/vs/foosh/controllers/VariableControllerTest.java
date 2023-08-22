@@ -9,7 +9,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.jupiter.api.BeforeAll;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -17,9 +19,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.vs.foosh.VariableTest;
+import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.services.ListService;
 import com.vs.foosh.api.services.PersistentDataService;
+import com.vs.foosh.custom.MyPredictionModel;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
@@ -28,11 +31,13 @@ public class VariableControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    @BeforeAll
-    static void setup() {
-        ListService.getDeviceList().clearList();
-        ListService.getVariableList().clearList();
-        PersistentDataService.hasSavedPredictionModelList();
+    @BeforeEach
+    void setup() {
+        ListService.getPredictionModelList().getList().clear();
+        ListService.getDeviceList().getList().clear();
+        ListService.getVariableList().getList().clear();
+        PersistentDataService.deleteAll();
+        ListService.getPredictionModelList().addThing(new MyPredictionModel());
     }
 
     ///
@@ -203,7 +208,7 @@ public class VariableControllerTest {
     
     @Test
     void givenList_whenDeleteVars_thenGetEmptyList() throws Exception {
-        ListService.getVariableList().addThing(new VariableTest("test-var"));
+        ListService.getVariableList().addThing(new Variable("test-var", List.of(), List.of()));
 
         mvc.perform(delete("/api/vars/"))
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -242,7 +247,7 @@ public class VariableControllerTest {
     @Test
     void givenAListWithVariable_whenGetVarWithUuid_thenGetVariable() throws Exception {
         ListService.getVariableList().clearList();
-        VariableTest variable = new VariableTest("test-var");
+        Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
         mvc.perform(get("/api/vars/" + variable.getId()))
@@ -255,7 +260,7 @@ public class VariableControllerTest {
     @Test
     void givenAListWithVariable_whenGetVarWithName_thenGetVariable() throws Exception {
         ListService.getVariableList().clearList();
-        VariableTest variable = new VariableTest("test-var");
+        Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
         mvc.perform(get("/api/vars/" + variable.getName()))
@@ -268,7 +273,7 @@ public class VariableControllerTest {
     @Test
     void givenAListWithoutVariable_whenGetVarWithName_thenGetProblemDetailWithStatus404() throws Exception {
         ListService.getVariableList().clearList();
-        ListService.getVariableList().addThing(new VariableTest("test-var"));
+        ListService.getVariableList().addThing(new Variable("test-var", List.of(), List.of()));
 
         mvc.perform(get("/api/vars/var-name"))
             .andExpect(content().contentTypeCompatibleWith("application/problem+json"))
