@@ -18,8 +18,10 @@ import com.vs.foosh.api.services.ListService;
 
 public class MyPredictionModel extends AbstractPredictionModel {
 
+    private static final String FIXED_ID = "e0584b73-ad13-41f2-9f36-2297299d8670";
+
     public MyPredictionModel() {
-        this.id   = UUID.randomUUID();
+        this.id   = UUID.fromString(FIXED_ID);
         this.name = "my-model";
 
         float[] myBounds = {0, 100};
