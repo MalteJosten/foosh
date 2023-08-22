@@ -31,8 +31,10 @@ public class Variable extends Thing implements IThingListSubscriber, IThingListP
     public Variable(String name, List<UUID> modelIds, List<UUID> deviceIds) {
         this.id      = UUID.randomUUID();
         this.name    = name;
-        this.models  = modelIds;
-        this.devices = deviceIds;
+        this.models.clear();
+        this.models.addAll(modelIds);
+        this.devices.clear();
+        this.devices.addAll(deviceIds);
     }
 
     public void setName(String name) {
