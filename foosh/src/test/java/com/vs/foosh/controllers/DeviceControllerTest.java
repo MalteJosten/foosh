@@ -307,7 +307,7 @@ public class DeviceControllerTest {
 
     @Test
     void givenAnything_whenPatchWithNonJSON_thenGetProblemDetailWithStatus415() throws Exception {
-        mvc.perform(patch("/api/devices/test-device").contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(patch("/api/devices/test-device").contentType(MediaType.TEXT_PLAIN))
             .andExpect(content().contentTypeCompatibleWith("application/problem+json"))
             .andExpect(status().isUnsupportedMediaType());
     }
@@ -359,7 +359,7 @@ public class DeviceControllerTest {
     }
  
     @Test
-    void givenListWithoutDevice_whenPatchDeviceWithContent_thenGetDeviceWithStatus200() throws Exception {
+    void givenListWithDevice_whenPatchDeviceWithContent_thenGetDeviceWithStatus200() throws Exception {
         ListService.getDeviceList().clearList();
         AbstractDeviceTest testDevice = new AbstractDeviceTest("test-device");
         ListService.getDeviceList().addThing(testDevice);
@@ -369,6 +369,7 @@ public class DeviceControllerTest {
             .content("[{\"op\": \"replace\",\"path\":\"/name\",\"value\":\"test-other\"}]"))
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.device").exists())
+                .andExpect(jsonPath("$.device.id").value(testDevice.getId().toString()))
                 .andExpect(jsonPath("$._links").exists())
                 .andExpect(jsonPath("$._links").isArray())
                 .andExpect(jsonPath("$._links").isNotEmpty())

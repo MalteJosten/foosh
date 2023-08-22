@@ -96,7 +96,7 @@ public class ApplicationConfig {
         }
     }
 
-    private static void tryToLoadSaveFiles() {
+    public static void tryToLoadSaveFiles() {
         ReadSaveFileResult<DeviceList> devicesResult = PersistentDataService.hasSavedDeviceList();
         if (devicesResult.getSuccess()) {
             ListService.setDeviceList(devicesResult.getData());

@@ -103,7 +103,7 @@ public class PredictionModelController {
     public ResponseEntity<Object> modelDelete(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
                 "You cannot use DELETE on /models/" + id.replace(" ", "%20") +  "! Use PATCH instead, to edit the parameter mapping(s).",
-                ListService.getPredictionModelList().getLinks("self"));
+                ListService.getPredictionModelList().getThing(id).getSelfLinks());
     }
     
     ///

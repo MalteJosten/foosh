@@ -8,7 +8,7 @@ import com.vs.foosh.api.services.ListService;
 public class PredictionModelNotFoundException extends FooSHApiException {
 
     public PredictionModelNotFoundException(String id) {
-        super("Could not find prediction model with identifier '" + id + "'!", HttpStatus.BAD_REQUEST);
+        super("Could not find prediction model with identifier '" + id + "'!", HttpStatus.NOT_FOUND);
 
         this.links.addAll(ListService.getPredictionModelList().getLinks("models"));
     }
