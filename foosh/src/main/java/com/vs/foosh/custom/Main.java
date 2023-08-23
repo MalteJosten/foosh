@@ -13,6 +13,7 @@ public class Main {
     @Bean
     public void setCredentials() {
         ApplicationConfig.setSmartHomeCredentials(new SmartHomeCredentials("http://192.168.108.103:8080/", new HashMap<String, String>()));
+        ApplicationConfig.addPredictionModel(new MyPredictionModel());
     }
     
 }

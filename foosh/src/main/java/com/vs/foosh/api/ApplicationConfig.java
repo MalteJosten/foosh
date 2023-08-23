@@ -13,13 +13,13 @@ import org.springframework.context.annotation.Configuration;
 
 import com.vs.foosh.api.model.device.DeviceList;
 import com.vs.foosh.api.model.misc.ReadSaveFileResult;
+import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
 import com.vs.foosh.api.model.predictionModel.PredictionModelList;
 import com.vs.foosh.api.model.variable.VariableList;
 import com.vs.foosh.api.model.web.SmartHomeCredentials;
 import com.vs.foosh.api.services.LinkBuilderService;
 import com.vs.foosh.api.services.ListService;
 import com.vs.foosh.api.services.PersistentDataService;
-import com.vs.foosh.custom.MyPredictionModel;
 
 @Configuration
 public class ApplicationConfig {
@@ -48,6 +48,10 @@ public class ApplicationConfig {
         } else {
             System.out.println("[INFO] Successfully set smart home credentials.");
         }
+    }
+
+    public static void addPredictionModel(AbstractPredictionModel model) {
+        ListService.getPredictionModelList().addThing(model);
     }
 
     private static void readInApplicationProperties() {
@@ -114,7 +118,6 @@ public class ApplicationConfig {
             ListService.setPredictionModelList(modelResult.getData());
             System.out.println("[INFO] Found and loaded predictionModel save file.");
         } else {
-            ListService.getPredictionModelList().addThing(new MyPredictionModel());
             PersistentDataService.savePredictionModelList();
             System.out.println("[INFO] Did not found predictionModel save file. Created predictionModels from source.");
         }
