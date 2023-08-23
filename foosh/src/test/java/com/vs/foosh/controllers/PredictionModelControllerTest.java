@@ -578,7 +578,7 @@ public class PredictionModelControllerTest {
     }
 
     @Test
-    void givenModel_whenPostModelMappingWithEmptyContent_thenGetProbleDetailWithStatus400() throws Exception {
+    void givenModel_whenPostModelMappingWithEmptyContent_thenGetProblemDetailWithStatus400() throws Exception {
         AbstractPredictionModel model = ListService.getPredictionModelList().getList().get(0);
 
         mvc.perform(post("/api/models/" + model.getId() + "/mappings/")
@@ -589,7 +589,7 @@ public class PredictionModelControllerTest {
     }
 
     @Test
-    void givenModel_whenPostModelMappingWithNoVarId_thenGetProbleDetailWithStatus400() throws Exception {
+    void givenModel_whenPostModelMappingWithNoVarId_thenGetProblemDetailWithStatus400() throws Exception {
         AbstractPredictionModel model = ListService.getPredictionModelList().getList().get(0);
 
         mvc.perform(post("/api/models/" + model.getId() + "/mappings/")
@@ -600,7 +600,7 @@ public class PredictionModelControllerTest {
     }
 
     @Test
-    void givenModel_whenPostModelMappingWithWrongVarId_thenGetProbleDetailWithStatus400() throws Exception {
+    void givenModel_whenPostModelMappingWithWrongVarId_thenGetProblemDetailWithStatus400() throws Exception {
         AbstractPredictionModel model = ListService.getPredictionModelList().getList().get(0);
 
         mvc.perform(post("/api/models/" + model.getId() + "/mappings/")
@@ -611,7 +611,7 @@ public class PredictionModelControllerTest {
     }
 
     @Test
-    void givenModel_whenPostModelMappingWithNoMappings_thenGetProbleDetailWithStatus400() throws Exception {
+    void givenModel_whenPostModelMappingWithNoMappings_thenGetProblemDetailWithStatus400() throws Exception {
         AbstractPredictionModel model = ListService.getPredictionModelList().getList().get(0);
 
         Variable variable = new Variable("test-var", List.of(), List.of());
@@ -625,7 +625,7 @@ public class PredictionModelControllerTest {
     }
 
     @Test
-    void givenModel_whenPostModelMappingWithWrongMappings_thenGetProbleDetailWithStatus400() throws Exception {
+    void givenModel_whenPostModelMappingWithWrongMappings_thenGetProblemDetailWithStatus400() throws Exception {
         AbstractPredictionModel model = ListService.getPredictionModelList().getList().get(0);
 
         Variable variable = new Variable("test-var", List.of(), List.of());
@@ -639,7 +639,7 @@ public class PredictionModelControllerTest {
     }
 
     @Test
-    void givenModel_whenPostModelMappingWithNonExistendVarId_thenGetProbleDetailWithStatus404() throws Exception {
+    void givenModel_whenPostModelMappingWithNonExistendVarId_thenGetProblemDetailWithStatus404() throws Exception {
         AbstractPredictionModel model = ListService.getPredictionModelList().getList().get(0);
 
         mvc.perform(post("/api/models/" + model.getId() + "/mappings/")
@@ -650,7 +650,7 @@ public class PredictionModelControllerTest {
     }
 
     @Test
-    void givenModel_whenPostModelMapping_thenGetProbleDetailWithStatus409() throws Exception {
+    void givenModel_whenPostSecondModelMapping_thenGetProblemDetailWithStatus409() throws Exception {
         AbstractPredictionModel model = ListService.getPredictionModelList().getList().get(0);
 
         Variable variable = new Variable("test-var", List.of(), List.of());
@@ -660,7 +660,7 @@ public class PredictionModelControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content("{\"variableId\": \"" + variable.getId() + "\", \"mappings\": []}"))
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.predictionModel").exists())
+                .andExpect(jsonPath("$.mappings").exists())
                 .andExpect(jsonPath("$._links").exists())
                 .andExpect(status().isOk());
 
@@ -672,7 +672,7 @@ public class PredictionModelControllerTest {
     }
 
     @Test
-    void givenModelWithMapping_whenPostModelMappingSuccessful_thenGetModelAndLinkList() throws Exception {
+    void givenModelWithMapping_whenPostModelMappingSuccessful_thenGetMappingsAndLinkList() throws Exception {
         AbstractPredictionModel model = ListService.getPredictionModelList().getList().get(0);
 
         Variable variable = new Variable("test-var", List.of(), List.of());
@@ -682,7 +682,8 @@ public class PredictionModelControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content("{\"variableId\": \"" + variable.getId() + "\", \"mappings\": []}"))
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.predictionModel").exists())
+                .andExpect(jsonPath("$.mappings").exists())
+                .andExpect(jsonPath("$.mappings").isArray())
                 .andExpect(jsonPath("$._links").exists())
                 .andExpect(status().isOk());
     }
@@ -768,7 +769,7 @@ public class PredictionModelControllerTest {
     }
  
     @Test
-    void givenListWithModel_whenPatchModelMappingWithContent_thenGetModelWithStatus200() throws Exception {
+    void givenListWithModel_whenPatchModelMappingWithContent_thenGetMappingWithStatus200() throws Exception {
         AbstractPredictionModel model = ListService.getPredictionModelList().getList().get(0);
         
         mvc.perform(post("/api/devices/"));
@@ -785,8 +786,8 @@ public class PredictionModelControllerTest {
             .contentType("application/json-patch+json")
             .content("[{\"op\": \"add\",\"path\":\"/" + variable.getId() + "\",\"value\":[]}]"))
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.predictionModel").exists())
-                .andExpect(jsonPath("$.predictionModel.id").value(model.getId().toString()))
+                .andExpect(jsonPath("$.mappings").exists())
+                .andExpect(jsonPath("$.mappings").isArray())
                 .andExpect(jsonPath("$._links").exists())
                 .andExpect(jsonPath("$._links").isArray())
                 .andExpect(jsonPath("$._links").isNotEmpty())
@@ -1044,7 +1045,7 @@ public class PredictionModelControllerTest {
     }
 
     @Test
-    void givenListWithModel_whenDeleteEmptyModelMapping_thenGetEmptyMappingsListAndLinks() throws Exception {
+    void givenListWithModel_whenDeleteEmptyModelMapping_thenGetEmptyMappingListAndLinks() throws Exception {
         AbstractPredictionModel model = ListService.getPredictionModelList().getList().get(0);
 
         mvc.perform(delete("/api/models/" + model.getId() + "/mappings/")
