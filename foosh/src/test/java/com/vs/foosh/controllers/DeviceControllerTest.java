@@ -65,8 +65,6 @@ public class DeviceControllerTest {
 
     @Test
     void givenNoDevices_whenGetDevices_thenGetEmptyDevicesArray() throws Exception {
-        ListService.getDeviceList().clearList();
-        
         mvc.perform(get("/api/devices/"))
             .andExpect(status().isOk())
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -81,8 +79,6 @@ public class DeviceControllerTest {
 
     @Test
     void givenNoDevices_whenPostDevicesWithoutCredentials_thenGetListOfDevices() throws Exception {
-        ListService.getDeviceList().clearList();
-
         mvc.perform(post("/api/devices/").contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isCreated())
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -92,7 +88,6 @@ public class DeviceControllerTest {
 
     @Test
     void givenDevices_whenPostDevices_thenGetStatus409() throws Exception {
-        ListService.getDeviceList().clearList();
         List<AbstractDevice> deviceList = List.of(new AbstractDeviceTest("test-device"));
         ListService.getDeviceList().setList(deviceList);
 
@@ -181,8 +176,6 @@ public class DeviceControllerTest {
 
     @Test
     void givenAnEmptyList_whenDeleteDevices_thenGetEmptyList() throws Exception {
-        ListService.getDeviceList().clearList();
-
         mvc.perform(delete("/api/devices/"))
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.devices").exists())
@@ -198,8 +191,6 @@ public class DeviceControllerTest {
 
     @Test
     void givenAnEmptyList_whenGetDevice_thenGetProblemDetailWithStatus404() throws Exception {
-        ListService.getDeviceList().clearList();
-
         mvc.perform(get("/api/devices/test-device"))
             .andExpect(content().contentTypeCompatibleWith("application/problem+json"))
             .andExpect(status().isNotFound());
@@ -207,7 +198,6 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithoutDevice_whenGetDevice_thenGetProblemDetailWithStatus404() throws Exception {
-        ListService.getDeviceList().clearList();
         ListService.getDeviceList().addThing(new AbstractDeviceTest("test1-device"));
 
         mvc.perform(get("/api/devices/test-device"))
@@ -217,7 +207,6 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithDevice_whenGetDeviceWithName_thenGetDevice() throws Exception {
-        ListService.getDeviceList().clearList();
         ListService.getDeviceList().addThing(new AbstractDeviceTest("test-device"));
 
         mvc.perform(get("/api/devices/test-device"))
@@ -228,7 +217,6 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithDevice_whenGetDeviceWithUUID_thenGetDevice() throws Exception {
-        ListService.getDeviceList().clearList();
         AbstractDeviceTest testDevice = new AbstractDeviceTest("test-device");
         ListService.getDeviceList().addThing(testDevice);
 
@@ -244,8 +232,6 @@ public class DeviceControllerTest {
 
     @Test
     void givenAnEmptyList_whenPostDevice_thenGetProblemDetailWithStatus404() throws Exception {
-        ListService.getDeviceList().clearList();
-
         mvc.perform(post("/api/devices/test-device"))
             .andExpect(content().contentTypeCompatibleWith("application/problem+json"))
             .andExpect(status().isNotFound());
@@ -253,7 +239,6 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithoutDevice_whenPostDevice_thenGetProblemDetailWithStatus404() throws Exception {
-        ListService.getDeviceList().clearList();
         ListService.getDeviceList().addThing(new AbstractDeviceTest("test1-device"));
 
         mvc.perform(post("/api/devices/test-device"))
@@ -263,7 +248,6 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithDevice_whenPostDevice_thenGetProblemDetailWithStatus405() throws Exception {
-        ListService.getDeviceList().clearList();
         ListService.getDeviceList().addThing(new AbstractDeviceTest("test-device"));
 
         mvc.perform(post("/api/devices/test-device"))
@@ -277,8 +261,6 @@ public class DeviceControllerTest {
 
     @Test
     void givenAnEmptyList_whenPutDevice_thenGetProblemDetailWithStatus404() throws Exception {
-        ListService.getDeviceList().clearList();
-
         mvc.perform(put("/api/devices/test-device"))
             .andExpect(content().contentTypeCompatibleWith("application/problem+json"))
             .andExpect(status().isNotFound());
@@ -286,7 +268,6 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithoutDevice_whenPutDevice_thenGetProblemDetailWithStatus404() throws Exception {
-        ListService.getDeviceList().clearList();
         ListService.getDeviceList().addThing(new AbstractDeviceTest("test1-device"));
 
         mvc.perform(put("/api/devices/test-device"))
@@ -296,7 +277,6 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithDevice_whenPutDevice_thenGetProblemDetailWithStatus405() throws Exception {
-        ListService.getDeviceList().clearList();
         ListService.getDeviceList().addThing(new AbstractDeviceTest("test-device"));
 
         mvc.perform(put("/api/devices/test-device"))
@@ -317,8 +297,6 @@ public class DeviceControllerTest {
 
     @Test
     void givenAnEmptyList_whenPatchDevice_thenGetProblemDetailWithStatus404() throws Exception {
-        ListService.getDeviceList().clearList();
-
         mvc.perform(patch("/api/devices/test-device").contentType("application/json-patch+json"))
             .andExpect(content().contentTypeCompatibleWith("application/problem+json"))
             .andExpect(status().isBadRequest());
@@ -326,7 +304,6 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithoutDevice_whenPatchDevice_thenGetProblemDetailWithStatus404() throws Exception {
-        ListService.getDeviceList().clearList();
         ListService.getDeviceList().addThing(new AbstractDeviceTest("test-device"));
 
         mvc.perform(patch("/api/devices/" + UUID.randomUUID())
@@ -338,7 +315,6 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithDevice_whenPatchDeviceWithName_thenGetProblemDetailWithStatus400() throws Exception {
-        ListService.getDeviceList().clearList();
         AbstractDeviceTest testDevice = new AbstractDeviceTest("test-device");
         ListService.getDeviceList().addThing(testDevice);
 
@@ -351,7 +327,6 @@ public class DeviceControllerTest {
  
     @Test
     void givenListWithDevice_whenPatchDeviceWithNoContent_thenGetProblemDetailWithStatus400() throws Exception {
-        ListService.getDeviceList().clearList();
         AbstractDeviceTest testDevice = new AbstractDeviceTest("test-device");
         ListService.getDeviceList().addThing(testDevice);
 
@@ -363,7 +338,6 @@ public class DeviceControllerTest {
  
     @Test
     void givenListWithDevice_whenPatchDeviceWithContent_thenGetDeviceWithStatus200() throws Exception {
-        ListService.getDeviceList().clearList();
         AbstractDeviceTest testDevice = new AbstractDeviceTest("test-device");
         ListService.getDeviceList().addThing(testDevice);
 
@@ -381,7 +355,6 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithDevice_whenPatchDeviceWithWrongFormat_thenGetProblemDetailWithStatus400() throws Exception {
-        ListService.getDeviceList().clearList();
         AbstractDeviceTest testDevice = new AbstractDeviceTest("test-device");
         ListService.getDeviceList().addThing(testDevice);
 
@@ -394,7 +367,6 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithDevice_whenPatchDeviceWithIllegalPath_thenGetProblemDetailWithStatus400() throws Exception {
-        ListService.getDeviceList().clearList();
         AbstractDeviceTest testDevice = new AbstractDeviceTest("test-device");
         ListService.getDeviceList().addThing(testDevice);
 
@@ -407,7 +379,6 @@ public class DeviceControllerTest {
     
     @Test
     void givenListWithDevice_whenPatchDeviceWithIllegalJsonPatchOperator_thenGetProblemDetailWithStatus400() throws Exception {
-        ListService.getDeviceList().clearList();
         AbstractDeviceTest testDevice = new AbstractDeviceTest("test-device");
         ListService.getDeviceList().addThing(testDevice);
 
@@ -420,7 +391,6 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithDevice_whenPatchDeviceWithDisallowedOperator_thenGetProblemDetailWithStatus400() throws Exception {
-        ListService.getDeviceList().clearList();
         AbstractDeviceTest testDevice = new AbstractDeviceTest("test-device");
         ListService.getDeviceList().addThing(testDevice);
 
@@ -433,7 +403,6 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithDevice_whenPatchDeviceWithNoValue_thenGetProblemDetailWithStatus400() throws Exception {
-        ListService.getDeviceList().clearList();
         AbstractDeviceTest testDevice = new AbstractDeviceTest("test-device");
         ListService.getDeviceList().addThing(testDevice);
 
@@ -446,7 +415,6 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithDevice_whenPatchDeviceWithEmptyValue_thenGetProblemDetailWithStatus400() throws Exception {
-        ListService.getDeviceList().clearList();
         AbstractDeviceTest testDevice = new AbstractDeviceTest("test-device");
         ListService.getDeviceList().addThing(testDevice);
 
@@ -459,7 +427,6 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithDevice_whenPatchDeviceWithWrongFormatValue_thenGetProblemDetailWithStatus400() throws Exception {
-        ListService.getDeviceList().clearList();
         AbstractDeviceTest testDevice = new AbstractDeviceTest("test-device");
         ListService.getDeviceList().addThing(testDevice);
 
@@ -476,8 +443,6 @@ public class DeviceControllerTest {
 
     @Test
     void givenAnEmptyList_whenDeleteDevice_thenGetProblemDetailWithStatus404() throws Exception {
-        ListService.getDeviceList().clearList();
-
         mvc.perform(delete("/api/devices/test-device"))
             .andExpect(content().contentTypeCompatibleWith("application/problem+json"))
             .andExpect(status().isNotFound());
@@ -485,7 +450,6 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithoutDevice_whenDeleteDevice_thenGetProblemDetailWithStatus404() throws Exception {
-        ListService.getDeviceList().clearList();
         ListService.getDeviceList().addThing(new AbstractDeviceTest("test1-device"));
 
         mvc.perform(delete("/api/devices/test-device"))
@@ -495,7 +459,6 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithDevice_whenDeleteDevice_thenGetProblemDetailWithStatus405() throws Exception {
-        ListService.getDeviceList().clearList();
         ListService.getDeviceList().addThing(new AbstractDeviceTest("test-device"));
 
         mvc.perform(delete("/api/devices/test-device"))
