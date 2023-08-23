@@ -78,7 +78,6 @@ public class DeviceService {
         return respondWithDevices(HttpStatus.OK);
     }
 
-    // TODO: Implement paging
     private static ResponseEntity<Object> respondWithDevices(HttpStatus status) {
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("devices", ListService.getDeviceList().getDisplayListRepresentation());
