@@ -87,7 +87,6 @@ public class PredictionModelService {
         return false;
     }
 
-    // TODO: Implement paging
     private static ResponseEntity<Object> respondWithModel(String id) {
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
 
@@ -98,22 +97,8 @@ public class PredictionModelService {
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
-    // TODO: Implement paging
     public static ResponseEntity<Object> getMappings(String id) {
-        AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
-
-        List<VariableParameterMapping> mappings = model.getAllMappings();
-
-        List<LinkEntry> links = new ArrayList<>();
-        links.addAll(model.getSelfLinks());
-        links.addAll(model.getDeviceLinks());
-        links.addAll(model.getVariableLinks());
-
-        Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("mappings", mappings);
-        responseBody.put("_links", links);
-
-        return new ResponseEntity<>(responseBody, HttpStatus.OK);
+        return respondWithMappings(id, HttpStatus.OK);
     }
 
     public static ResponseEntity<Object> postMappings(String id, PredictionModelMappingPostRequest request) {
@@ -121,7 +106,7 @@ public class PredictionModelService {
 
         setMappings(model, request);
 
-        return respondWithModel(id);
+        return respondWithMappings(id, HttpStatus.OK);
     }
 
     public static ResponseEntity<Object> patchMappings(String id, List<Map<String, Object>> patchMappings) {
@@ -139,7 +124,7 @@ public class PredictionModelService {
 
         model.updateLinks();
 
-        return respondWithModel(id);
+        return respondWithMappings(id, HttpStatus.OK);
     }
 
     private static List<FooSHJsonPatch> convertPatchMappings(String id, List<Map<String, Object>> patchMappings) {
@@ -255,18 +240,23 @@ public class PredictionModelService {
 
         PersistentDataService.savePredictionModelList();
 
+        return respondWithMappings(id, HttpStatus.OK);
+    }
+
+    private static ResponseEntity<Object> respondWithMappings(String id, HttpStatus status) {
+        AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
+
         List<VariableParameterMapping> mappings = model.getAllMappings();
 
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(model.getSelfLinks());
-        links.addAll(model.getDeviceLinks());
-        links.addAll(model.getVariableLinks());
+        links.addAll(model.getMappingLinks());
 
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("mappings", mappings);
         responseBody.put("_links", links);
 
-        return new ResponseEntity<>(responseBody, HttpStatus.OK);
+        return new ResponseEntity<>(responseBody, status);
     }
 
 }
