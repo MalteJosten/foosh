@@ -19,13 +19,13 @@ import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.LinkBuilderService;
 
-// TODO: IThingListPublisher
 /**
  * A container holding all currently registered {@link AbstractDevice}s with a bunch of functions allowing setting, retrieval, and modification of
  * the managed devices.
  * 
- * It implements {@link IThingListSubject} as it can be observed by objects implementing the {@link IThingListSubscriber}.
+ * It implements {@link IThingListPublisher} as it can be observed by objects implementing the {@link IThingListSubscriber}.
  * @see <a href="https://refactoring.guru/design-patterns/observer">Observer Pattern</a>
+ * 
  * 
  * It implements {@link IThingList}<{@link AbstractDevice}, {@link DeviceDisplayRepresentation}> to give the class capabilities of a list of {@link Thing}s.
  * It implements {@link Serializable} so that it can be (de)serialized for saving and loading into and from persistent storage.
