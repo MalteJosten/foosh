@@ -28,7 +28,7 @@ public class FooSHJsonPatchOperationException extends RuntimeException {
     }
 
     public HttpStatusCode getStatusCode() {
-        return HttpStatus.BAD_REQUEST;
+        return HttpStatus.NOT_FOUND;
     };
     
 }
