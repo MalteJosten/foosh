@@ -22,12 +22,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.vs.foosh.AbstractDeviceTest;
+import com.vs.foosh.PredictionModelTest;
 import com.vs.foosh.api.model.device.AbstractDevice;
 import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
 import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.services.ListService;
 import com.vs.foosh.api.services.PersistentDataService;
-import com.vs.foosh.custom.MyPredictionModel;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
@@ -42,7 +42,7 @@ public class VariableControllerTest {
         ListService.getDeviceList().getList().clear();
         ListService.getVariableList().getList().clear();
         PersistentDataService.deleteAll();
-        ListService.getPredictionModelList().addThing(new MyPredictionModel());
+        ListService.getPredictionModelList().addThing(new PredictionModelTest());
     }
 
     ///
