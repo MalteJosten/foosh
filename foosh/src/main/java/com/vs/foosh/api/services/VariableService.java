@@ -22,6 +22,7 @@ import com.vs.foosh.api.exceptions.variable.MalformedVariableModelPostRequestExc
 import com.vs.foosh.api.exceptions.variable.MalformedVariablePredictionRequest;
 import com.vs.foosh.api.exceptions.variable.VariableCreationException;
 import com.vs.foosh.api.exceptions.variable.VariableDevicePostException;
+import com.vs.foosh.api.model.device.AbstractDevice;
 import com.vs.foosh.api.model.device.DeviceResponseObject;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.misc.ThingType;
@@ -114,7 +115,6 @@ public class VariableService {
         return respondWithVariables(HttpStatus.OK);
     }
 
-    // TODO: Implement paging
     private static ResponseEntity<Object> respondWithVariables(HttpStatus status) {
         Map<String, Object> responseBody = new HashMap<>();
 
@@ -214,7 +214,7 @@ public class VariableService {
 
         PersistentDataService.saveVariableList();
 
-        return respondWithVariable(id);
+        return respondWithVariables(HttpStatus.OK);
     }
 
     private static ResponseEntity<Object> respondWithVariable(String id) {
@@ -239,7 +239,7 @@ public class VariableService {
             devices.add(ListService.getDeviceList().getThing(deviceId.toString()).getDisplayRepresentation().getDevice());
         }
 
-        return respondWithVariableAndDevices(variable);
+        return respondWithDevices(variable);
     }
 
     public static ResponseEntity<Object> postVariableDevices(String id, VariableDevicesPostRequest request) {
@@ -272,7 +272,7 @@ public class VariableService {
                 throw new VariableDevicePostException(
                     id,
                     "Could not find a device with ID '" + deviceId + "'. Aborting.",
-                    HttpStatus.BAD_REQUEST
+                    HttpStatus.NOT_FOUND
                 );
             }
         }
@@ -282,7 +282,7 @@ public class VariableService {
 
         PersistentDataService.saveAll();
 
-        return respondWithVariableAndDevices(variable);
+        return respondWithDevices(variable);
     }
 
     public static ResponseEntity<Object> patchVariableDevices(String id, List<Map<String, Object>> patchMappings) {
@@ -310,7 +310,7 @@ public class VariableService {
             devices.add(ListService.getDeviceList().getThing(deviceId.toString()).getDisplayRepresentation().getDevice());
         }
 
-        return respondWithVariableAndDevices(variable);
+        return respondWithDevices(variable);
     }
 
     private static List<FooSHJsonPatch> convertDevicesPatchMappings(String variableId, List<Map<String, Object>> patchMappings) {
@@ -424,17 +424,21 @@ public class VariableService {
 
         PersistentDataService.saveAll();
     
-        return respondWithVariableAndDevices(variable);
+        return respondWithDevices(variable);
     }
 
-    // TODO: Implement Paging
-    private static ResponseEntity<Object> respondWithVariableAndDevices(Variable variable) {
+    private static ResponseEntity<Object> respondWithDevices(Variable variable) {
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(variable.getSelfLinks());
         links.addAll(variable.getDeviceLinks());
 
+        List<AbstractDevice> devices = new ArrayList<>();
+        for (UUID deviceId: variable.getDeviceIds()) {
+            devices.add(ListService.getDeviceList().getThing(deviceId.toString()));
+        }
+
         Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("variable", variable.getDisplayRepresentation().getVariable());
+        responseBody.put("devices", devices);
         responseBody.put("_links", links);
 
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
@@ -447,11 +451,22 @@ public class VariableService {
     public static ResponseEntity<Object> getVariableModels(String id) {
         Variable variable = ListService.getVariableList().getThing(id);
 
-        return respondWithVariableAndModels(variable);
+        return respondWithModels(variable);
     }
 
     public static ResponseEntity<Object> addVariableModel(String id, VariableModelPostRequest request) {
         Variable variable = ListService.getVariableList().getThing(id);
+
+        if (request.modelId() == null) {
+            throw new MalformedVariableModelPostRequestException(
+                id,
+                "Please provide a field named 'modelId'!"
+            );
+        }
+
+        IdService.isUuid(request.modelId().toString()).orElseThrow(() -> new MalformedVariableModelPostRequestException(
+            id,
+            "Please provide a UUID for the field 'modelId'!"));
 
         // Check whether the user provided a valid predictionModel identifier
         AbstractPredictionModel linkToModel = ListService.getPredictionModelList().getThing(request.modelId().toString());
@@ -475,7 +490,7 @@ public class VariableService {
         // It is going to be handled as if the user did a POST /models/{modelId}/mappings/
         PredictionModelService.postMappings(request.modelId().toString(), new PredictionModelMappingPostRequest(variable.getId(), request.mappings()));
 
-        return respondWithVariableAndModels(variable);
+        return respondWithModels(variable);
     }
 
     public static ResponseEntity<Object> patchVariableModels(String id, List<Map<String, Object>> patchMappings) {
@@ -494,7 +509,7 @@ public class VariableService {
 
         PersistentDataService.saveAll();
 
-        return respondWithVariableAndModels(variable);
+        return respondWithModels(variable);
     }
 
     private static List<FooSHJsonPatch> convertModelsPatchMappings(Variable variable, List<Map<String, Object>> patchMappings) {
@@ -612,10 +627,10 @@ public class VariableService {
 
         PersistentDataService.saveAll();
 
-        return respondWithVariableAndModels(variable);
+        return respondWithModels(variable);
     }
 
-    private static ResponseEntity<Object> respondWithVariableAndModels(Variable variable) {
+    private static ResponseEntity<Object> respondWithModels(Variable variable) {
         List<Thing> models = new ArrayList<>();
         for (UUID modelId: variable.getModelIds()) {
             for (AbstractPredictionModel model: ListService.getPredictionModelList().getList()) {
