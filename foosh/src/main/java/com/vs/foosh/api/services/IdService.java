@@ -22,6 +22,10 @@ public class IdService {
     }
 
     public static <T extends Thing> boolean isIdentifierInList(String id, List<T> collection) {
+        if (collection == null) {
+            return false;
+        }
+
         for(T element: collection) {
             if (element.getId().toString().equals(id) || element.getName().equals(id)) {
                 return true;
