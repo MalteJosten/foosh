@@ -1,4 +1,4 @@
-package com.vs.foosh;
+package com.vs.foosh.helper;
 
 import java.net.URI;
 import java.net.URISyntaxException;

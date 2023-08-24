@@ -9,8 +9,6 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.vs.foosh.AbstractDeviceTest;
-import com.vs.foosh.PredictionModelTest;
 import com.vs.foosh.api.exceptions.device.DeviceIdNotFoundException;
 import com.vs.foosh.api.exceptions.predictionModel.MalformedParameterMappingException;
 import com.vs.foosh.api.exceptions.predictionModel.ParameterMappingDeviceException;
@@ -21,6 +19,8 @@ import com.vs.foosh.api.model.predictionModel.PredictionModelMappingPostRequest;
 import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.services.ListService;
 import com.vs.foosh.api.services.PersistentDataService;
+import com.vs.foosh.helper.AbstractDeviceTest;
+import com.vs.foosh.helper.PredictionModelTest;
 
 public class PredictionModelMappingPostRequestTest {
 

@@ -8,7 +8,6 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.vs.foosh.PredictionModelTest;
 import com.vs.foosh.api.exceptions.predictionModel.PredictionModelNotFoundException;
 import com.vs.foosh.api.exceptions.variable.MalformedVariablePredictionRequest;
 import com.vs.foosh.api.exceptions.variable.VariableNotFoundException;
@@ -16,6 +15,7 @@ import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.variable.VariablePredictionRequest;
 import com.vs.foosh.api.services.ListService;
 import com.vs.foosh.api.services.PersistentDataService;
+import com.vs.foosh.helper.PredictionModelTest;
 
 public class VariablePredictionRequestTest {
 

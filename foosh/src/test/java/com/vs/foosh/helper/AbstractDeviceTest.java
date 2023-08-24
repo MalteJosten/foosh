@@ -1,4 +1,4 @@
-package com.vs.foosh;
+package com.vs.foosh.helper;
 
 import com.vs.foosh.api.model.device.AbstractDevice;
 
