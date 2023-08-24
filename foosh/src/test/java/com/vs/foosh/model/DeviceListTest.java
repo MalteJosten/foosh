@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.vs.foosh.AbstractDeviceTest;
-import com.vs.foosh.PredictionModelTest;
 import com.vs.foosh.api.exceptions.device.CouldNotFindUniqueDeviceNameException;
 import com.vs.foosh.api.model.device.DeviceNamePatchRequest;
 import com.vs.foosh.api.services.ListService;
@@ -24,7 +23,6 @@ public class DeviceListTest {
         ListService.getDeviceList().getList().clear();
         ListService.getVariableList().getList().clear();
         PersistentDataService.deleteAll();
-        ListService.getPredictionModelList().addThing(new PredictionModelTest());
     }
 
     ///
