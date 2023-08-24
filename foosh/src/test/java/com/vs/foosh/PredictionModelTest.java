@@ -19,9 +19,9 @@ public class PredictionModelTest extends AbstractPredictionModel {
 
     private static final String FIXED_ID = "e0584b73-ad13-41f2-9f36-2297299d8671";
 
-    public PredictionModelTest() {
+    public PredictionModelTest(String name) {
         this.id   = UUID.fromString(FIXED_ID);
-        this.name = "test-model";
+        this.name = name;
 
         float[] myBounds = {0, 100};
         this.valueBounds = myBounds;
