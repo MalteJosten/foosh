@@ -210,8 +210,6 @@ public class DeviceList implements IThingListPublisher, IThingList<AbstractDevic
      *     - it is not a {@link UUID}
      *     - it is not used by any other {@link AbstractDevice} in the list of devices
      * 
-     * If the name is is not unique, a {@link DeviceNameIsNotUniqueException} is thrown.
-     * 
      * @param name the {@code name} of the {@link AbstractDevice} under test
      * @param uuid the {@code id} of the {@link AbstractDevice} under test
      * @return {@code true} if the name is unique
