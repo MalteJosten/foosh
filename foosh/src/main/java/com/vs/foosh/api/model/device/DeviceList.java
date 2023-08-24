@@ -44,7 +44,7 @@ public class DeviceList implements IThingListPublisher, IThingList<AbstractDevic
      * 
      * @see #findUniqueName(DeviceNamePatchRequest)
      */
-    private final int UNIQUE_NAME_TIMEOUT = 25;
+    private final int UNIQUE_NAME_TIMEOUT = 10;
 
 
     /**
@@ -229,14 +229,13 @@ public class DeviceList implements IThingListPublisher, IThingList<AbstractDevic
                     // If it's already used, check whether it's the same device
                     if (d.getId().equals(uuid)) {
                         return true;
+                    } else {
+                        return false;
                     }
-
-                    throw new DeviceNameIsNotUniqueException(uuid, name);
                 }
-            
             }
         }
-        
+
         return true;
     }
 
@@ -275,12 +274,13 @@ public class DeviceList implements IThingListPublisher, IThingList<AbstractDevic
             name.replace(0, name.length(), getThing(id.toString()).getDeviceName());
         }
 
+        StringBuilder newName = new StringBuilder(name.toString());
         for (int i = 0; i < UNIQUE_NAME_TIMEOUT; i++) {
             // Is the name provided by the field unique or the same as the current name?
-            if (isValidName(name.toString(), id)) {
-                return name.toString();
+            if (isValidName(newName.toString(), id)) {
+                return newName.toString();
             } else {
-                name.replace(0, name.length(), getThing(id.toString()).getDeviceName() + (i+1));
+                newName.replace(0, newName.length(), name.toString() + (i+1));
             }
         }
 
