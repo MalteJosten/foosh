@@ -42,7 +42,7 @@ public class VariableControllerTest {
         ListService.getDeviceList().getList().clear();
         ListService.getVariableList().getList().clear();
         PersistentDataService.deleteAll();
-        ListService.getPredictionModelList().addThing(new PredictionModelTest());
+        ListService.getPredictionModelList().addThing(new PredictionModelTest("test-model"));
     }
 
     ///
