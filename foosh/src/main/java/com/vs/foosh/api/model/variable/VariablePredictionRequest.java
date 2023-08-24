@@ -7,6 +7,8 @@ import com.vs.foosh.api.services.ListService;
 public record VariablePredictionRequest(String modelId, String value, boolean execute) {
 
     public void validate(String variableId) {
+        ListService.getVariableList().getThing(variableId);
+
         if (modelId == null) {
             throw new MalformedVariablePredictionRequest(
                 variableId,
@@ -23,6 +25,12 @@ public record VariablePredictionRequest(String modelId, String value, boolean ex
             throw new MalformedVariablePredictionRequest(
                 variableId,
                 "Could not read prediciton request. It's missing the field 'value'.");
+        }
+
+        if (value.trim().isEmpty()) {
+            throw new MalformedVariablePredictionRequest(
+                variableId,
+                "Could not read prediciton request. The field 'value' is empty.");
         }
 
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(modelId);
