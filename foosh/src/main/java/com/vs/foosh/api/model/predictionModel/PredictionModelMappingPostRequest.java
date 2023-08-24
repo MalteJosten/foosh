@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import com.vs.foosh.api.exceptions.predictionModel.MalformedParameterMappingException;
 import com.vs.foosh.api.exceptions.predictionModel.ParameterMappingDeviceException;
+import com.vs.foosh.api.exceptions.variable.VariableNotFoundException;
 import com.vs.foosh.api.services.IdService;
 import com.vs.foosh.api.services.ListService;
 
@@ -41,7 +42,9 @@ public class PredictionModelMappingPostRequest {
      */
     public PredictionModelMappingPostRequest(UUID variableId, List<ParameterMapping> mappings) {
         this.variableId = variableId;
-        this.mappings   = mappings;
+        if (mappings != null) {
+            this.mappings   = mappings;
+        }
     }
 
     /**
@@ -52,7 +55,13 @@ public class PredictionModelMappingPostRequest {
      * the prediction model in question - valid device IDs
      */
     public void validate(String modelId, List<UUID> validDeviceIds) {
-        IdService.isUuidInList(variableId, ListService.getVariableList().getList());
+        if (variableId == null) {
+            throw new VariableNotFoundException("null");
+        }
+
+        if (!IdService.isUuidInList(variableId, ListService.getVariableList().getList())) {
+            throw new VariableNotFoundException(variableId.toString());
+        }
 
         // Detect and remove duplicates
         HashMap<String, Integer> parameterCounter = new HashMap<>();
