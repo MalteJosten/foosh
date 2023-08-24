@@ -98,7 +98,7 @@ public class DeviceService {
         List<FooSHJsonPatch> patches = new ArrayList<>();
         for (Map<String, Object> patchMapping: patchMappings) {
             FooSHJsonPatch patch = new FooSHJsonPatch(patchMapping);
-            patch.validateRequest(uuid.toString(), List.of(FooSHPatchOperation.REPLACE));
+            patch.validateRequest(List.of(FooSHPatchOperation.REPLACE));
             patch.validateReplace(String.class);
 
             patches.add(patch);

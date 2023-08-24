@@ -49,7 +49,7 @@ public class PredictionModelService {
         List<FooSHJsonPatch> patches = new ArrayList<>();
         for (Map<String, Object> patchMapping: patchMappings) {
             FooSHJsonPatch patch = new FooSHJsonPatch(patchMapping);
-            patch.validateRequest(id, List.of(FooSHPatchOperation.REPLACE));
+            patch.validateRequest(List.of(FooSHPatchOperation.REPLACE));
             patch.validateReplace(String.class);
 
             patches.add(patch);
@@ -133,7 +133,7 @@ public class PredictionModelService {
         for (Map<String, Object> patchMapping: patchMappings) {
             FooSHJsonPatch patch = new FooSHJsonPatch(patchMapping);
             patch.setParentId(id);
-            patch.validateRequest(id, List.of(FooSHPatchOperation.ADD, FooSHPatchOperation.REPLACE, FooSHPatchOperation.REMOVE));
+            patch.validateRequest(List.of(FooSHPatchOperation.ADD, FooSHPatchOperation.REPLACE, FooSHPatchOperation.REMOVE));
             
             switch (patch.getOperation()) {
                 case ADD:
@@ -143,7 +143,7 @@ public class PredictionModelService {
                     patch.validateReplace(PredictionModelMappingPatchRequest.class);
                     break;
                 case REMOVE:
-                    patch.validateRemove(PredictionModelMappingPatchRequest.class);
+                    patch.validateRemove();
                     break;
                 default:
                     break;

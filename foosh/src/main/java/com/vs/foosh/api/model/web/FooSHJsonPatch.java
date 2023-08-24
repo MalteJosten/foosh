@@ -43,7 +43,7 @@ public class FooSHJsonPatch {
         return this.parentId;
     }
 
-    public void validateRequest(String thingId, List<FooSHPatchOperation> allowedOperations) {
+    public void validateRequest(List<FooSHPatchOperation> allowedOperations) {
         String operationField = (String) request.get("op");
 
         // Does the Patch contain a valid operation?
@@ -79,12 +79,7 @@ public class FooSHJsonPatch {
         Object value = request.get("value");
 
         if (valueClass == String.class) {
-            String stringValue = (String) value;
-            if (stringValue.trim().isEmpty()) {
-                throw new FooSHJsonPatchValueIsEmptyException();
-            }
-
-            validateValueAsString(stringValue);
+            validateValueAsString(value);
         } else if (valueClass == UUID.class) {
             String uuidValue = (String) value;
             validateValueAsUUID(uuidValue);
@@ -114,12 +109,7 @@ public class FooSHJsonPatch {
         Object value = request.get("value");
 
         if (valueClass == String.class) {
-            String stringValue = (String) value;
-            if (stringValue.trim().isEmpty()) {
-                throw new FooSHJsonPatchValueIsEmptyException();
-            }
-
-            validateValueAsString(stringValue);
+            validateValueAsString(value);
         } else if (valueClass == UUID.class) {
             String uuidValue = (String) value;
             validateValueAsUUID(uuidValue);
@@ -132,8 +122,7 @@ public class FooSHJsonPatch {
         }
     }
 
-    @SuppressWarnings("rawtypes")
-    public void validateRemove(Class valueClass) {
+    public void validateRemove() {
         Set<String> keys = request.keySet();
 
         if (!keys.containsAll(List.of("op", "path", "value")) || keys.size() > 3) {
@@ -151,12 +140,21 @@ public class FooSHJsonPatch {
         this.value = null;
     }
 
-    private void validateValueAsString(String value) {
-        if (IdService.isUuid(value).isPresent()) {
+    private void validateValueAsString(Object value) {
+        try {
+            String stringValue = (String) value;
+            if (stringValue.trim().isEmpty()) {
+                throw new FooSHJsonPatchValueIsEmptyException();
+            }
+
+            if (IdService.isUuid(stringValue).isPresent()) {
+                throw new FooSHJsonPatchValueException();
+            }
+
+            this.value = stringValue;
+        } catch (ClassCastException e) {
             throw new FooSHJsonPatchValueException();
         }
-
-        this.value = value;
     }
 
     private void validateValueAsUUID(String value) {
