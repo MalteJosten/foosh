@@ -2,15 +2,15 @@ package com.vs.foosh.api.model.web;
 
 import java.util.HashMap;
 
-public class SmartHomeCredentials {
+public class SmartHomeDetails {
 
     private String uri;
     private HashMap<String, String> credentials;
 
-    public SmartHomeCredentials() {
+    public SmartHomeDetails() {
     }
 
-    public SmartHomeCredentials(String uri, HashMap<String, String> credentials) {
+    public SmartHomeDetails(String uri, HashMap<String, String> credentials) {
         setUri(uri);
         setCredentials(credentials);
     }

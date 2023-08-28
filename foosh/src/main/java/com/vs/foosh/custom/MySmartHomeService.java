@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.vs.foosh.api.ApplicationConfig;
 import com.vs.foosh.api.model.device.AbstractDevice;
 import com.vs.foosh.api.model.device.FetchDeviceResponse;
-import com.vs.foosh.api.model.web.SmartHomeCredentials;
+import com.vs.foosh.api.model.web.SmartHomeDetails;
 import com.vs.foosh.api.model.web.SmartHomeInstruction;
 import com.vs.foosh.api.model.web.SmartHomePostResult;
 import com.vs.foosh.api.services.ISmartHomeDeviceFetcher;
@@ -36,7 +36,9 @@ public class MySmartHomeService implements ISmartHomeDeviceFetcher, ISmartHomeIn
         SmartHomeService.registerSmartHomeInstructionExecutor(this);
     }
 
-    public FetchDeviceResponse fetchDevicesFromSmartHomeAPI() throws ResourceAccessException, IOException {
+    /// For this scenario, no authentication is needed.
+    /// Therefore we ignore any input.
+    public FetchDeviceResponse fetchDevicesFromSmartHomeAPI(SmartHomeDetails details) throws ResourceAccessException, IOException {
         RestTemplate restTemplate = new RestTemplateBuilder().setConnectTimeout(Duration.ofSeconds(5)).setReadTimeout(Duration.ofSeconds(5)).build();
         List<AbstractDevice> devices = new ArrayList<>();
 
@@ -50,12 +52,6 @@ public class MySmartHomeService implements ISmartHomeDeviceFetcher, ISmartHomeIn
         }
 
         return new FetchDeviceResponse(devices, true);
-    }
-
-    /// For this scenario, no authentication is needed.
-    /// Therefore we ignore any input and just forward the request to the non-credential-using method.
-    public FetchDeviceResponse fetchDevicesFromSmartHomeAPI(SmartHomeCredentials credentials) throws ResourceAccessException, IOException {
-        return fetchDevicesFromSmartHomeAPI();
     }
     
     public List<SmartHomePostResult> sendAndExecuteSmartHomeInstructions(List<SmartHomeInstruction> instructions) {

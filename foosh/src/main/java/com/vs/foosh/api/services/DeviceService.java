@@ -24,7 +24,7 @@ import com.vs.foosh.api.model.misc.ThingType;
 import com.vs.foosh.api.model.web.FooSHJsonPatch;
 import com.vs.foosh.api.model.web.FooSHPatchOperation;
 import com.vs.foosh.api.model.web.LinkEntry;
-import com.vs.foosh.api.model.web.SmartHomeCredentials;
+import com.vs.foosh.api.model.web.SmartHomeDetails;
 
 @Service
 public class DeviceService {
@@ -33,7 +33,7 @@ public class DeviceService {
         return respondWithDevices(HttpStatus.OK);
     }
 
-    public static ResponseEntity<Object> postDevices(SmartHomeCredentials credentials) {
+    public static ResponseEntity<Object> postDevices(SmartHomeDetails details) {
         if (!ListService.getDeviceList().isListEmpty()) {
             String message = "There are already registered devices! Please use PATCH on /devices/ to update the list.";
 
@@ -43,20 +43,16 @@ public class DeviceService {
             return new ResponseEntity<>(responseBody, HttpStatus.CONFLICT);
         }
 
-        fetchDevices(credentials);
+        fetchDevices(details);
 
         return respondWithDevices(HttpStatus.CREATED);
     }
 
-    private static void fetchDevices(SmartHomeCredentials credentials) {
+    private static void fetchDevices(SmartHomeDetails details) {
         FetchDeviceResponse apiResponse;
 
         try {
-            if (credentials == null) {
-                apiResponse = SmartHomeService.getSmartHomeDeviceFetcher().fetchDevicesFromSmartHomeAPI();
-            } else {
-                apiResponse = SmartHomeService.getSmartHomeDeviceFetcher().fetchDevicesFromSmartHomeAPI(credentials);
-            }
+            apiResponse = SmartHomeService.getSmartHomeDeviceFetcher().fetchDevicesFromSmartHomeAPI(details);
 
             ListService.getDeviceList().setList(apiResponse.getDevices());
             ListService.getDeviceList().updateLinks();

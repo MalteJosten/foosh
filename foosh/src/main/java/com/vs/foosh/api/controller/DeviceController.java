@@ -21,7 +21,7 @@ import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
 import com.vs.foosh.api.model.device.AbstractDevice;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
-import com.vs.foosh.api.model.web.SmartHomeCredentials;
+import com.vs.foosh.api.model.web.SmartHomeDetails;
 import com.vs.foosh.api.services.DeviceService;
 import com.vs.foosh.api.services.LinkBuilderService;
 import com.vs.foosh.api.services.ListService;
@@ -66,9 +66,9 @@ public class DeviceController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> devicesPost(
-            @RequestBody(required = false) SmartHomeCredentials credentials) {
+            @RequestBody(required = false) SmartHomeDetails details) {
         
-        return DeviceService.postDevices(credentials);
+        return DeviceService.postDevices(details);
 
     }
 

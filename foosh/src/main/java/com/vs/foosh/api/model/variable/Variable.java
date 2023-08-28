@@ -19,18 +19,18 @@ public class Variable extends Thing implements IThingListSubscriber, IThingListP
     protected List<UUID> models  = new ArrayList<>();
     protected List<UUID> devices = new ArrayList<>();
 
-    protected List<LinkEntry> modelLinks     = new ArrayList<>();
-    protected List<LinkEntry> deviceLinks    = new ArrayList<>();
     protected List<LinkEntry> links          = new ArrayList<>();
     protected List<LinkEntry> extLinks       = new ArrayList<>();
+    protected List<LinkEntry> modelLinks     = new ArrayList<>();
+    protected List<LinkEntry> deviceLinks    = new ArrayList<>();
     protected List<LinkEntry> varDeviceLinks = new ArrayList<>();
     protected List<LinkEntry> varModelLinks  = new ArrayList<>();
 
     protected List<IThingListSubscriber> observers = new ArrayList<>();
 
     public Variable(String name, List<UUID> modelIds, List<UUID> deviceIds) {
-        this.id      = UUID.randomUUID();
-        this.name    = name;
+        this.id   = UUID.randomUUID();
+        this.name = name;
         this.models.clear();
         this.models.addAll(modelIds);
         this.devices.clear();

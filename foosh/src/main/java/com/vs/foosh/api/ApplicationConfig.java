@@ -16,7 +16,7 @@ import com.vs.foosh.api.model.misc.ReadSaveFileResult;
 import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
 import com.vs.foosh.api.model.predictionModel.PredictionModelList;
 import com.vs.foosh.api.model.variable.VariableList;
-import com.vs.foosh.api.model.web.SmartHomeCredentials;
+import com.vs.foosh.api.model.web.SmartHomeDetails;
 import com.vs.foosh.api.services.LinkBuilderService;
 import com.vs.foosh.api.services.ListService;
 import com.vs.foosh.api.services.PersistentDataService;
@@ -28,7 +28,7 @@ public class ApplicationConfig {
     private static int port;
     private static Path SAVE_DIR_PATH = Paths.get(System.getProperty("user.home") + File.separator + "foosh").toAbsolutePath();
 
-    private static SmartHomeCredentials smartHomeCredentials;
+    private static SmartHomeDetails smartHomeDetails;
     
     @Bean
     private static void setup() {
@@ -37,10 +37,10 @@ public class ApplicationConfig {
         tryToLoadSaveFiles();
     }
 
-    public static void setSmartHomeCredentials(SmartHomeCredentials credentials) {
-        smartHomeCredentials = credentials;
+    public static void setSmartHomeCredentials(SmartHomeDetails details) {
+        smartHomeDetails = details;
 
-        if (smartHomeCredentials.getUri() == null || smartHomeCredentials.getUri().equals("")) {
+        if (smartHomeDetails.getUri() == null || smartHomeDetails.getUri().equals("")) {
             System.err.println(
                     "[ERROR] Field 'uri' of the provided SmartHomeCredentials is either empty or non-existent! "
                             + "This might become a problem when trying to communicate with the SmartHome API.\n"
@@ -123,8 +123,8 @@ public class ApplicationConfig {
         }
     }
 
-    public static SmartHomeCredentials getSmartHomeCredentials() {
-        return smartHomeCredentials;
+    public static SmartHomeDetails getSmartHomeCredentials() {
+        return smartHomeDetails;
     }
 
     public static Path getSaveDirPath() {
