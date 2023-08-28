@@ -1337,7 +1337,7 @@ public class VariableControllerTest {
     }
 
     @Test
-    void givenVar_whenPostVarSecondTimes_thenGetModelListWithLinks() throws Exception {
+    void givenVar_whenPostVarSecondTimes_thenGetProblemDetailWithStatus409() throws Exception {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
@@ -1369,7 +1369,7 @@ public class VariableControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"modelId\": \"" + ListService.getPredictionModelList().getList().get(0).getId() + "\", \"mappings\": [{\"parameter\":\"x2\", \"deviceId\":\"" + device2.getId() + "\"}]}"))
                 .andExpect(content().contentTypeCompatibleWith("application/problem+json"))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isConflict());
     }
 
     ///
