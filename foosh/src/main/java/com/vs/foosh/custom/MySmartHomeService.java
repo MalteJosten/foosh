@@ -42,7 +42,7 @@ public class MySmartHomeService implements ISmartHomeDeviceFetcher, ISmartHomeIn
         RestTemplate restTemplate = new RestTemplateBuilder().setConnectTimeout(Duration.ofSeconds(5)).setReadTimeout(Duration.ofSeconds(5)).build();
         List<AbstractDevice> devices = new ArrayList<>();
 
-        JsonNode response = restTemplate.getForObject(ApplicationConfig.getSmartHomeCredentials().getUri() + "rest/items", JsonNode.class);
+        JsonNode response = restTemplate.getForObject(ApplicationConfig.getSmartHomeDetails().getUri() + "rest/items", JsonNode.class);
 
         for (JsonNode node : response) {
             if (!node.get("state").asText().equals("NULL")) {

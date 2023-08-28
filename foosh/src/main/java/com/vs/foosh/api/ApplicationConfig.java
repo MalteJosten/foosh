@@ -123,7 +123,7 @@ public class ApplicationConfig {
         }
     }
 
-    public static SmartHomeDetails getSmartHomeCredentials() {
+    public static SmartHomeDetails getSmartHomeDetails() {
         return smartHomeDetails;
     }
 

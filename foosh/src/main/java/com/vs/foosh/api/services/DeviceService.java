@@ -59,9 +59,9 @@ public class DeviceService {
 
             PersistentDataService.saveDeviceList();
         } catch (ResourceAccessException rAccessException) {
-            throw new SmartHomeAccessException(ApplicationConfig.getSmartHomeCredentials().getUri() + "/api/devices/");
+            throw new SmartHomeAccessException(ApplicationConfig.getSmartHomeDetails().getUri());
         } catch (IOException ioException) {
-            throw new SmartHomeIOException(ApplicationConfig.getSmartHomeCredentials().getUri() + "/api/devices/");
+            throw new SmartHomeIOException(ApplicationConfig.getSmartHomeDetails().getUri());
         }
     }
 
