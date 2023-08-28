@@ -477,7 +477,8 @@ public class VariableService {
         if (variable.getModelIds().contains(request.modelId())) {
             throw new MalformedVariableModelPostRequestException(
                 id,
-                "The model '" + linkToModel.getName() + "' (" + linkToModel.getId() + ") is already linked to the variable '" + variable.getName() + "' (" + variable.getId() + ")."
+                "The model '" + linkToModel.getName() + "' (" + linkToModel.getId() + ") is already linked to the variable '" + variable.getName() + "' (" + variable.getId() + ").",
+                HttpStatus.CONFLICT
             );
         }
 

@@ -14,5 +14,12 @@ public class MalformedVariableModelPostRequestException extends FooSHApiExceptio
         this.links.addAll(LinkBuilderService.getVariableLinkBlock(id));
         this.links.addAll(ListService.getVariableList().getThing(id).getVarModelLinks());
     }
+
+    public MalformedVariableModelPostRequestException(String id, String message, HttpStatus status) {
+        super(message, status);
+
+        this.links.addAll(LinkBuilderService.getVariableLinkBlock(id));
+        this.links.addAll(ListService.getVariableList().getThing(id).getVarModelLinks());
+    }
     
 }
