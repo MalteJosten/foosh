@@ -27,6 +27,8 @@ import com.vs.foosh.api.services.PredictionModelService;
 @RequestMapping(value = "/api/models")
 public class PredictionModelController {
 
+    private static final String ROUTE = "/api/models/";
+
     @GetMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modelsGet() {
@@ -37,7 +39,7 @@ public class PredictionModelController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modelsPost() {
         throw new HttpMappingNotAllowedException(
-                "You cannot use POST on /models/! Please use the pre-defined model(s).",
+                "You cannot use POST on " + ROUTE + "! Please use the pre-defined model(s).",
                 ListService.getPredictionModelList().getLinks("self"));
     }
 
@@ -45,7 +47,7 @@ public class PredictionModelController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modelsPut() {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /models/! Use the pre-defined model(s) and/or use PATCH on /models/{id} instead, to edit the parameter mapping(s).",
+                "You cannot use PUT on " + ROUTE + "! Use the pre-defined model(s) and/or use PATCH on /models/{id} instead, to edit the parameter mapping(s).",
                 ListService.getPredictionModelList().getLinks("self"));
     }
 
@@ -53,7 +55,7 @@ public class PredictionModelController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modelsPatch() {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PATCH on /models/! Use PATCH on /models/{id} instead, to edit the parameter mapping(s).",
+                "You cannot use PATCH on " + ROUTE + "! Use PATCH on /models/{id} instead, to edit the parameter mapping(s).",
                 ListService.getPredictionModelList().getLinks("self"));
     }
 
@@ -61,7 +63,7 @@ public class PredictionModelController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modelsDelete() {
         throw new HttpMappingNotAllowedException(
-                "You cannot use DELETE on /models/! Use PATCH instead, to edit the parameter mapping(s).",
+                "You cannot use DELETE on " + ROUTE + "! Use PATCH instead, to edit the parameter mapping(s).",
                 ListService.getPredictionModelList().getLinks("self"));
     }
 
@@ -80,7 +82,7 @@ public class PredictionModelController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modelPost(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
-                "You cannot use POST on /models/" + id.replace(" ", "%20") +  "! Use PATCH instead, to edit the parameter mapping(s).",
+                "You cannot use POST on " + ROUTE + id.replace(" ", "%20") +  "! Use PATCH instead, to edit the parameter mapping(s).",
                 ListService.getPredictionModelList().getThing(id).getSelfLinks());
     }
 
@@ -88,7 +90,7 @@ public class PredictionModelController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modelPut(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /models/" + id.replace(" ", "%20") +  "! Use PATCH instead, to edit the parameter mapping(s).",
+                "You cannot use PUT on " + ROUTE + id.replace(" ", "%20") +  "! Use PATCH instead, to edit the parameter mapping(s).",
                 ListService.getPredictionModelList().getThing(id).getSelfLinks());
     }
 
@@ -102,7 +104,7 @@ public class PredictionModelController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> modelDelete(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
-                "You cannot use DELETE on /models/" + id.replace(" ", "%20") +  "! Use PATCH instead, to edit the parameter mapping(s).",
+                "You cannot use DELETE on " + ROUTE + id.replace(" ", "%20") +  "! Use PATCH instead, to edit the parameter mapping(s).",
                 ListService.getPredictionModelList().getThing(id).getSelfLinks());
     }
     
@@ -112,20 +114,20 @@ public class PredictionModelController {
 
     @GetMapping(value = "/{id}/mappings/",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getModelMapping(@PathVariable("id") String id) {
+    public ResponseEntity<Object> modelMappingsGet(@PathVariable("id") String id) {
         return PredictionModelService.getMappings(id);
     }
 
     @PostMapping(value = "/{id}/mappings/",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> postModelMapping(@PathVariable("id") String id, @RequestBody PredictionModelMappingPostRequest request) {
+    public ResponseEntity<Object> modelMappingsPost(@PathVariable("id") String id, @RequestBody PredictionModelMappingPostRequest request) {
         return PredictionModelService.postMappings(id, request);
     }
 
     @PutMapping(value = "/{id}/mappings/",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> putModelMapping(@PathVariable("id") String id) {
+    public ResponseEntity<Object> modelMappingsPut(@PathVariable("id") String id) {
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
 
         List<LinkEntry> links = new ArrayList<>();
@@ -133,20 +135,20 @@ public class PredictionModelController {
         links.addAll(model.getMappingLinks());
 
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on /models/" + id.replace(" ", "%20") +  "/mappings/! Use either PATCH to edit or DELETE and POST to replace the current mapping.",
+                "You cannot use PUT on " + ROUTE + id.replace(" ", "%20") +  "/mappings/! Use either PATCH to edit or DELETE and POST to replace the current mapping.",
                 links);
     }
     
     @PatchMapping(value = "/{id}/mappings/",
             consumes = "application/json-patch+json",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> patchModelMapping(@PathVariable("id") String id, @RequestBody List<Map<String, Object>> patchMappings) {
+    public ResponseEntity<Object> modelMappingsPatch(@PathVariable("id") String id, @RequestBody List<Map<String, Object>> patchMappings) {
         return PredictionModelService.patchMappings(id, patchMappings);
     }
 
     @DeleteMapping(value = "/{id}/mappings/",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> deleteModelMapping(@PathVariable("id") String id) {
+    public ResponseEntity<Object> modelMappingsDelete(@PathVariable("id") String id) {
         return PredictionModelService.deleteMappings(id);
     }
 

@@ -33,7 +33,7 @@ import com.vs.foosh.api.services.ListService;
 @RequestMapping(value="/api/devices")
 public class DeviceController {
     
-    private final String route = "/api/devices/";
+    private final String ROUTE = "/api/devices/";
 
     //
     // Device Collection
@@ -81,7 +81,7 @@ public class DeviceController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void devicesPut() {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on " + route + "! Use DELETE and POST to replace the list of devices.",
+                "You cannot use PUT on " + ROUTE + "! Use DELETE and POST to replace the list of devices.",
                 ListService.getDeviceList().getLinks("self"));
     }
 
@@ -94,7 +94,7 @@ public class DeviceController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void devicesPatch() {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PATCH on " + route + "! Either use PATCH on /devices/{id} to update the device's name or DELETE and POST to replace the list of devices.",
+                "You cannot use PATCH on " + ROUTE + "! Either use PATCH on /devices/{id} to update the device's name or DELETE and POST to replace the list of devices.",
                 ListService.getDeviceList().getLinks("self"));
     }
 
@@ -148,7 +148,7 @@ public class DeviceController {
         links.addAll(device.getSelfLinks());
 
         throw new HttpMappingNotAllowedException(
-                "You cannot use POST on " + route + id.replace(" ", "%20") +  "! Please use POST instead.",
+                "You cannot use POST on " + ROUTE + id.replace(" ", "%20") +  "! Please use POST instead.",
                 links);
     }
 
@@ -170,7 +170,7 @@ public class DeviceController {
         links.addAll(device.getSelfLinks());
 
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on " + route + id.replace(" ", "%20") +  "! Either use PATCH on /devices/" + device.getId() + " to edit " + device.getName() + "'s name or use DELETE and POST on /devices/ to update the entire collection of devices.",
+                "You cannot use PUT on " + ROUTE + id.replace(" ", "%20") +  "! Either use PATCH on /devices/" + device.getId() + " to edit " + device.getName() + "'s name or use DELETE and POST on /devices/ to update the entire collection of devices.",
                 links);
     }
 

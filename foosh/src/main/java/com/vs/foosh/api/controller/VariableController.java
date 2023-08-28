@@ -34,7 +34,7 @@ import com.vs.foosh.api.services.VariableService;
 @RequestMapping(value = "/api/vars")
 public class VariableController {
 
-    private final String route = "/api/vars/";
+    private final String ROUTE = "/api/vars/";
 
     ///
     /// Variable Collection
@@ -100,7 +100,7 @@ public class VariableController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void putVars() {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on " + route + "! Use DELETE and POST to replace the list of variables.",
+                "You cannot use PUT on " + ROUTE + "! Use DELETE and POST to replace the list of variables.",
                 ListService.getVariableList().getLinks("self"));
     }
 
@@ -113,7 +113,7 @@ public class VariableController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void patchVars() {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PATCH on " + route + "! Either use PATCH on /vars/{id} to update a variable's name or DELETE and POST on /vars/ to replace the list of variables.",
+                "You cannot use PATCH on " + ROUTE + "! Either use PATCH on /vars/{id} to update a variable's name or DELETE and POST on /vars/ to replace the list of variables.",
                 ListService.getVariableList().getLinks("self"));
     }
 
@@ -182,7 +182,7 @@ public class VariableController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void putVar(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on " + route + id.replace(" ", "%20") +  "! Either use PATCH to update or DELETE and POST to replace a variable.",
+                "You cannot use PUT on " + ROUTE + id.replace(" ", "%20") +  "! Either use PATCH to update or DELETE and POST to replace a variable.",
                 ListService.getVariableList().getThing(id).getSelfLinks());
     }
 
@@ -282,7 +282,7 @@ public class VariableController {
         links.addAll(variable.getDeviceLinks());
 
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on " + route + id.replace(" ", "%20") +  "/devices/! Either use PATCH to update or DELETE and POST to replace the list of associated devices.",
+                "You cannot use PUT on " + ROUTE + id.replace(" ", "%20") +  "/devices/! Either use PATCH to update or DELETE and POST to replace the list of associated devices.",
                 links);
     }
 
@@ -381,7 +381,7 @@ public class VariableController {
         links.addAll(variable.getModelLinks());
 
         throw new HttpMappingNotAllowedException(
-                "You cannot use PUT on " + route  + id + "/models/! Either use PATCH or DELETE and POST instead.",
+                "You cannot use PUT on " + ROUTE  + id + "/models/! Either use PATCH or DELETE and POST instead.",
                 links);
     }
 
