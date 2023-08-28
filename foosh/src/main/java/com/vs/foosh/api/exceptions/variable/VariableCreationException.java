@@ -7,8 +7,8 @@ import com.vs.foosh.api.services.ListService;
 
 public class VariableCreationException extends FooSHApiException {
 
-    public VariableCreationException(String message) {
-        super(message, HttpStatus.BAD_REQUEST);
+    public VariableCreationException(String message, HttpStatus status) {
+        super(message, status);
 
         this.links.addAll(ListService.getVariableList().getLinks("self"));
     }

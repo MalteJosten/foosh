@@ -53,7 +53,7 @@ public class VariableService {
 
     public static ResponseEntity<Object> addVariables(List<VariablePostRequest> requests) {
         if (requests == null || requests.isEmpty()) {
-            throw new VariableCreationException("Cannot create variables! Please provide a collection of variable names.");
+            throw new VariableCreationException("Cannot create variables! Please provide a collection of variable names.", HttpStatus.BAD_REQUEST);
         }
 
         List<Variable> variables = new ArrayList<>();
@@ -84,22 +84,22 @@ public class VariableService {
         // Name validation
         // Is there a field called 'name'?
         if (request.name() == null) {
-            throw new VariableCreationException("Cannot create variable without a name! Please provide a field 'name'.");
+            throw new VariableCreationException("Cannot create variable without a name! Please provide a field 'name'.", HttpStatus.BAD_REQUEST);
         }
 
         // Is this field not empty?
         if (request.name().trim().isEmpty()) {
-            throw new VariableCreationException("Cannot create variable without a name! The field 'name' is empty.");
+            throw new VariableCreationException("Cannot create variable without a name! The field 'name' is empty.", HttpStatus.BAD_REQUEST);
         }
 
         // Is the name an UUID?
         if (IdService.isUuid(request.name()).isPresent()) {
-            throw new VariableCreationException("Cannot create variable! Variables must not be an UUID.");
+            throw new VariableCreationException("Cannot create variable! Variables must not be an UUID.", HttpStatus.BAD_REQUEST);
         }
 
         // Check for duplicates
         if (!ListService.getVariableList().isValidName(request.name(), null)) {
-            throw new VariableCreationException("Cannot create variable(s)! The name '" + request.name() + "' is already taken.");
+            throw new VariableCreationException("Cannot create variable(s)! The name '" + request.name() + "' is already taken.", HttpStatus.CONFLICT);
         }
 
         String name = request.name().toLowerCase();
