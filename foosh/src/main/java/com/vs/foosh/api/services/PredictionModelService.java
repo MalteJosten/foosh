@@ -168,7 +168,8 @@ public class PredictionModelService {
                 throw new FooSHJsonPatchOperationException(
                         model.getId(),
                         model.getMappingLinks(),
-                        "You can only replace mappings which exist. Use the operation 'add' to add new mappings.");
+                        "You can only replace mappings which exist. Use the operation 'add' to add new mappings.",
+                        HttpStatus.NOT_FOUND);
 
             }
         }

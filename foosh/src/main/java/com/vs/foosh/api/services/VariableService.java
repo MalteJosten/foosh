@@ -335,7 +335,8 @@ public class VariableService {
                         throw new FooSHJsonPatchOperationException(
                             variable.getId(),
                             variable.getVarDeviceLinks(),
-                            "You can only use add on devices that are not yet present in the list!");
+                            "You can only use add on devices that are not yet present in the list!",
+                            HttpStatus.BAD_REQUEST);
                     }
 
                     break;
@@ -348,7 +349,8 @@ public class VariableService {
                         throw new FooSHJsonPatchOperationException(
                             variable.getId(),
                             variable.getVarDeviceLinks(),
-                            "You can only use remove on devices that are present in the list!");
+                            "You can only use remove on devices that are present in the list!",
+                            HttpStatus.NOT_FOUND);
                     }
 
                     break;
@@ -560,7 +562,8 @@ public class VariableService {
                 throw new FooSHJsonPatchOperationException(
                         variable.getId(),
                         links,
-                        "You can only replace mappings which exist. Use the operation 'add' to add new mappings.");
+                        "You can only replace mappings which exist. Use the operation 'add' to add new mappings.",
+                        HttpStatus.NOT_FOUND);
 
             }
         }
@@ -575,7 +578,8 @@ public class VariableService {
                 throw new FooSHJsonPatchOperationException(
                         variable.getId(),
                         links,
-                        "You can only remove mappings which exist.");
+                        "You can only remove mappings which exist.",
+                        HttpStatus.NOT_FOUND);
 
             }
         }

@@ -11,12 +11,14 @@ import com.vs.foosh.api.model.web.LinkEntry;
 public class FooSHJsonPatchOperationException extends RuntimeException {
     private UUID thingId;
     private List<LinkEntry> links;
+    private HttpStatus status;
 
-    public FooSHJsonPatchOperationException(UUID thingId, List<LinkEntry> links, String message) {
+    public FooSHJsonPatchOperationException(UUID thingId, List<LinkEntry> links, String message, HttpStatus status) {
         super(message);
 
         this.thingId = thingId;
         this.links   = links;
+        this.status  = status;
     }
 
     public UUID getThingId() {
@@ -28,7 +30,7 @@ public class FooSHJsonPatchOperationException extends RuntimeException {
     }
 
     public HttpStatusCode getStatusCode() {
-        return HttpStatus.NOT_FOUND;
+        return this.status;
     };
     
 }
