@@ -49,7 +49,7 @@ public class VariableController {
      */
     @GetMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getVars() {
+    public ResponseEntity<Object> varsGet() {
         return VariableService.getVariables();
     }
 
@@ -68,7 +68,7 @@ public class VariableController {
             headers  = "batch=true",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> postMulitpleVar(@RequestBody List<VariablePostRequest> requests) {
+    public ResponseEntity<Object> varsPostMultiple(@RequestBody List<VariablePostRequest> requests) {
         return VariableService.addVariables(requests);
     }
 
@@ -87,7 +87,7 @@ public class VariableController {
             headers  = "batch=false",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> postSingleVar(@RequestBody VariablePostRequest request) {
+    public ResponseEntity<Object> varsPostSingle(@RequestBody VariablePostRequest request) {
         return VariableService.addVariable(request);
     }
 
@@ -98,7 +98,7 @@ public class VariableController {
      */
     @PutMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public void putVars() {
+    public void varsPut() {
         throw new HttpMappingNotAllowedException(
                 "You cannot use PUT on " + ROUTE + "! Use DELETE and POST to replace the list of variables.",
                 ListService.getVariableList().getLinks("self"));
@@ -111,7 +111,7 @@ public class VariableController {
      */
     @PatchMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public void patchVars() {
+    public void varsPatch() {
         throw new HttpMappingNotAllowedException(
                 "You cannot use PATCH on " + ROUTE + "! Either use PATCH on /vars/{id} to update a variable's name or DELETE and POST on /vars/ to replace the list of variables.",
                 ListService.getVariableList().getLinks("self"));
@@ -126,7 +126,7 @@ public class VariableController {
      */
     @DeleteMapping(value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> deleteVars() {
+    public ResponseEntity<Object> varsDelete() {
         return VariableService.deleteVariables();
     }
 
@@ -146,7 +146,7 @@ public class VariableController {
      */
     @GetMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getVar(@PathVariable("id") String id) {
+    public ResponseEntity<Object> varGet(@PathVariable("id") String id) {
         return VariableService.getVariable(id);
     }
 
@@ -166,7 +166,7 @@ public class VariableController {
     @PostMapping(value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> postVar(@PathVariable("id") String id, @RequestBody VariablePredictionRequest request) {
+    public ResponseEntity<Object> varPost(@PathVariable("id") String id, @RequestBody VariablePredictionRequest request) {
         return VariableService.startVariablePrediction(id, request);
     }
 
@@ -180,7 +180,7 @@ public class VariableController {
      */
     @PutMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public void putVar(@PathVariable("id") String id) {
+    public void varPut(@PathVariable("id") String id) {
         throw new HttpMappingNotAllowedException(
                 "You cannot use PUT on " + ROUTE + id.replace(" ", "%20") +  "! Either use PATCH to update or DELETE and POST to replace a variable.",
                 ListService.getVariableList().getThing(id).getSelfLinks());
@@ -203,7 +203,7 @@ public class VariableController {
     @PatchMapping(value = "/{id}",
             consumes = "application/json-patch+json",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> patchVar(@PathVariable("id") UUID uuid, @RequestBody List<Map<String, Object>> patchMappings) {
+    public ResponseEntity<Object> varPatch(@PathVariable("id") UUID uuid, @RequestBody List<Map<String, Object>> patchMappings) {
         return VariableService.patchVariable(uuid.toString(), patchMappings);
     }
 
@@ -219,7 +219,7 @@ public class VariableController {
      */
     @DeleteMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> deleteVar(@PathVariable("id") String id) {
+    public ResponseEntity<Object> varDelete(@PathVariable("id") String id) {
         return VariableService.deleteVariable(id);
     }
 
@@ -240,7 +240,7 @@ public class VariableController {
      */
     @GetMapping(value = "/{id}/devices/",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getVarDevices(@PathVariable("id") String id) {
+    public ResponseEntity<Object> varDevicesGet(@PathVariable("id") String id) {
         return VariableService.getVariableDevices(id);
     }
 
@@ -260,7 +260,7 @@ public class VariableController {
     @PostMapping(value = "/{id}/devices/",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> postVarDevices(@PathVariable("id") String id, @RequestBody VariableDevicesPostRequest request) {
+    public ResponseEntity<Object> varDevicesPost(@PathVariable("id") String id, @RequestBody VariableDevicesPostRequest request) {
         return VariableService.postVariableDevices(id, request);
     }
 
@@ -274,7 +274,7 @@ public class VariableController {
      */
     @PutMapping(value = "/{id}/devices/",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public void putVarDevices(@PathVariable("id") String id) {
+    public void varDevicesPut(@PathVariable("id") String id) {
         Variable variable = ListService.getVariableList().getThing(id);
 
         List<LinkEntry> links = new ArrayList<>();
@@ -303,7 +303,7 @@ public class VariableController {
     @PatchMapping(value = "/{id}/devices/",
             consumes = "application/json-patch+json",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> patchVarDevices(@PathVariable("id") String id, @RequestBody List<Map<String, Object>> patchMappings) {
+    public ResponseEntity<Object> varDevicesPatch(@PathVariable("id") String id, @RequestBody List<Map<String, Object>> patchMappings) {
         return VariableService.patchVariableDevices(id, patchMappings);
     }
 
@@ -319,7 +319,7 @@ public class VariableController {
      */
     @DeleteMapping(value = "/{id}/devices/",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> deleteVarDevices(@PathVariable("id") String id) {
+    public ResponseEntity<Object> varDevicesDelete(@PathVariable("id") String id) {
         return VariableService.deleteVariableDevices(id);
     }
 
@@ -339,7 +339,7 @@ public class VariableController {
      */
     @GetMapping(value = "/{id}/models/",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getVarModels(@PathVariable("id") String id) {
+    public ResponseEntity<Object> varModelsGet(@PathVariable("id") String id) {
         return VariableService.getVariableModels(id);
     }
 
@@ -359,7 +359,7 @@ public class VariableController {
     @PostMapping(value = "/{id}/models/",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> postVarModels(@PathVariable("id") String id, @RequestBody VariableModelPostRequest request) {
+    public ResponseEntity<Object> varModelsPost(@PathVariable("id") String id, @RequestBody VariableModelPostRequest request) {
         return VariableService.addVariableModel(id, request);
     }
 
@@ -373,7 +373,7 @@ public class VariableController {
      */
     @PutMapping(value = "/{id}/models/",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> putVarModels(@PathVariable("id") String id) {
+    public ResponseEntity<Object> varModelsPut(@PathVariable("id") String id) {
         Variable variable = ListService.getVariableList().getThing(id);
         
         List<LinkEntry> links = new ArrayList<>();
@@ -402,7 +402,7 @@ public class VariableController {
     @PatchMapping(value = "/{id}/models/",
             consumes = "application/json-patch+json",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> patchVarModels(@PathVariable("id") String id, @RequestBody List<Map<String, Object>> patchMappings) {
+    public ResponseEntity<Object> varModelsPatch(@PathVariable("id") String id, @RequestBody List<Map<String, Object>> patchMappings) {
         return VariableService.patchVariableModels(id, patchMappings);
     }
 
@@ -418,7 +418,7 @@ public class VariableController {
      */
     @DeleteMapping(value = "/{id}/models/",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> deleteVarModels(@PathVariable("id") String id) {
+    public ResponseEntity<Object> varModelsDelete(@PathVariable("id") String id) {
         return VariableService.deleteVariableModels(id);
     }
 }
