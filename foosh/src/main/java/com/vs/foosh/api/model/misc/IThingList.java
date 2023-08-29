@@ -3,7 +3,6 @@ package com.vs.foosh.api.model.misc;
 import java.util.List;
 import java.util.UUID;
 
-import com.vs.foosh.api.model.device.AbstractDevice;
 import com.vs.foosh.api.model.web.LinkEntry;
 
 /**
@@ -73,7 +72,7 @@ public interface IThingList<T extends Thing,V> {
      * Check whether the provided {@code name} is valid.
      * A name is valid if
      *     - if is not a {@link UUID}
-     *     - if it is not used by any other {@link AbstractDevice} in the list of devices
+     *     - if it is not used by any other {@link Thing} in the list of devices
      * 
      * If the name is is not unique, an exception should be thrown.
      * 
