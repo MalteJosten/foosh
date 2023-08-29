@@ -17,12 +17,12 @@ import com.vs.foosh.api.services.ListService;
  */
 public abstract class AbstractDevice extends Thing {
     /**
-     * The device's name given it by the smart home system
+     * The device's name given by the smart home system
      */
     protected String deviceName;
 
     /**
-     * The device's type given it by the smart home system 
+     * The device's type given by the smart home system 
      */
     protected String type;
 

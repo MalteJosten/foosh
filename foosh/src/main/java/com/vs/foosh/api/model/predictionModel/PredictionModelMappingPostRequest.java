@@ -24,7 +24,7 @@ public class PredictionModelMappingPostRequest {
     /**
      * The {@link List} holding the {@link ParameterMapping}s.
      */
-    protected List<ParameterMapping> mappings = new ArrayList<>();
+    private List<ParameterMapping> mappings = new ArrayList<>();
 
     /**
      * Create an empty {@code PredictionModelMappingPostRequest}.

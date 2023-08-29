@@ -61,7 +61,7 @@ public class ParameterMapping implements Serializable {
      * @return a {@link Map} with one entry
      */
     @JsonIgnore
-    public Map<String, String> getAsHashMap() {
+    public Map<String, String> getAsMap() {
         Map<String, String> map = new HashMap<>();
         map.put("parameter", this.parameter);
         map.put("deviceId", this.deviceId);

@@ -42,7 +42,7 @@ public class DeviceDisplayRepresentation {
     /**
      * Return the list containigall relevant {@link LinkEntry} elements.
      * 
-     * @apiNote The {@code @JsonProperty} annotation is used to rename the field to "_links" when deserializing the object into JSON.
+     * @apiNote The {@code @JsonProperty} annotation is used to rename the field to "_links" when transforming the object into JSON.
      */
     @JsonProperty("_links")
     public List<LinkEntry> getLinks() {

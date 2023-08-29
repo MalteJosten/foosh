@@ -43,7 +43,8 @@ public class Variable extends Thing implements IThingListSubscriber, IThingListP
     }
 
     public void setModels(List<UUID> modelIDs) {
-        this.models = modelIDs;
+        this.models.clear();
+        this.models.addAll(modelIDs);
         updateModelLinks();
     }
 
@@ -62,10 +63,6 @@ public class Variable extends Thing implements IThingListSubscriber, IThingListP
         return this.modelLinks;
     }
 
-    public List<LinkEntry> getModels() {
-        return this.modelLinks;
-    }
-
     public void clearDevices() {
        unregisterFromSubject();
        this.devices.clear();
@@ -79,7 +76,8 @@ public class Variable extends Thing implements IThingListSubscriber, IThingListP
     }
 
     public void setDevices(List<UUID> deviceIDs) {
-        this.devices = deviceIDs;
+        this.devices.clear();
+        this.devices.addAll(deviceIDs);
         updateDeviceLinks();
         registerToSubject();
     }
@@ -98,10 +96,6 @@ public class Variable extends Thing implements IThingListSubscriber, IThingListP
     }
 
     public List<LinkEntry> getDeviceLinks() {
-        return this.deviceLinks;
-    }
-
-    public List<LinkEntry> getDevices() {
         return this.deviceLinks;
     }
 

@@ -616,7 +616,7 @@ public class VariableService {
 
         List<Map<String, String>> paramMappings = new ArrayList<>();
         for (ParameterMapping parameterMapping: oldPatchValue) {
-            Map<String, String> hashParamMapping = parameterMapping.getAsHashMap();
+            Map<String, String> hashParamMapping = parameterMapping.getAsMap();
             paramMappings.add(hashParamMapping);
         }
 

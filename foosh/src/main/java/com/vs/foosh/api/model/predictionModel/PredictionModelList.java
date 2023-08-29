@@ -28,7 +28,7 @@ import com.vs.foosh.api.services.ListService;
  * @see com.vs.foosh.api.services.PersistentDataService#savePredictionModelList()
  * @see com.vs.foosh.api.services.PersistentDataService#hasSavedPredictionModelList()
  */
-public class PredictionModelList implements Serializable, IThingList<AbstractPredictionModel, PredictionModelDisplayRepresentation>{
+public class PredictionModelList implements Serializable, IThingList<AbstractPredictionModel, PredictionModelDisplayRepresentation> {
     /**
      * The list containing all {@link AbstractPredictionModel}s.
      */

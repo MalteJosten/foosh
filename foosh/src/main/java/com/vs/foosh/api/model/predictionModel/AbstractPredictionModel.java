@@ -39,18 +39,18 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
     /**
      * The {@link List} with elements of type {@link UUID} containing IDs of variables which are linked to this model.
      */
-    private List<UUID> variableIds  = new ArrayList<>();
+    protected List<UUID> variableIds  = new ArrayList<>();
 
     /**
      * The {@link List} with elements of type {@link String} containing all parameter names relevant for this prediction model.
      */
-    private List<String> parameters = new ArrayList<>();
+    protected List<String> parameters = new ArrayList<>();
 
 
     /**
      * The {@link List} with elements of type {@link VariableParameterMapping} containing all mappings for every variable mapping.
      */
-    private List<VariableParameterMapping> parameterMappings = new ArrayList<>();
+    protected List<VariableParameterMapping> parameterMappings = new ArrayList<>();
 
     /**
      *  The {@link List} with elements of type {@link LinkEntry} which point to the model's own API URIs.
