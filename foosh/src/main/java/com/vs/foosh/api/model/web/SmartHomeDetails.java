@@ -1,18 +1,18 @@
 package com.vs.foosh.api.model.web;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public class SmartHomeDetails {
 
     private String uri;
-    private HashMap<String, String> credentials;
+    private Map<String, String> details;
 
     public SmartHomeDetails() {
     }
 
-    public SmartHomeDetails(String uri, HashMap<String, String> credentials) {
+    public SmartHomeDetails(String uri, Map<String, String> details) {
         setUri(uri);
-        setCredentials(credentials);
+        setDetails(details);
     }
 
     public void setUri(String uri) {
@@ -23,25 +23,25 @@ public class SmartHomeDetails {
         return this.uri;
     }
 
-    public void setCredentials(HashMap<String, String> credentials) {
-        this.credentials = credentials;
+    public void setDetails(Map<String, String> details) {
+        this.details = details;
     }
 
-    public HashMap<String, String> getCredentials() {
-        return this.credentials;
+    public Map<String, String> getDetails() {
+        return this.details;
     }
 
-    public boolean hasCredentials() {
-        return (this.credentials == null || this.credentials.isEmpty());
+    public boolean hasDetails() {
+        return (this.details == null || this.details.isEmpty());
     }
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("<< SmartHomeCredentials >>\n");
-        if (this.credentials != null) {
-            builder.append("Credentials:\n");
+        StringBuilder builder = new StringBuilder("<< SmartHomeDetails >>\n");
+        if (this.details != null) {
+            builder.append("details:\n");
             
-            this.credentials.forEach((key, value) -> {
+            this.details.forEach((key, value) -> {
                 builder.append("\t" + key + ": " + value + "\n");    
             });
         } else {
