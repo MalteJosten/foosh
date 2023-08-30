@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 
 import com.vs.foosh.api.exceptions.device.CouldNotFindUniqueDeviceNameException;
 import com.vs.foosh.api.model.device.DeviceNamePatchRequest;
-import com.vs.foosh.api.services.ListService;
 import com.vs.foosh.api.services.PersistentDataService;
+import com.vs.foosh.api.services.helpers.ListService;
 import com.vs.foosh.helper.AbstractDeviceTest;
 
 public class DeviceListTest {

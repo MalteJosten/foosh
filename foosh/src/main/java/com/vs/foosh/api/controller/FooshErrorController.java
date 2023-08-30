@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.vs.foosh.api.services.LinkBuilderService;
+import com.vs.foosh.api.services.helpers.LinkBuilderService;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;

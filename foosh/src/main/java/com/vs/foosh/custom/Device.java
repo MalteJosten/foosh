@@ -3,7 +3,7 @@ package com.vs.foosh.custom;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.vs.foosh.api.model.device.AbstractDevice;
 import com.vs.foosh.api.model.device.DeviceNamePatchRequest;
-import com.vs.foosh.api.services.ListService;
+import com.vs.foosh.api.services.helpers.ListService;
 
 public class Device extends AbstractDevice {
 

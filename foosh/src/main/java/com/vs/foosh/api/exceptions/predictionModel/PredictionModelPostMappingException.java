@@ -3,7 +3,7 @@ package com.vs.foosh.api.exceptions.predictionModel;
 import org.springframework.http.HttpStatus;
 
 import com.vs.foosh.api.exceptions.misc.FooSHApiException;
-import com.vs.foosh.api.services.ListService;
+import com.vs.foosh.api.services.helpers.ListService;
 
 public class PredictionModelPostMappingException extends FooSHApiException {
 

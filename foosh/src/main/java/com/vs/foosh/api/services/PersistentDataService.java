@@ -20,6 +20,7 @@ import com.vs.foosh.api.model.device.DeviceList;
 import com.vs.foosh.api.model.misc.ReadSaveFileResult;
 import com.vs.foosh.api.model.predictionModel.PredictionModelList;
 import com.vs.foosh.api.model.variable.VariableList;
+import com.vs.foosh.api.services.helpers.ListService;
 
 @Service
 public class PersistentDataService {

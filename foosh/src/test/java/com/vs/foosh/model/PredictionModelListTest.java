@@ -9,8 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.vs.foosh.api.exceptions.predictionModel.PredictionModelNameMustNotBeAnUuidException;
-import com.vs.foosh.api.services.ListService;
 import com.vs.foosh.api.services.PersistentDataService;
+import com.vs.foosh.api.services.helpers.ListService;
 import com.vs.foosh.helper.PredictionModelTest;
 
 public class PredictionModelListTest {

@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Test;
 import com.vs.foosh.api.exceptions.variable.VariableNameIsNotUniqueException;
 import com.vs.foosh.api.exceptions.variable.VariableNameMustNotBeAnUuidException;
 import com.vs.foosh.api.model.variable.Variable;
-import com.vs.foosh.api.services.ListService;
 import com.vs.foosh.api.services.PersistentDataService;
+import com.vs.foosh.api.services.helpers.ListService;
 
 public class VariableListTest {
 

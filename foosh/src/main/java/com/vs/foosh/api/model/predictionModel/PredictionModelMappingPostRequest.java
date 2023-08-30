@@ -9,8 +9,8 @@ import java.util.Map.Entry;
 import com.vs.foosh.api.exceptions.predictionModel.MalformedParameterMappingException;
 import com.vs.foosh.api.exceptions.predictionModel.ParameterMappingDeviceException;
 import com.vs.foosh.api.exceptions.variable.VariableNotFoundException;
-import com.vs.foosh.api.services.IdService;
-import com.vs.foosh.api.services.ListService;
+import com.vs.foosh.api.services.helpers.IdService;
+import com.vs.foosh.api.services.helpers.ListService;
 
 /**
  * A class containing a request to change a {@link VariableParameterMapping}.

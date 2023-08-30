@@ -1,4 +1,4 @@
-package com.vs.foosh.api.services;
+package com.vs.foosh.api.services.helpers;
 
 import org.springframework.stereotype.Service;
 

@@ -13,7 +13,7 @@ import com.vs.foosh.api.model.misc.ModificationType;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
-import com.vs.foosh.api.services.LinkBuilderService;
+import com.vs.foosh.api.services.helpers.LinkBuilderService;
 
 public class VariableList implements Serializable, IThingList<Variable, VariableDisplayRepresentation> {
     private List<Variable> variables;

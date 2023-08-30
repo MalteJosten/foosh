@@ -17,8 +17,8 @@ import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsEmptyException;
 import com.vs.foosh.api.model.web.FooSHJsonPatch;
 import com.vs.foosh.api.model.web.FooSHPatchOperation;
-import com.vs.foosh.api.services.ListService;
 import com.vs.foosh.api.services.PersistentDataService;
+import com.vs.foosh.api.services.helpers.ListService;
 
 public class FooSHJsonPatchTest {
     @BeforeEach

@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
-import com.vs.foosh.api.services.IdService;
+import com.vs.foosh.api.services.helpers.IdService;
 import com.vs.foosh.helper.ThingTest;
 
 public class IdServiceTest {

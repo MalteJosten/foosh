@@ -39,6 +39,8 @@ import com.vs.foosh.api.model.web.FooSHPatchOperation;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.model.web.SmartHomeInstruction;
 import com.vs.foosh.api.model.web.SmartHomePostResult;
+import com.vs.foosh.api.services.helpers.IdService;
+import com.vs.foosh.api.services.helpers.ListService;
 
 @Service
 public class VariableService {

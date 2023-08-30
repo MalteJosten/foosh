@@ -23,8 +23,8 @@ import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.model.web.SmartHomeDetails;
 import com.vs.foosh.api.services.DeviceService;
-import com.vs.foosh.api.services.LinkBuilderService;
-import com.vs.foosh.api.services.ListService;
+import com.vs.foosh.api.services.helpers.LinkBuilderService;
+import com.vs.foosh.api.services.helpers.ListService;
 
 /**
  * A {@link RestController} that handles HTTP requests for the routes {@code /api/devices/} and {@code /api/devices/{id}}.

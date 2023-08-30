@@ -12,8 +12,8 @@ import com.vs.foosh.api.model.misc.IThingList;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
-import com.vs.foosh.api.services.LinkBuilderService;
-import com.vs.foosh.api.services.ListService;
+import com.vs.foosh.api.services.helpers.LinkBuilderService;
+import com.vs.foosh.api.services.helpers.ListService;
 
 /**
  * A container holding all {@link AbstractPredictionModel}s with a bunch of functions allowing setting, retrieval, and modification of parameter mappings

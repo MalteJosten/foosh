@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import com.vs.foosh.api.exceptions.misc.FooSHApiException;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
-import com.vs.foosh.api.services.LinkBuilderService;
+import com.vs.foosh.api.services.helpers.LinkBuilderService;
 
 public class CouldNotFindVariableParameterMappingException extends FooSHApiException {
     

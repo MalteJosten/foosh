@@ -2,7 +2,7 @@ package com.vs.foosh.api.model.variable;
 
 import com.vs.foosh.api.exceptions.variable.MalformedVariablePredictionRequest;
 import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
-import com.vs.foosh.api.services.ListService;
+import com.vs.foosh.api.services.helpers.ListService;
 
 public record VariablePredictionRequest(String modelId, String value, boolean execute) {
 

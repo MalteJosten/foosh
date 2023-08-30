@@ -25,6 +25,8 @@ import com.vs.foosh.api.model.web.FooSHJsonPatch;
 import com.vs.foosh.api.model.web.FooSHPatchOperation;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.model.web.SmartHomeDetails;
+import com.vs.foosh.api.services.helpers.IdService;
+import com.vs.foosh.api.services.helpers.ListService;
 
 @Service
 public class DeviceService {

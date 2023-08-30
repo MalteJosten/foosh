@@ -20,8 +20,8 @@ import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
 import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
 import com.vs.foosh.api.model.predictionModel.PredictionModelMappingPostRequest;
 import com.vs.foosh.api.model.web.LinkEntry;
-import com.vs.foosh.api.services.ListService;
 import com.vs.foosh.api.services.PredictionModelService;
+import com.vs.foosh.api.services.helpers.ListService;
 
 @RestController
 @RequestMapping(value = "/api/models")

@@ -14,7 +14,7 @@ import com.vs.foosh.api.model.device.AbstractDevice;
 import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
 import com.vs.foosh.api.model.predictionModel.ParameterMapping;
 import com.vs.foosh.api.model.web.SmartHomeInstruction;
-import com.vs.foosh.api.services.ListService;
+import com.vs.foosh.api.services.helpers.ListService;
 
 public class MyPredictionModel extends AbstractPredictionModel {
 

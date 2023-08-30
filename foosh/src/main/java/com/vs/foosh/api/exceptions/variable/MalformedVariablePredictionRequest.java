@@ -3,7 +3,7 @@ package com.vs.foosh.api.exceptions.variable;
 import org.springframework.http.HttpStatus;
 
 import com.vs.foosh.api.exceptions.misc.FooSHApiException;
-import com.vs.foosh.api.services.LinkBuilderService;
+import com.vs.foosh.api.services.helpers.LinkBuilderService;
 
 public class MalformedVariablePredictionRequest extends FooSHApiException {
 

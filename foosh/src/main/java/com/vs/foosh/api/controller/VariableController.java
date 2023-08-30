@@ -24,8 +24,8 @@ import com.vs.foosh.api.model.variable.VariableModelPostRequest;
 import com.vs.foosh.api.model.variable.VariablePostRequest;
 import com.vs.foosh.api.model.variable.VariablePredictionRequest;
 import com.vs.foosh.api.model.web.LinkEntry;
-import com.vs.foosh.api.services.ListService;
 import com.vs.foosh.api.services.VariableService;
+import com.vs.foosh.api.services.helpers.ListService;
 
 /**
  * A {@link RestController} that handles HTTP requests for the routes {@code /api/vars/}, {@code /api/vars/{id}}, {@code /api/vars/{id}/devices/}, and {@code /api/vars/{id}/models/}.

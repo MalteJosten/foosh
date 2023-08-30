@@ -3,7 +3,7 @@ package com.vs.foosh.api.exceptions.misc;
 import org.springframework.http.HttpStatus;
 
 import com.vs.foosh.api.model.misc.ThingType;
-import com.vs.foosh.api.services.ListService;
+import com.vs.foosh.api.services.helpers.ListService;
 
 public class IdIsNoValidUUIDException extends FooSHApiException {
 

@@ -17,7 +17,7 @@ import com.vs.foosh.api.model.misc.ModificationType;
 import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
-import com.vs.foosh.api.services.LinkBuilderService;
+import com.vs.foosh.api.services.helpers.LinkBuilderService;
 
 /**
  * A container holding all currently registered {@link AbstractDevice}s with a bunch of functions allowing setting, retrieval, and modification of

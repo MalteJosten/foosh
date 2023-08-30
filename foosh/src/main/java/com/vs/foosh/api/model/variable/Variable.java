@@ -12,8 +12,8 @@ import com.vs.foosh.api.model.misc.Thing;
 import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
-import com.vs.foosh.api.services.LinkBuilderService;
-import com.vs.foosh.api.services.ListService;
+import com.vs.foosh.api.services.helpers.LinkBuilderService;
+import com.vs.foosh.api.services.helpers.ListService;
 
 public class Variable extends Thing implements IThingListSubscriber, IThingListPublisher {
     protected List<UUID> models  = new ArrayList<>();

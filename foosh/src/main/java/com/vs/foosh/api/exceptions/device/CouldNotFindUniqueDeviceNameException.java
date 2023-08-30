@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.springframework.http.HttpStatus;
 
 import com.vs.foosh.api.exceptions.misc.FooSHApiException;
-import com.vs.foosh.api.services.LinkBuilderService;
+import com.vs.foosh.api.services.helpers.LinkBuilderService;
 
 public class CouldNotFindUniqueDeviceNameException extends FooSHApiException {
 

@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.springframework.http.HttpStatus;
 
 import com.vs.foosh.api.exceptions.misc.FooSHApiException;
-import com.vs.foosh.api.services.ListService;
+import com.vs.foosh.api.services.helpers.ListService;
 
 public class VariableNotFoundException extends FooSHApiException {
 

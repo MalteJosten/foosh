@@ -17,9 +17,9 @@ import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
 import com.vs.foosh.api.model.predictionModel.PredictionModelList;
 import com.vs.foosh.api.model.variable.VariableList;
 import com.vs.foosh.api.model.web.SmartHomeDetails;
-import com.vs.foosh.api.services.LinkBuilderService;
-import com.vs.foosh.api.services.ListService;
 import com.vs.foosh.api.services.PersistentDataService;
+import com.vs.foosh.api.services.helpers.LinkBuilderService;
+import com.vs.foosh.api.services.helpers.ListService;
 
 @Configuration
 public class ApplicationConfig {
