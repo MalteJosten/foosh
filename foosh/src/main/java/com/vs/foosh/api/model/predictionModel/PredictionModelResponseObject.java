@@ -6,7 +6,7 @@ import java.util.UUID;
 import com.vs.foosh.api.model.misc.Thing;
 
 /**
- * A data component that is a subclass of {@link Thing} and only includes fields of {@link AbstractPredictionModel} which are relevant when using a {@link AbstractDevice} in a HTTP response.
+ * A data component that is a subclass of {@link Thing} and only includes fields of {@link AbstractPredictionModel} which are relevant when using a {@link AbstractPredictionModel} in a HTTP response.
  * 
  * The relevant fields include the prediction model's {@code variableIds}, {@code parameters}, and {@code mappings}.
  */
@@ -18,7 +18,7 @@ public class PredictionModelResponseObject extends Thing {
     /**
      * Given a prediction model, create the corresponding {@code PredictionModelResponseObject}.
      * 
-     * @param model the {@link AbstractPredictionModel to create the {@code PredictionModelResponseObject} from
+     * @param model the {@link AbstractPredictionModel} to create the {@code PredictionModelResponseObject} from
      */
     public PredictionModelResponseObject(AbstractPredictionModel model) {
         this.id          = model.getId();

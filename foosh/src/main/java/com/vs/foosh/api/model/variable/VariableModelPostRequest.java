@@ -5,6 +5,13 @@ import java.util.UUID;
 
 import com.vs.foosh.api.model.predictionModel.ParameterMapping;
 
+
+/**
+ * A {@link Record} containing a request to link a {@link AbstractPredictionModel} to a {@link Variable}.
+ * 
+ * @param modelId the ID of type {@link UUID} of an {@link AbstractPredictionModel}
+ * @param mappings the {@link List} of {@link ParameterMapping}s
+ */
 public record VariableModelPostRequest(UUID modelId, List<ParameterMapping> mappings) {
     
     @Override

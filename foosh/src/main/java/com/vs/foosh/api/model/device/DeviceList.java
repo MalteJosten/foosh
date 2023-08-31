@@ -87,7 +87,7 @@ public class DeviceList implements IThingListPublisher, IThingList<AbstractDevic
     /**
      * Return a list of devices as things.
      * 
-     * @return a {@link List} with elements of type {@link AbstractDevice} as a {@link Thing}
+     * @return a {@link List} with elements of type {@link AbstractDevice} as {@link Thing}s
      */
     @Override
     public List<Thing> getAsThings() {
