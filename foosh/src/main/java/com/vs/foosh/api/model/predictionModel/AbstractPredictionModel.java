@@ -34,6 +34,9 @@ import com.vs.foosh.api.services.helpers.ListService;
  * 
  * It implements the interface {@link IThingListSubscriber} to act as a subscriber of the observer pattern.
  * @see <a href="https://refactoring.guru/design-patterns/observer">Observer Pattern</a>
+ * 
+ * It implements the interface {@link IPredictionMaker} to make predictions based on a given value and provide
+ * the user with corresponding smart home api instructions.
  */
 public abstract class AbstractPredictionModel extends Thing implements IThingListSubscriber, IPredictionMaker {
     /**
