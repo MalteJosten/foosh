@@ -30,7 +30,7 @@ import com.vs.foosh.api.services.helpers.ListService;
  *      * paratemerMappings
  *      * valueBounds
  *      * various link lists
- * These add prediction model specific data and enables linking to {@link Variable}s.o
+ * These add prediction model specific data and enables linking to {@link Variable}s.
  * 
  * It implements the interface {@link IThingListSubscriber} to act as a subscriber of the observer pattern.
  * @see <a href="https://refactoring.guru/design-patterns/observer">Observer Pattern</a>

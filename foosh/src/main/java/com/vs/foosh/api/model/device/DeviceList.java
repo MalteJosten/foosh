@@ -317,7 +317,7 @@ public class DeviceList implements IThingListPublisher, IThingList<AbstractDevic
     }
 
     /**
-     * Implement {@link com.vs.foosh.api.model.misc.IThingListSubject#attach(IThingListSubscriber) attach(IThingListObserver)}.
+     * Implement {@link com.vs.foosh.api.model.misc.IThingListPublisher#attach(IThingListSubscriber) attach(IThingListObserver)}.
      * The given observer is added to the list of observers.
      * 
      * @param observer the {@link IThingListSubscriber} to be added to {@code observers}
@@ -330,7 +330,7 @@ public class DeviceList implements IThingListPublisher, IThingList<AbstractDevic
     }
 
     /**
-     * Implement {@link com.vs.foosh.api.model.misc.IThingListSubject#detach(IThingListSubscriber) deatch(IThingListObserver)}.
+     * Implement {@link com.vs.foosh.api.model.misc.IThingListPublisher#detach(IThingListSubscriber) deatch(IThingListObserver)}.
      * The given observer is removed from the list of observers.
      * 
      * @param observer the {@link IThingListSubscriber} to be removed from {@code observers}
@@ -341,7 +341,7 @@ public class DeviceList implements IThingListPublisher, IThingList<AbstractDevic
     }
 
     /**
-     * Implement {@link com.vs.foosh.api.model.misc.IThingListSubject#notifyObservers(AbstractModification) notifyObservers(AbstractModification)}.
+     * Implement {@link com.vs.foosh.api.model.misc.IThingListPublisher#notifyObservers(AbstractModification) notifyObservers(AbstractModification)}.
      * 
      * First, all observers are notified about the modification.
      * Then, the {@code observers} is cleared.

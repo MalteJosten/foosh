@@ -279,7 +279,7 @@ public class VariableService {
             }
         }
 
-        variable.setDevices(deviceIds);
+        variable.setDeviceIds(deviceIds);
         variable.updateLinks();
 
         PersistentDataService.saveAll();
@@ -299,7 +299,7 @@ public class VariableService {
 
             List<UUID> devices = variable.getDeviceIds();
             variable.unregisterFromSubject();
-            variable.setDevices(devices);
+            variable.setDeviceIds(devices);
             variable.registerToSubject();
             variable.updateLinks();
 
@@ -424,7 +424,7 @@ public class VariableService {
         Variable variable = ListService.getVariableList().getThing(id);
 
         variable.unregisterFromSubject();
-        variable.clearDevices();
+        variable.clearDeviceIds();
 
         PersistentDataService.saveAll();
     
@@ -630,7 +630,7 @@ public class VariableService {
     public static ResponseEntity<Object> deleteVariableModels(String id) {
         Variable variable = ListService.getVariableList().getThing(id);
 
-        variable.clearModels();
+        variable.clearModelIds();
 
         PersistentDataService.saveAll();
 
