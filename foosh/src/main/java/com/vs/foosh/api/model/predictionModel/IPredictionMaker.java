@@ -5,6 +5,9 @@ import java.util.UUID;
 
 import com.vs.foosh.api.model.web.SmartHomeInstruction;
 
+/**
+ * An interface providing the capability to make a prediction given a {@link Variable} and a {@code value}.
+ */
 public interface IPredictionMaker {
     
     /**

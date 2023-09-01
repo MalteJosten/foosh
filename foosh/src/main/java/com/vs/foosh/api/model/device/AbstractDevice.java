@@ -12,7 +12,10 @@ import com.vs.foosh.api.services.helpers.ListService;
 
 /**
  * A subclass of {@link Thing} that adds support for smart home devices.
- * It adds an additional {@code deviceName}, {@code type}, and {@link AbstractDeviceDescription} fields
+ * It adds the additional fields:
+ *     * {@code deviceName}
+ *     * {@code type}
+ *     * {@link AbstractDeviceDescription}
  * which add data to the object, retrieved from the smart home API.
  */
 public abstract class AbstractDevice extends Thing {

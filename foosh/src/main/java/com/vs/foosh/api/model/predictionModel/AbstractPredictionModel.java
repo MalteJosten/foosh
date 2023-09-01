@@ -25,10 +25,10 @@ import com.vs.foosh.api.services.helpers.ListService;
 /**
  * A subclass of {@link Thing} that adds support for prediction models.
  * It adds the additional fields:
- *      * variableIds
- *      * parameters
- *      * paratemerMappings
- *      * valueBounds
+ *      * {@code variableIds}
+ *      * {@code parameters}
+ *      * {@code paratemerMappings}
+ *      * {@code valueBounds}
  *      * various link lists
  * These add prediction model specific data and enables linking to {@link Variable}s.
  * 

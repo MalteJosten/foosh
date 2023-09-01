@@ -3,7 +3,7 @@ package com.vs.foosh.api.model.device;
 import java.util.UUID;
 
 /**
- * A record holding information about a request to change the name of an {@link AbstractDevice}.
+ * A {@link Record} holding information about a request to change the name of an {@link AbstractDevice}.
  * 
  * @param uuid the {@link UUID} of the {@link AbstractDevice} in question
  * @param name the requested {@link String} value to change the {@code name} to
