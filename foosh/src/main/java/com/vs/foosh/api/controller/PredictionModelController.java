@@ -30,6 +30,9 @@ import com.vs.foosh.api.services.helpers.ListService;
 @RequestMapping(value = "/api/models")
 public class PredictionModelController {
 
+    /**
+     * The controllers "root" route.  
+     */
     private static final String ROUTE = "/api/models/";
 
     /**

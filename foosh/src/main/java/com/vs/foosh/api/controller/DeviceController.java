@@ -33,6 +33,9 @@ import com.vs.foosh.api.services.helpers.ListService;
 @RequestMapping(value="/api/devices")
 public class DeviceController {
     
+    /**
+     * The controllers "root" route.  
+     */
     private final String ROUTE = "/api/devices/";
 
     //

@@ -34,6 +34,9 @@ import com.vs.foosh.api.services.helpers.ListService;
 @RequestMapping(value = "/api/vars")
 public class VariableController {
 
+    /**
+     * The controllers "root" route.  
+     */
     private final String ROUTE = "/api/vars/";
 
     ///
