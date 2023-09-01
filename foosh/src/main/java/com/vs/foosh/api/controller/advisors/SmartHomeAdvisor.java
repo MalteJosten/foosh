@@ -12,8 +12,20 @@ import com.vs.foosh.api.exceptions.smarthome.SmartHomeDeviceFetcherIsNullExcepti
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeIOException;
 import com.vs.foosh.api.exceptions.smarthome.SmartHomeInstructionExecutorIsNullException;
 
+/**
+ * A {@link ControllerAdvice} which intercepts SmartHome-related exceptions and handles them correctly.
+ */
 @ControllerAdvice
 public class SmartHomeAdvisor {
+    /**
+     * Construct and return a {@link ProblemDetail} if a {@link FooSHSmartHomeException} is thrown.
+     * @see <a href="https://www.rfc-editor.org/rfc/rfc7807">RFC 7807</a>
+     * 
+     * @param exception the thrown {@link FooSHSmartHomeException}
+     * @param request the {@link WebRequest} which triggered the exception
+     * 
+     * @return a {@link ResponseEntity} containing a {@link ProblemDetail} as its body.
+     */
     @ExceptionHandler({
         SmartHomeAccessException.class,
         SmartHomeIOException.class,

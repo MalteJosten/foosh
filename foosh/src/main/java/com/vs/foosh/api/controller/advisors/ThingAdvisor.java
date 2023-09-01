@@ -34,9 +34,21 @@ import com.vs.foosh.api.exceptions.variable.VariableNameMustNotBeAnUuidException
 import com.vs.foosh.api.exceptions.variable.VariableNotFoundException;
 import com.vs.foosh.api.exceptions.variable.VariablePredictionException;
 
+/**
+ * A {@link ControllerAdvice} which intercepts {@link Thing}-related exceptions and handles them correctly.
+ */
 @ControllerAdvice
 public class ThingAdvisor extends ResponseEntityExceptionHandler {
 
+    /**
+     * Construct and return a {@link ProblemDetail} if a {@link AbstractDevice}-related {@link FooSHApiException} is thrown.
+     * @see <a href="https://www.rfc-editor.org/rfc/rfc7807">RFC 7807</a>
+     * 
+     * @param exception the thrown {@link FooSHApiException}
+     * @param request the {@link WebRequest} which triggered the exception
+     * 
+     * @return a {@link ResponseEntity} containing a {@link ProblemDetail} as its body.
+     */
     @ExceptionHandler({
         IdIsNoValidUUIDException.class,
         DeviceNameIsNotUniqueException.class,
@@ -53,6 +65,15 @@ public class ThingAdvisor extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(exception.getStatus()).body(problemDetail);
     }
 
+    /**
+     * Construct and return a {@link ProblemDetail} if a {@link AbstractPredictionModel}-related {@link FooSHApiException} is thrown.
+     * @see <a href="https://www.rfc-editor.org/rfc/rfc7807">RFC 7807</a>
+     * 
+     * @param exception the thrown {@link FooSHApiException}
+     * @param request the {@link WebRequest} which triggered the exception
+     * 
+     * @return a {@link ResponseEntity} containing a {@link ProblemDetail} as its body.
+     */
     @ExceptionHandler({
         MalformedParameterMappingException.class,
         CouldNotFindVariableParameterMappingException.class,
@@ -72,6 +93,15 @@ public class ThingAdvisor extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(exception.getStatus()).body(problemDetail);
     }
 
+    /**
+     * Construct and return a {@link ProblemDetail} if a {@link Variable}-related {@link FooSHApiException} is thrown.
+     * @see <a href="https://www.rfc-editor.org/rfc/rfc7807">RFC 7807</a>
+     * 
+     * @param exception the thrown {@link FooSHApiException}
+     * @param request the {@link WebRequest} which triggered the exception
+     * 
+     * @return a {@link ResponseEntity} containing a {@link ProblemDetail} as its body.
+     */
     @ExceptionHandler({
         VariableNotFoundException.class,
         VariableCreationException.class,

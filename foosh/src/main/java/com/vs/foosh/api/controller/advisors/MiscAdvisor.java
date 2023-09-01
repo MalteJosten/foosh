@@ -12,9 +12,21 @@ import com.vs.foosh.api.exceptions.misc.HttpMappingNotAllowedException;
 import com.vs.foosh.api.exceptions.misc.SaveFileNotFoundException;
 import com.vs.foosh.api.exceptions.misc.SavingToFileIOException;
 
+/**
+ * A {@link ControllerAdvice} which intercepts {@link HttpMappingNotAllowedException}s and exceptions thrown by {@link PersistentDataService} and handles them correctly.
+ */
 @ControllerAdvice
 public class MiscAdvisor {
 
+    /**
+     * Construct and return a {@link ProblemDetail} if a {@link HttpMappingNotAllowedException} is thrown.
+     * @see <a href="https://www.rfc-editor.org/rfc/rfc7807">RFC 7807</a>
+     * 
+     * @param exception the thrown {@link HttpMappingNotAllowedException}
+     * @param request the {@link WebRequest} which triggered the exception
+     * 
+     * @return a {@link ResponseEntity} containing a {@link ProblemDetail} as its body.
+     */
     @ExceptionHandler(HttpMappingNotAllowedException.class)
     public ResponseEntity<Object> handleHttpMappingNotAllowedExeption(HttpMappingNotAllowedException exception,
             WebRequest request) {
@@ -24,6 +36,15 @@ public class MiscAdvisor {
         return ResponseEntity.status(exception.getStatus()).body(problemDetail);
     }
 
+    /**
+     * Construct and return a {@link ProblemDetail} for exceptions thrown by the {@link PersistentDataService}.
+     * @see <a href="https://www.rfc-editor.org/rfc/rfc7807">RFC 7807</a>
+     * 
+     * @param exception the thrown {@link FooSHSaveFileException}
+     * @param request the {@link WebRequest} which triggered the exception
+     * 
+     * @return a {@link ResponseEntity} containing a {@link ProblemDetail} as its body.
+     */
     @ExceptionHandler({
         SaveFileNotFoundException.class,
         SavingToFileIOException.class,

@@ -15,8 +15,21 @@ import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsEmptyException;
 import com.vs.foosh.api.exceptions.FooSHJsonPatch.FooSHJsonPatchValueIsNullException;
 
+/**
+ * A {@link ControllerAdvice} which intercepts FooSHJsonPatch exceptions and handles them correctly.
+ */
 @ControllerAdvice
 public class FooSHJsonPatchAdvisor {
+
+    /**
+     * Construct and return a {@link ProblemDetail} without links.
+     * @see <a href="https://www.rfc-editor.org/rfc/rfc7807">RFC 7807</a>
+     * 
+     * @param exception the thrown {@link FooSHJsonPatchException}
+     * @param request the {@link WebRequest} which triggered the exception
+     * 
+     * @return a {@link ResponseEntity} containing a {@link ProblemDetail} as its body.
+     */
     @ExceptionHandler({
         FooSHJsonPatchFormatException.class,
         FooSHJsonPatchIllegalPathException.class,
@@ -32,6 +45,15 @@ public class FooSHJsonPatchAdvisor {
         return ResponseEntity.status(exception.getStatusCode()).body(problemDetail);
     }
 
+    /**
+     * Construct and return a {@link ProblemDetail} with links.
+     * @see <a href="https://www.rfc-editor.org/rfc/rfc7807">RFC 7807</a>
+
+     * @param exception the thrown {@link FooSHJsonPatchOperationException}
+     * @param request the {@link WebRequest} which triggered the exception
+     * 
+     * @return a {@link ResponseEntity} containing a {@link ProblemDetail} as its body.
+     */
     @ExceptionHandler(FooSHJsonPatchOperationException.class)
     public ResponseEntity<Object> handleFooSHJsonPatchOperationException(FooSHJsonPatchOperationException exception,
                     WebRequest request) {
