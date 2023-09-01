@@ -15,11 +15,11 @@ import com.vs.foosh.api.model.predictionModel.ParameterMapping;
 import com.vs.foosh.api.model.web.SmartHomeInstruction;
 import com.vs.foosh.api.services.helpers.ListService;
 
-public class PredictionModelTest extends AbstractPredictionModel {
+public class PredictionModelMock extends AbstractPredictionModel {
 
     private static final String FIXED_ID = "e0584b73-ad13-41f2-9f36-2297299d8671";
 
-    public PredictionModelTest(String name) {
+    public PredictionModelMock(String name) {
         this.id   = UUID.fromString(FIXED_ID);
         this.name = name;
 

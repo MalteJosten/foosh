@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import com.vs.foosh.api.exceptions.predictionModel.PredictionModelNameMustNotBeAnUuidException;
 import com.vs.foosh.api.services.PersistentDataService;
 import com.vs.foosh.api.services.helpers.ListService;
-import com.vs.foosh.helper.PredictionModelTest;
+import com.vs.foosh.helper.PredictionModelMock;
 
 public class PredictionModelListTest {
     
@@ -29,7 +29,7 @@ public class PredictionModelListTest {
 
     @Test
     void givenModelsListWithOneModel_whenIsValidWithRandomString_getTrue() {
-        PredictionModelTest model = new PredictionModelTest("test-model");
+        PredictionModelMock model = new PredictionModelMock("test-model");
         ListService.getPredictionModelList().addThing(model);
 
         assertEquals(true, ListService.getPredictionModelList().isValidName("test-other", model.getId()));
@@ -37,7 +37,7 @@ public class PredictionModelListTest {
 
     @Test
     void givenModelsListWithOneModel_whenIsValidWithUuid_getException() {
-        PredictionModelTest model = new PredictionModelTest("test-model");
+        PredictionModelMock model = new PredictionModelMock("test-model");
         ListService.getPredictionModelList().addThing(model);
 
         assertThrows(PredictionModelNameMustNotBeAnUuidException.class, () -> {
@@ -47,8 +47,8 @@ public class PredictionModelListTest {
 
     @Test
     void givenNonEmptyModelsList_whenIsValidWithRandomString_getTrue() {
-        PredictionModelTest model1 = new PredictionModelTest("test-model1");
-        PredictionModelTest model2 = new PredictionModelTest("test-model2");
+        PredictionModelMock model1 = new PredictionModelMock("test-model1");
+        PredictionModelMock model2 = new PredictionModelMock("test-model2");
         ListService.getPredictionModelList().addThing(model1);
         ListService.getPredictionModelList().addThing(model2);
 
@@ -57,8 +57,8 @@ public class PredictionModelListTest {
 
     @Test
     void givenNonEmptyModelsList_whenIsValidWithUuid_getException() {
-        PredictionModelTest model1 = new PredictionModelTest("test-model1");
-        PredictionModelTest model2 = new PredictionModelTest("test-model2");
+        PredictionModelMock model1 = new PredictionModelMock("test-model1");
+        PredictionModelMock model2 = new PredictionModelMock("test-model2");
         ListService.getPredictionModelList().addThing(model1);
         ListService.getPredictionModelList().addThing(model2);
 
@@ -69,8 +69,8 @@ public class PredictionModelListTest {
 
     @Test
     void givenNonEmptyDevicesList_whenIsValidWithOwnDuplicate_getTrue() {
-        PredictionModelTest model1 = new PredictionModelTest("test-model1");
-        PredictionModelTest model2 = new PredictionModelTest("test-model2");
+        PredictionModelMock model1 = new PredictionModelMock("test-model1");
+        PredictionModelMock model2 = new PredictionModelMock("test-model2");
         ListService.getPredictionModelList().addThing(model1);
         ListService.getPredictionModelList().addThing(model2);
 

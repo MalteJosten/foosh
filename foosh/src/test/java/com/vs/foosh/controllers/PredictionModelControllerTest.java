@@ -26,8 +26,8 @@ import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
 import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.services.PersistentDataService;
 import com.vs.foosh.api.services.helpers.ListService;
-import com.vs.foosh.helper.AbstractDeviceTest;
-import com.vs.foosh.helper.PredictionModelTest;
+import com.vs.foosh.helper.AbstractDeviceMock;
+import com.vs.foosh.helper.PredictionModelMock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
@@ -42,7 +42,7 @@ public class PredictionModelControllerTest {
         ListService.getDeviceList().getList().clear();
         ListService.getVariableList().getList().clear();
         PersistentDataService.deleteAll();
-        ListService.getPredictionModelList().addThing(new PredictionModelTest("test-model"));
+        ListService.getPredictionModelList().addThing(new PredictionModelMock("test-model"));
     }
 
     ///
@@ -800,7 +800,7 @@ public class PredictionModelControllerTest {
         
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -820,7 +820,7 @@ public class PredictionModelControllerTest {
         
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -840,7 +840,7 @@ public class PredictionModelControllerTest {
         
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -860,7 +860,7 @@ public class PredictionModelControllerTest {
         
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -880,7 +880,7 @@ public class PredictionModelControllerTest {
         
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -900,7 +900,7 @@ public class PredictionModelControllerTest {
         
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -920,7 +920,7 @@ public class PredictionModelControllerTest {
         
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -939,7 +939,7 @@ public class PredictionModelControllerTest {
         AbstractPredictionModel model = ListService.getPredictionModelList().getList().get(0);
         
         Variable variable = new Variable("test-var", List.of(), List.of());
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -959,7 +959,7 @@ public class PredictionModelControllerTest {
         
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
             .contentType(MediaType.APPLICATION_JSON)
@@ -978,7 +978,7 @@ public class PredictionModelControllerTest {
         
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -998,7 +998,7 @@ public class PredictionModelControllerTest {
         
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -1018,7 +1018,7 @@ public class PredictionModelControllerTest {
         
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")

@@ -13,7 +13,7 @@ import com.vs.foosh.api.exceptions.device.CouldNotFindUniqueDeviceNameException;
 import com.vs.foosh.api.model.device.DeviceNamePatchRequest;
 import com.vs.foosh.api.services.PersistentDataService;
 import com.vs.foosh.api.services.helpers.ListService;
-import com.vs.foosh.helper.AbstractDeviceTest;
+import com.vs.foosh.helper.AbstractDeviceMock;
 
 public class DeviceListTest {
 
@@ -31,7 +31,7 @@ public class DeviceListTest {
 
     @Test
     void givenDevicesListWithOneDevice_whenIsValidWithRandomString_getTrue() {
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         assertEquals(true, ListService.getDeviceList().isValidName("test-other", device.getId()));
@@ -39,7 +39,7 @@ public class DeviceListTest {
 
     @Test
     void givenDevicesListWithOneDevice_whenIsValidWithUuid_getFalse() {
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         assertEquals(false, ListService.getDeviceList().isValidName(UUID.randomUUID().toString(), device.getId()));
@@ -47,8 +47,8 @@ public class DeviceListTest {
 
     @Test
     void givenNonEmptyDevicesList_whenIsValidWithRandomString_getTrue() {
-        AbstractDeviceTest device1 = new AbstractDeviceTest("test-device1");
-        AbstractDeviceTest device2 = new AbstractDeviceTest("test-device2");
+        AbstractDeviceMock device1 = new AbstractDeviceMock("test-device1");
+        AbstractDeviceMock device2 = new AbstractDeviceMock("test-device2");
         ListService.getDeviceList().addThing(device1);
         ListService.getDeviceList().addThing(device2);
 
@@ -57,8 +57,8 @@ public class DeviceListTest {
 
     @Test
     void givenNonEmptyDevicesList_whenIsValidWithUuid_getFalse() {
-        AbstractDeviceTest device1 = new AbstractDeviceTest("test-device1");
-        AbstractDeviceTest device2 = new AbstractDeviceTest("test-device2");
+        AbstractDeviceMock device1 = new AbstractDeviceMock("test-device1");
+        AbstractDeviceMock device2 = new AbstractDeviceMock("test-device2");
         ListService.getDeviceList().addThing(device1);
         ListService.getDeviceList().addThing(device2);
 
@@ -67,8 +67,8 @@ public class DeviceListTest {
 
     @Test
     void givenNonEmptyDevicesList_whenIsValidWithOwnDuplicate_getTrue() {
-        AbstractDeviceTest device1 = new AbstractDeviceTest("test-device1");
-        AbstractDeviceTest device2 = new AbstractDeviceTest("test-device2");
+        AbstractDeviceMock device1 = new AbstractDeviceMock("test-device1");
+        AbstractDeviceMock device2 = new AbstractDeviceMock("test-device2");
         ListService.getDeviceList().addThing(device1);
         ListService.getDeviceList().addThing(device2);
 
@@ -83,7 +83,7 @@ public class DeviceListTest {
     void givenDevicesListWithOneDevice_whenFindUniqueNameWithSameName_getSameString() {
         String sameName = "test-device";
 
-        AbstractDeviceTest device = new AbstractDeviceTest(sameName);
+        AbstractDeviceMock device = new AbstractDeviceMock(sameName);
         ListService.getDeviceList().addThing(device);
 
         assertEquals(sameName, ListService.getDeviceList().findUniqueName(new DeviceNamePatchRequest(device.getId(), sameName)));
@@ -94,7 +94,7 @@ public class DeviceListTest {
         String oldName = "test-device";
         String newName = "test-other";
 
-        AbstractDeviceTest device = new AbstractDeviceTest(oldName);
+        AbstractDeviceMock device = new AbstractDeviceMock(oldName);
         ListService.getDeviceList().addThing(device);
 
         assertEquals(newName, ListService.getDeviceList().findUniqueName(new DeviceNamePatchRequest(device.getId(), newName)));
@@ -105,16 +105,16 @@ public class DeviceListTest {
         String oldName = "test-device";
         String newName = "test-other";
 
-        AbstractDeviceTest device   = new AbstractDeviceTest(oldName);
-        AbstractDeviceTest device1  = new AbstractDeviceTest(newName);
-        AbstractDeviceTest device2  = new AbstractDeviceTest(newName + "1");
-        AbstractDeviceTest device3  = new AbstractDeviceTest(newName + "2");
-        AbstractDeviceTest device4  = new AbstractDeviceTest(newName + "3");
-        AbstractDeviceTest device5  = new AbstractDeviceTest(newName + "4");
-        AbstractDeviceTest device6  = new AbstractDeviceTest(newName + "5");
-        AbstractDeviceTest device7  = new AbstractDeviceTest(newName + "6");
-        AbstractDeviceTest device8  = new AbstractDeviceTest(newName + "7");
-        AbstractDeviceTest device9  = new AbstractDeviceTest(newName + "8");
+        AbstractDeviceMock device   = new AbstractDeviceMock(oldName);
+        AbstractDeviceMock device1  = new AbstractDeviceMock(newName);
+        AbstractDeviceMock device2  = new AbstractDeviceMock(newName + "1");
+        AbstractDeviceMock device3  = new AbstractDeviceMock(newName + "2");
+        AbstractDeviceMock device4  = new AbstractDeviceMock(newName + "3");
+        AbstractDeviceMock device5  = new AbstractDeviceMock(newName + "4");
+        AbstractDeviceMock device6  = new AbstractDeviceMock(newName + "5");
+        AbstractDeviceMock device7  = new AbstractDeviceMock(newName + "6");
+        AbstractDeviceMock device8  = new AbstractDeviceMock(newName + "7");
+        AbstractDeviceMock device9  = new AbstractDeviceMock(newName + "8");
         ListService.getDeviceList().setList(List.of(device, device1, device2, device3, device4, device5, device6, device7, device8, device9));
 
         assertEquals(newName + "9", ListService.getDeviceList().findUniqueName(new DeviceNamePatchRequest(device.getId(), newName)));
@@ -125,17 +125,17 @@ public class DeviceListTest {
         String oldName = "test-device";
         String newName = "test-other";
 
-        AbstractDeviceTest device    = new AbstractDeviceTest(oldName);
-        AbstractDeviceTest device1   = new AbstractDeviceTest(newName);
-        AbstractDeviceTest device2   = new AbstractDeviceTest(newName + "1");
-        AbstractDeviceTest device3   = new AbstractDeviceTest(newName + "2");
-        AbstractDeviceTest device4   = new AbstractDeviceTest(newName + "3");
-        AbstractDeviceTest device5   = new AbstractDeviceTest(newName + "4");
-        AbstractDeviceTest device6   = new AbstractDeviceTest(newName + "5");
-        AbstractDeviceTest device7   = new AbstractDeviceTest(newName + "6");
-        AbstractDeviceTest device8   = new AbstractDeviceTest(newName + "7");
-        AbstractDeviceTest device9   = new AbstractDeviceTest(newName + "8");
-        AbstractDeviceTest device10  = new AbstractDeviceTest(newName + "9");
+        AbstractDeviceMock device    = new AbstractDeviceMock(oldName);
+        AbstractDeviceMock device1   = new AbstractDeviceMock(newName);
+        AbstractDeviceMock device2   = new AbstractDeviceMock(newName + "1");
+        AbstractDeviceMock device3   = new AbstractDeviceMock(newName + "2");
+        AbstractDeviceMock device4   = new AbstractDeviceMock(newName + "3");
+        AbstractDeviceMock device5   = new AbstractDeviceMock(newName + "4");
+        AbstractDeviceMock device6   = new AbstractDeviceMock(newName + "5");
+        AbstractDeviceMock device7   = new AbstractDeviceMock(newName + "6");
+        AbstractDeviceMock device8   = new AbstractDeviceMock(newName + "7");
+        AbstractDeviceMock device9   = new AbstractDeviceMock(newName + "8");
+        AbstractDeviceMock device10  = new AbstractDeviceMock(newName + "9");
         ListService.getDeviceList().setList(List.of(device, device1, device2, device3, device4, device5, device6, device7, device8, device9, device10));
 
         assertThrows(CouldNotFindUniqueDeviceNameException.class, () -> {

@@ -26,8 +26,8 @@ import com.vs.foosh.api.model.predictionModel.AbstractPredictionModel;
 import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.services.PersistentDataService;
 import com.vs.foosh.api.services.helpers.ListService;
-import com.vs.foosh.helper.AbstractDeviceTest;
-import com.vs.foosh.helper.PredictionModelTest;
+import com.vs.foosh.helper.AbstractDeviceMock;
+import com.vs.foosh.helper.PredictionModelMock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
@@ -42,7 +42,7 @@ public class VariableControllerTest {
         ListService.getDeviceList().getList().clear();
         ListService.getVariableList().getList().clear();
         PersistentDataService.deleteAll();
-        ListService.getPredictionModelList().addThing(new PredictionModelTest("test-model"));
+        ListService.getPredictionModelList().addThing(new PredictionModelMock("test-model"));
     }
 
     ///
@@ -850,7 +850,7 @@ public class VariableControllerTest {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -867,9 +867,9 @@ public class VariableControllerTest {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
-        AbstractDeviceTest device1 = new AbstractDeviceTest("test-device1");
+        AbstractDeviceMock device1 = new AbstractDeviceMock("test-device1");
         ListService.getDeviceList().addThing(device1);
-        AbstractDeviceTest device2 = new AbstractDeviceTest("test-device2");
+        AbstractDeviceMock device2 = new AbstractDeviceMock("test-device2");
         ListService.getDeviceList().addThing(device2);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -950,7 +950,7 @@ public class VariableControllerTest {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(patch("/api/vars/" + variable.getId() + "/devices/")
@@ -970,7 +970,7 @@ public class VariableControllerTest {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(patch("/api/vars/" + variable.getId() + "/devices/")
@@ -985,7 +985,7 @@ public class VariableControllerTest {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(patch("/api/vars/" + variable.getId() + "/devices/")
@@ -1000,7 +1000,7 @@ public class VariableControllerTest {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(patch("/api/vars/" + variable.getId() + "/devices/")
@@ -1015,7 +1015,7 @@ public class VariableControllerTest {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(patch("/api/vars/" + variable.getId() + "/devices/")
@@ -1030,7 +1030,7 @@ public class VariableControllerTest {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(patch("/api/vars/" + variable.getId() + "/devices/")
@@ -1045,7 +1045,7 @@ public class VariableControllerTest {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(patch("/api/vars/" + variable.getId() + "/devices/")
@@ -1060,7 +1060,7 @@ public class VariableControllerTest {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(patch("/api/vars/" + variable.getId() + "/devices/")
@@ -1115,7 +1115,7 @@ public class VariableControllerTest {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
-        AbstractDeviceTest device1 = new AbstractDeviceTest("test-device1");
+        AbstractDeviceMock device1 = new AbstractDeviceMock("test-device1");
         ListService.getDeviceList().addThing(device1);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -1313,7 +1313,7 @@ public class VariableControllerTest {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -1341,9 +1341,9 @@ public class VariableControllerTest {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
-        AbstractDeviceTest device1 = new AbstractDeviceTest("test-device1");
+        AbstractDeviceMock device1 = new AbstractDeviceMock("test-device1");
         ListService.getDeviceList().addThing(device1);
-        AbstractDeviceTest device2 = new AbstractDeviceTest("test-device2");
+        AbstractDeviceMock device2 = new AbstractDeviceMock("test-device2");
         ListService.getDeviceList().addThing(device2);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -1437,7 +1437,7 @@ public class VariableControllerTest {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -1463,7 +1463,7 @@ public class VariableControllerTest {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -1482,7 +1482,7 @@ public class VariableControllerTest {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -1503,7 +1503,7 @@ public class VariableControllerTest {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -1524,7 +1524,7 @@ public class VariableControllerTest {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -1545,7 +1545,7 @@ public class VariableControllerTest {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -1566,7 +1566,7 @@ public class VariableControllerTest {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -1587,7 +1587,7 @@ public class VariableControllerTest {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -1606,7 +1606,7 @@ public class VariableControllerTest {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -1627,7 +1627,7 @@ public class VariableControllerTest {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -1648,7 +1648,7 @@ public class VariableControllerTest {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -1669,7 +1669,7 @@ public class VariableControllerTest {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -1690,7 +1690,7 @@ public class VariableControllerTest {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")
@@ -1737,7 +1737,7 @@ public class VariableControllerTest {
         Variable variable = new Variable("test-var", List.of(), List.of());
         ListService.getVariableList().addThing(variable);
 
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
 
         mvc.perform(post("/api/vars/" + variable.getId() + "/devices/")

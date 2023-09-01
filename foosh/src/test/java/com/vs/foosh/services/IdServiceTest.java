@@ -8,7 +8,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 import com.vs.foosh.api.services.helpers.IdService;
-import com.vs.foosh.helper.ThingTest;
+import com.vs.foosh.helper.ThingMock;
 
 public class IdServiceTest {
     @Test
@@ -51,23 +51,23 @@ public class IdServiceTest {
 
     @Test
     void givenUuidAndList_whenIsIdentifierInListWithUuid_getFalse() {
-        ThingTest thing = new ThingTest("test-thing");
+        ThingMock thing = new ThingMock("test-thing");
         assertEquals(true, IdService.isIdentifierInList(thing.getId().toString(), List.of(thing)));
     }
 
     @Test
     void givenUuidAndList_whenIsIdentifierInListWithoutUuid_getFalse() {
-        assertEquals(false, IdService.isIdentifierInList(UUID.randomUUID().toString(), List.of(new ThingTest("test-thing"))));
+        assertEquals(false, IdService.isIdentifierInList(UUID.randomUUID().toString(), List.of(new ThingMock("test-thing"))));
     }
 
     @Test
     void givenStringAndList_whenIsIdentifierInListWithString_getFalse() {
-        ThingTest thing = new ThingTest("test-thing");
+        ThingMock thing = new ThingMock("test-thing");
         assertEquals(true, IdService.isIdentifierInList("test-thing", List.of(thing)));
     }
 
     @Test
     void givenStringAndList_whenIsIdentifierInListWithoutString_getFalse() {
-        assertEquals(false, IdService.isIdentifierInList("abc", List.of(new ThingTest("test-thing"))));
+        assertEquals(false, IdService.isIdentifierInList("abc", List.of(new ThingMock("test-thing"))));
     }
 }

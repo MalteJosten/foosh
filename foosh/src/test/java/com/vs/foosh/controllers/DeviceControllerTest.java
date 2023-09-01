@@ -23,8 +23,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.vs.foosh.api.model.device.AbstractDevice;
 import com.vs.foosh.api.services.PersistentDataService;
 import com.vs.foosh.api.services.helpers.ListService;
-import com.vs.foosh.helper.AbstractDeviceTest;
-import com.vs.foosh.helper.PredictionModelTest;
+import com.vs.foosh.helper.AbstractDeviceMock;
+import com.vs.foosh.helper.PredictionModelMock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
@@ -39,7 +39,7 @@ public class DeviceControllerTest {
         ListService.getDeviceList().getList().clear();
         ListService.getVariableList().getList().clear();
         PersistentDataService.deleteAll();
-        ListService.getPredictionModelList().addThing(new PredictionModelTest("test-model"));
+        ListService.getPredictionModelList().addThing(new PredictionModelMock("test-model"));
     }
 
     ///
@@ -88,7 +88,7 @@ public class DeviceControllerTest {
 
     @Test
     void givenDevices_whenPostDevices_thenGetStatus409() throws Exception {
-        List<AbstractDevice> deviceList = List.of(new AbstractDeviceTest("test-device"));
+        List<AbstractDevice> deviceList = List.of(new AbstractDeviceMock("test-device"));
         ListService.getDeviceList().setList(deviceList);
 
         mvc.perform(post("/api/devices/").contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -165,7 +165,7 @@ public class DeviceControllerTest {
     
     @Test
     void givenList_whenDeleteDevices_thenGetEmptyList() throws Exception {
-        ListService.getDeviceList().addThing(new AbstractDeviceTest("test-device"));
+        ListService.getDeviceList().addThing(new AbstractDeviceMock("test-device"));
 
         mvc.perform(delete("/api/devices/"))
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -198,7 +198,7 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithoutDevice_whenGetDevice_thenGetProblemDetailWithStatus404() throws Exception {
-        ListService.getDeviceList().addThing(new AbstractDeviceTest("test1-device"));
+        ListService.getDeviceList().addThing(new AbstractDeviceMock("test1-device"));
 
         mvc.perform(get("/api/devices/test-device"))
             .andExpect(content().contentTypeCompatibleWith("application/problem+json"))
@@ -207,7 +207,7 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithDevice_whenGetDeviceWithName_thenGetDevice() throws Exception {
-        ListService.getDeviceList().addThing(new AbstractDeviceTest("test-device"));
+        ListService.getDeviceList().addThing(new AbstractDeviceMock("test-device"));
 
         mvc.perform(get("/api/devices/test-device"))
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -217,7 +217,7 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithDevice_whenGetDeviceWithUUID_thenGetDevice() throws Exception {
-        AbstractDeviceTest testDevice = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock testDevice = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(testDevice);
 
         mvc.perform(get("/api/devices/" + testDevice.getId()))
@@ -239,7 +239,7 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithoutDevice_whenPostDevice_thenGetProblemDetailWithStatus404() throws Exception {
-        ListService.getDeviceList().addThing(new AbstractDeviceTest("test1-device"));
+        ListService.getDeviceList().addThing(new AbstractDeviceMock("test1-device"));
 
         mvc.perform(post("/api/devices/test-device"))
             .andExpect(content().contentTypeCompatibleWith("application/problem+json"))
@@ -248,7 +248,7 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithDevice_whenPostDevice_thenGetProblemDetailWithStatus405() throws Exception {
-        ListService.getDeviceList().addThing(new AbstractDeviceTest("test-device"));
+        ListService.getDeviceList().addThing(new AbstractDeviceMock("test-device"));
 
         mvc.perform(post("/api/devices/test-device"))
             .andExpect(content().contentTypeCompatibleWith("application/problem+json"))
@@ -268,7 +268,7 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithoutDevice_whenPutDevice_thenGetProblemDetailWithStatus404() throws Exception {
-        ListService.getDeviceList().addThing(new AbstractDeviceTest("test1-device"));
+        ListService.getDeviceList().addThing(new AbstractDeviceMock("test1-device"));
 
         mvc.perform(put("/api/devices/test-device"))
             .andExpect(content().contentTypeCompatibleWith("application/problem+json"))
@@ -277,7 +277,7 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithDevice_whenPutDevice_thenGetProblemDetailWithStatus405() throws Exception {
-        ListService.getDeviceList().addThing(new AbstractDeviceTest("test-device"));
+        ListService.getDeviceList().addThing(new AbstractDeviceMock("test-device"));
 
         mvc.perform(put("/api/devices/test-device"))
             .andExpect(content().contentTypeCompatibleWith("application/problem+json"))
@@ -304,7 +304,7 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithoutDevice_whenPatchDevice_thenGetProblemDetailWithStatus404() throws Exception {
-        ListService.getDeviceList().addThing(new AbstractDeviceTest("test-device"));
+        ListService.getDeviceList().addThing(new AbstractDeviceMock("test-device"));
 
         mvc.perform(patch("/api/devices/" + UUID.randomUUID())
             .contentType("application/json-patch+json")
@@ -315,7 +315,7 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithDevice_whenPatchDeviceWithName_thenGetProblemDetailWithStatus400() throws Exception {
-        AbstractDeviceTest testDevice = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock testDevice = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(testDevice);
 
         mvc.perform(patch("/api/devices/" + testDevice.getName())
@@ -327,7 +327,7 @@ public class DeviceControllerTest {
  
     @Test
     void givenListWithDevice_whenPatchDeviceWithNoContent_thenGetProblemDetailWithStatus400() throws Exception {
-        AbstractDeviceTest testDevice = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock testDevice = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(testDevice);
 
         mvc.perform(patch("/api/devices/" + testDevice.getId())
@@ -338,7 +338,7 @@ public class DeviceControllerTest {
  
     @Test
     void givenListWithDevice_whenPatchDeviceWithContent_thenGetDeviceWithStatus200() throws Exception {
-        AbstractDeviceTest testDevice = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock testDevice = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(testDevice);
 
         mvc.perform(patch("/api/devices/" + testDevice.getId())
@@ -355,7 +355,7 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithDevice_whenPatchDeviceWithWrongFormat_thenGetProblemDetailWithStatus400() throws Exception {
-        AbstractDeviceTest testDevice = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock testDevice = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(testDevice);
 
         mvc.perform(patch("/api/devices/" + testDevice.getId())
@@ -367,7 +367,7 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithDevice_whenPatchDeviceWithIllegalPath_thenGetProblemDetailWithStatus400() throws Exception {
-        AbstractDeviceTest testDevice = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock testDevice = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(testDevice);
 
         mvc.perform(patch("/api/devices/" + testDevice.getId())
@@ -379,7 +379,7 @@ public class DeviceControllerTest {
     
     @Test
     void givenListWithDevice_whenPatchDeviceWithIllegalJsonPatchOperator_thenGetProblemDetailWithStatus400() throws Exception {
-        AbstractDeviceTest testDevice = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock testDevice = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(testDevice);
 
         mvc.perform(patch("/api/devices/" + testDevice.getId())
@@ -391,7 +391,7 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithDevice_whenPatchDeviceWithDisallowedOperator_thenGetProblemDetailWithStatus400() throws Exception {
-        AbstractDeviceTest testDevice = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock testDevice = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(testDevice);
 
         mvc.perform(patch("/api/devices/" + testDevice.getId())
@@ -403,7 +403,7 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithDevice_whenPatchDeviceWithNoValue_thenGetProblemDetailWithStatus400() throws Exception {
-        AbstractDeviceTest testDevice = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock testDevice = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(testDevice);
 
         mvc.perform(patch("/api/devices/" + testDevice.getId())
@@ -415,7 +415,7 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithDevice_whenPatchDeviceWithEmptyValue_thenGetProblemDetailWithStatus400() throws Exception {
-        AbstractDeviceTest testDevice = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock testDevice = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(testDevice);
 
         mvc.perform(patch("/api/devices/" + testDevice.getId())
@@ -427,7 +427,7 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithDevice_whenPatchDeviceWithWrongFormatValue_thenGetProblemDetailWithStatus400() throws Exception {
-        AbstractDeviceTest testDevice = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock testDevice = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(testDevice);
 
         mvc.perform(patch("/api/devices/" + testDevice.getId())
@@ -450,7 +450,7 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithoutDevice_whenDeleteDevice_thenGetProblemDetailWithStatus404() throws Exception {
-        ListService.getDeviceList().addThing(new AbstractDeviceTest("test1-device"));
+        ListService.getDeviceList().addThing(new AbstractDeviceMock("test1-device"));
 
         mvc.perform(delete("/api/devices/test-device"))
             .andExpect(content().contentTypeCompatibleWith("application/problem+json"))
@@ -459,7 +459,7 @@ public class DeviceControllerTest {
 
     @Test
     void givenListWithDevice_whenDeleteDevice_thenGetProblemDetailWithStatus405() throws Exception {
-        ListService.getDeviceList().addThing(new AbstractDeviceTest("test-device"));
+        ListService.getDeviceList().addThing(new AbstractDeviceMock("test-device"));
 
         mvc.perform(delete("/api/devices/test-device"))
             .andExpect(content().contentTypeCompatibleWith("application/problem+json"))

@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import com.vs.foosh.api.model.misc.Thing;
 
-public class ThingTest extends Thing {
-    public ThingTest(String name) {
+public class ThingMock extends Thing {
+    public ThingMock(String name) {
         this.name = name;
         this.id = UUID.randomUUID();
     }

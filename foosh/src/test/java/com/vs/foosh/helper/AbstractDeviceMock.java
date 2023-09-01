@@ -2,9 +2,9 @@ package com.vs.foosh.helper;
 
 import com.vs.foosh.api.model.device.AbstractDevice;
 
-public class AbstractDeviceTest extends AbstractDevice{
+public class AbstractDeviceMock extends AbstractDevice{
 
-    public AbstractDeviceTest(String name) {
+    public AbstractDeviceMock(String name) {
         super(name);
     }
 

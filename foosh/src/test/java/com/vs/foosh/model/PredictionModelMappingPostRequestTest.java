@@ -19,8 +19,8 @@ import com.vs.foosh.api.model.predictionModel.PredictionModelMappingPostRequest;
 import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.services.PersistentDataService;
 import com.vs.foosh.api.services.helpers.ListService;
-import com.vs.foosh.helper.AbstractDeviceTest;
-import com.vs.foosh.helper.PredictionModelTest;
+import com.vs.foosh.helper.AbstractDeviceMock;
+import com.vs.foosh.helper.PredictionModelMock;
 
 public class PredictionModelMappingPostRequestTest {
 
@@ -35,10 +35,10 @@ public class PredictionModelMappingPostRequestTest {
         ListService.getVariableList().getList().clear();
         PersistentDataService.deleteAll();
 
-        ListService.getPredictionModelList().addThing(new PredictionModelTest("test-model"));
+        ListService.getPredictionModelList().addThing(new PredictionModelMock("test-model"));
         modelId = ListService.getPredictionModelList().getList().get(0).getId();
 
-        AbstractDeviceTest device = new AbstractDeviceTest("test-device");
+        AbstractDeviceMock device = new AbstractDeviceMock("test-device");
         ListService.getDeviceList().addThing(device);
         deviceId = device.getId();
 
@@ -143,7 +143,7 @@ public class PredictionModelMappingPostRequestTest {
 
     @Test
     void givenMappingHasDeviceIdNotInVarDeviceList_whenValidate_getException() {
-        AbstractDeviceTest device2 = new AbstractDeviceTest("test-device2");
+        AbstractDeviceMock device2 = new AbstractDeviceMock("test-device2");
         ListService.getDeviceList().addThing(device2);
 
         ParameterMapping mapping = new ParameterMapping("x1", device2.getId().toString());

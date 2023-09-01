@@ -15,7 +15,7 @@ import com.vs.foosh.api.model.variable.Variable;
 import com.vs.foosh.api.model.variable.VariablePredictionRequest;
 import com.vs.foosh.api.services.PersistentDataService;
 import com.vs.foosh.api.services.helpers.ListService;
-import com.vs.foosh.helper.PredictionModelTest;
+import com.vs.foosh.helper.PredictionModelMock;
 
 public class VariablePredictionRequestTest {
 
@@ -29,7 +29,7 @@ public class VariablePredictionRequestTest {
         ListService.getVariableList().getList().clear();
         PersistentDataService.deleteAll();
 
-        ListService.getPredictionModelList().addThing(new PredictionModelTest("test-model"));
+        ListService.getPredictionModelList().addThing(new PredictionModelMock("test-model"));
         modelId = ListService.getPredictionModelList().getList().get(0).getId();
 
         Variable variable = new Variable("test-var", List.of(), List.of());
