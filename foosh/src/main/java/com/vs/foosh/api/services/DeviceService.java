@@ -28,13 +28,30 @@ import com.vs.foosh.api.model.web.SmartHomeDetails;
 import com.vs.foosh.api.services.helpers.IdService;
 import com.vs.foosh.api.services.helpers.ListService;
 
+/**
+ * A {@link Service} that provides functionalities for accessing and modifying (elements of) the {@link DeviceList}.
+ */
 @Service
 public class DeviceService {
 
+    /**
+     * Return the contents of {@link DeviceList}.
+     * 
+     * @return the contents of {@link DeviceList} as a {@link ResponseEntity}
+     */
     public static ResponseEntity<Object> getDevices() {
         return respondWithDevices(HttpStatus.OK);
     }
 
+    /**
+     * Given a set of {@link SmartHomeDetails}, fetch the list of registered smart devices from the smart home API.
+     * 
+     * If {@link DeviceList} already contains {@link AbstractDevice}s, a corresponding response is constructed and the list of devices is not fetched.
+     * 
+     * @param details the {@link SmartHomeDetails}
+     * 
+     * @return the response as a {@link ResponseEntity}
+     */
     public static ResponseEntity<Object> postDevices(SmartHomeDetails details) {
         if (!ListService.getDeviceList().isListEmpty()) {
             String message = "There are already registered devices! Please use PATCH on /devices/ to update the list.";
@@ -50,6 +67,11 @@ public class DeviceService {
         return respondWithDevices(HttpStatus.CREATED);
     }
 
+    /**
+     * Fetch the list of smart devices from the smart home API.
+     * 
+     * @param details the {@link SmartHomeDetails} which might be used to connect to the smart home API and retrieve the list of devices
+     */
     private static void fetchDevices(SmartHomeDetails details) {
         FetchDeviceResponse apiResponse;
 
@@ -67,6 +89,11 @@ public class DeviceService {
         }
     }
 
+    /**
+     * Delete the contents of {@link DeviceList}, delete (and backup) the local save file and respond with {@code 200 OK}.
+     * 
+     * @return the contents of {@link DeviceList} with status code {@code 200} as a {@link ResponseEntity} 
+     */
     public static ResponseEntity<Object> deleteDevices() {
         ListService.getDeviceList().clearList();
 
@@ -76,6 +103,13 @@ public class DeviceService {
         return respondWithDevices(HttpStatus.OK);
     }
 
+    /**
+     * Construct and return the {@link DeviceDisplayRepresentation} for all devices of {@link DeviceList} and the necessary hypermedia links.
+     * 
+     * @param status the {@link HttpStatus} of the response
+     * 
+     * @return the display representations and hypermedia links as a {@link ResponseEntity} with status {@code status}
+     */
     private static ResponseEntity<Object> respondWithDevices(HttpStatus status) {
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("devices", ListService.getDeviceList().getDisplayListRepresentation());
@@ -84,12 +118,27 @@ public class DeviceService {
         return new ResponseEntity<>(responseBody, status);
     }
 
+    /**
+     * Return an {@link AbstractDevice}.
+     * 
+     * @param id the {@link AbstractDevice}'s identifier
+     * 
+     * @return the {@link AbstractDevice} and necessary hypermedia links as the body of a {@link ResponseEntity} and status code {@code OK}
+     */
     public static ResponseEntity<Object> getDevice(String id) {
         AbstractDevice device = ListService.getDeviceList().getThing(id);
 
         return respondWithDevice(device, HttpStatus.OK);
     }
 
+    /**
+     * Update an {@link AbstractDevice}'s {@code name}.
+     * 
+     * @param uuid the {@link AbstractDevice}'s {@code id}
+     * @param patchMappings a JSON Patch Document
+     * 
+     * @return the {@link AbstractDevice} and necessary hypermedia links as the body of a {@link ResponseEntity} and status code {@code OK} (if successful)
+     */
     public static ResponseEntity<Object> patchDevice(UUID uuid, List<Map<String, Object>> patchMappings) {
         AbstractDevice device = ListService.getDeviceList().getThing(uuid.toString());
 
@@ -116,6 +165,14 @@ public class DeviceService {
         return respondWithDevice(device, HttpStatus.OK);
     }
 
+    /**
+     * Rename an {@link AbstractDevice}.
+     * 
+     * @param id the {@link AbstractDevice}'s {@code id}
+     * @param patchName the name to change the {@link AbstractDevice}'s {@code name} to
+     * 
+     * @return {@code true} if renaming the {@link AbstractDevice} was succesful. Otherwise return {@code false}.
+     */
     private static boolean patchDeviceName(String id, String patchName) {
         UUID uuid = IdService.isUuid(id).get();
 
@@ -134,6 +191,14 @@ public class DeviceService {
         }
     }
 
+    /**
+     * Construct and return the {@link DeviceDisplayRepresentation} an {@link AbstractDevice} and the necessary hypermedia links.
+     * 
+     * @param device the {@link AbstractDevice} we want to return
+     * @param status the {@link HttpStatus} of the response
+     * 
+     * @return the display representation and hypermedia links as a {@link ResponseEntity} with status {@code status}
+     */
     private static ResponseEntity<Object> respondWithDevice(AbstractDevice device, HttpStatus status) {
             List<LinkEntry> links = new ArrayList<>();
             links.addAll(device.getSelfLinks());

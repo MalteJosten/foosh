@@ -87,9 +87,9 @@ public class MyPredictionModel extends AbstractPredictionModel {
             return "OFF";
         } 
 
-        // Turn the light on, if we can't reach the desired level of brightness without the light.
-        // We also turn on the light, if we just cannot reach the value at all (e.g., 100%).
-        // This model does its best, to reach the desired level and tries to come as close as possible.
+        // Turn the light on if we can't reach the desired level of brightness without the light.
+        // We also turn on the light, if we cannot reach the value at all (e.g., 100%).
+        // This model does its best to reach the desired level and tries to come as close as possible.
         return "ON";
 
     }
