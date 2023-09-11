@@ -192,7 +192,7 @@ public class DeviceService {
     }
 
     /**
-     * Construct and return the {@link DeviceDisplayRepresentation} an {@link AbstractDevice} and the necessary hypermedia links.
+     * Construct and return the {@link DeviceDisplayRepresentation} of an {@link AbstractDevice} and the necessary hypermedia links.
      * 
      * @param device the {@link AbstractDevice} we want to return
      * @param status the {@link HttpStatus} of the response
