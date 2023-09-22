@@ -85,7 +85,7 @@ public abstract class AbstractPredictionModel extends Thing implements IThingLis
     /**
      * Make a prediction with this prediction model} based on the provided {@code value}.
      * 
-     * @apiNote This is a default implementation! needs to be overwritten when extending {@code AbstractPredictionModel}.
+     * @apiNote This is a default implementation! It needs to be overwritten when extending {@code AbstractPredictionModel}.
      * 
      * @param variableId the {@link UUID} of the variable for which we perform the prediction
      * @param value the value for which we make the prediction
