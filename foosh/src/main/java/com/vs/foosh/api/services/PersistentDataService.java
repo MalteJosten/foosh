@@ -22,8 +22,15 @@ import com.vs.foosh.api.model.predictionModel.PredictionModelList;
 import com.vs.foosh.api.model.variable.VariableList;
 import com.vs.foosh.api.services.helpers.ListService;
 
+/**
+ * A {@link Service} that provides functionalities for saving and loading {@link DeviceList}, {@link VariableList}, and {@link PredictionModelList} to and from local persistent storage.
+ */
 @Service
 public class PersistentDataService {
+
+    /**
+     * Setup service by creating directory.
+     */
     public static void setup() {
         try {
             Files.createDirectories(ApplicationConfig.getSaveDirPath());
@@ -32,18 +39,27 @@ public class PersistentDataService {
         }
     }
 
+    /**
+     * Save all lists to local persistent storage.
+     */
     public static void saveAll() {
         saveDeviceList();
         saveVariableList();
         savePredictionModelList();
     }
 
+    /**
+     * Delete all save files.
+     */
     public static void deleteAll() {
         deleteDeviceListSave();
         deleteVariableListSave();
         deletePredictionModelListSave();
     }
     
+    /**
+     * Save {@link DeviceList} to local persistent storage.
+     */
     public static void saveDeviceList() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ApplicationConfig.getDeviceSavePath().toFile()))) {
             oos.writeObject(ListService.getDeviceList());
@@ -55,6 +71,11 @@ public class PersistentDataService {
         }
     } 
 
+    /**
+     * Try to read {@link DeviceList} save file.
+     * 
+     * @return {@link ReadSaveFileResult} with the save file contents (if reading was successful).
+     */
     public static ReadSaveFileResult<DeviceList> hasSavedDeviceList() {
         ReadSaveFileResult<DeviceList> result = new ReadSaveFileResult<>();
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ApplicationConfig.getDeviceSavePath().toFile()))) {
@@ -72,6 +93,9 @@ public class PersistentDataService {
         return result;
     }
 
+    /**
+     * Delete {@link DeviceList} save file and create a backup file for instead.
+     */
     public static void deleteDeviceListSave() {
         if (Files.exists(ApplicationConfig.getDeviceSavePath())) {
             try {
@@ -83,6 +107,9 @@ public class PersistentDataService {
         }
     }
 
+    /**
+     * Save {@link VariableList} to local persistent storage.
+     */
     public static void saveVariableList() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ApplicationConfig.getVariableSavePath().toFile()))) {
             oos.writeObject(ListService.getVariableList());
@@ -94,6 +121,11 @@ public class PersistentDataService {
         }
     } 
 
+    /**
+     * Try to read {@link VariableList} save file.
+     * 
+     * @return {@link ReadSaveFileResult} with the save file contents (if reading was successful).
+     */
     public static ReadSaveFileResult<VariableList> hasSavedVariableList() {
         ReadSaveFileResult<VariableList> result = new ReadSaveFileResult<>();
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ApplicationConfig.getVariableSavePath().toFile()))) {
@@ -111,6 +143,9 @@ public class PersistentDataService {
         return result;
     }
 
+    /**
+     * Delete {@link VariableList} save file and create a backup file for instead.
+     */
     public static void deleteVariableListSave() {
         if (Files.exists(ApplicationConfig.getDeleteVariablePath())) {
             try {
@@ -122,6 +157,9 @@ public class PersistentDataService {
         }
     }
 
+    /**
+     * Save {@link PredictionModelList} to local persistent storage.
+     */
     public static void savePredictionModelList() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ApplicationConfig.getPredictionModelSavePath().toFile()))) {
             oos.writeObject(ListService.getPredictionModelList());
@@ -133,6 +171,11 @@ public class PersistentDataService {
         }
     } 
 
+    /**
+     * Try to read {@link PredictionModelList} save file.
+     * 
+     * @return {@link ReadSaveFileResult} with the save file contents (if reading was successful).
+     */
     public static ReadSaveFileResult<PredictionModelList> hasSavedPredictionModelList() {
         ReadSaveFileResult<PredictionModelList> result = new ReadSaveFileResult<>();
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ApplicationConfig.getPredictionModelSavePath().toFile()))) {
@@ -150,7 +193,10 @@ public class PersistentDataService {
         return result;
     }
 
-   public static void deletePredictionModelListSave() {
+    /**
+     * Delete {@link PredictionModelList} save file and create a backup file for instead.
+     */
+    public static void deletePredictionModelListSave() {
         if (Files.exists(ApplicationConfig.getPredictionModelSavePath())) {
             try {
                 Files.copy(ApplicationConfig.getPredictionModelSavePath(), ApplicationConfig.getDeletePredictionModelPath(), StandardCopyOption.REPLACE_EXISTING);

@@ -29,8 +29,17 @@ import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.services.helpers.IdService;
 import com.vs.foosh.api.services.helpers.ListService;
 
+/**
+ * A {@link Service} that provides functionalities for accessing and modifying (elements of) the {@link DeviceList}.
+ */
 @Service
 public class PredictionModelService {
+
+    /**
+     * Return the contents of {@link PredictionModelList}.
+     * 
+     * @return the contents of {@link PredictionModelList} and hypermedia links as a {@link ResponseEntity} with HTTP statu code 200.
+     */
     public static ResponseEntity<Object> getModels() {
         AbstractMap.SimpleEntry<String, Object> result = new AbstractMap.SimpleEntry<String, Object>("predictionModels", ListService.getPredictionModelList().getDisplayListRepresentation());
 
@@ -41,10 +50,27 @@ public class PredictionModelService {
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
+    /**
+     * Given an identifier ({@code id} or {@code name}), return an {@link AbstractPredictionModel}.
+     * 
+     * @param id the {@link AbstractPredictionModel}'s {@code id} or {@code name}
+     * 
+     * @return {@link #respondWithModel(id)}
+     */
     public static ResponseEntity<Object> getModel(String id) {
         return respondWithModel(id);
     }
 
+    /**
+     * Edit an {@link AbstractPredictionModel}'s {@code name}.
+     * 
+     * @param id the {@link AbstractPredictionModel}'s {@code id}
+     * @param patchMappings a JSON Patch document
+     * 
+     * @exception FooSHJsonPatchIllegalPatchException If any other field than {@code name} is trying to be changed.
+     * 
+     * @return {@link #respondWithModel(String)}
+     */
     public static ResponseEntity<Object> patchModel(String id, List<Map<String, Object>> patchMappings) {
         ListService.getPredictionModelList().checkIfIdIsPresent(id);
 
@@ -71,6 +97,18 @@ public class PredictionModelService {
         return respondWithModel(id);
     }
 
+    /**
+     * Actually change the name of the {@link AbstractPredictionModel}.
+     * 
+     * @param id the {@link AbstractPredictionModel}'s {@code id}
+     * @param patchName the value to change the {@code name} to
+     * 
+     * @exception FooSHJsonPatchValueIsNullException If {@code patchName} is {@code null}
+     * @exception FooSHJsonPatchValueIsEmptyException If {@code patchName} is empty
+     * 
+     * @return {@code true} if the name was successfully changed
+     * 
+     */
     private static boolean patchModelName(String id, String patchName) {
         UUID uuid = IdService.isUuid(id).get();
 
@@ -89,6 +127,13 @@ public class PredictionModelService {
         return false;
     }
 
+    /**
+     * Construct and return the {@link PredictionModelDisplayRepresentation} of an {@link AbstractPredictionModel} and the necessary hypermedia links.
+     * 
+     * @param id the {@link AbstractPredictionModel}'s {@code id} or {@code name}
+     * 
+     * @return the display representation and hypermedia links as a {@link ResponseEntity} with HTTP status code 200
+     */
     private static ResponseEntity<Object> respondWithModel(String id) {
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
 
@@ -99,10 +144,27 @@ public class PredictionModelService {
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
+    /**
+     * Return an {@link AbstractPredictionModel}'s mappings.
+     * 
+     * @param id the {@link AbstractPredictionModel}'s {@code id} or {@code name}
+     * 
+     * @return {@link #respondWithMappings(String, HttpStatus)}
+     * 
+     */
     public static ResponseEntity<Object> getMappings(String id) {
         return respondWithMappings(id, HttpStatus.OK);
     }
 
+    /**
+     * Add an mapping to an {@link AbstractPredictionModel}.
+     * 
+     * @param id the {@link AbstractPredictionModel}'s {@code id} or {@code name}
+     * @param request the {@link PredictionModelMappingPostRequest}
+     * 
+     * @return {@link #respondWithMappings(String, HttpStatus)}
+     * 
+     */
     public static ResponseEntity<Object> postMappings(String id, PredictionModelMappingPostRequest request) {
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
 
@@ -111,6 +173,14 @@ public class PredictionModelService {
         return respondWithMappings(id, HttpStatus.OK);
     }
 
+    /**
+     * Edit an {@link AbstractPredictionModel}'s mappings.
+     * 
+     * @param id the {@link AbstractPredictionModel}'s {@code id} or {@code name}
+     * @param patchMappings a JSON Patch document
+     * 
+     * @return {@link #respondWithMappings(String, HttpStatus)}
+     */
     public static ResponseEntity<Object> patchMappings(String id, List<Map<String, Object>> patchMappings) {
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
 
@@ -129,6 +199,14 @@ public class PredictionModelService {
         return respondWithMappings(id, HttpStatus.OK);
     }
 
+    /**
+     * Convert a JSON Patch document to a list of {@link FooSHJsonPatch} objects.
+     * 
+     * @param id the {@link AbstractPredictionModel}'s {@code id} or {@code name}
+     * @param patchMappings a JSON Patch document
+     * 
+     * @return the {@code patchMappings} as a {@link List} with elements of type {@link FooSHJsonPatch}
+     */
     private static List<FooSHJsonPatch> convertPatchMappings(String id, List<Map<String, Object>> patchMappings) {
         List<FooSHJsonPatch> patches = new ArrayList<>();
 
@@ -157,6 +235,15 @@ public class PredictionModelService {
         return patches;
     }
 
+    /**
+     * Check whether a {@link FooSHJsonPatch} contains a correct path.
+     * 
+     * @param model the {@link AbstractPredictionModel} to check the {@link FooSHJsonPatch} for
+     * @param patch the {@link FooSHJsonPatch}
+     * 
+     * @exception FooSHJsonPatchIllegalPathException If someone tries to edit a non-valid path
+     * @exception FooSHJsonPatchOperationException If someone tries to edit a non-existend mapping
+     */
     private static void checkForCorrectPatchPath(AbstractPredictionModel model, FooSHJsonPatch patch) {
         List<String> allowedPathSegments = List.of("uuid");
         if (!patch.isValidPath(allowedPathSegments, ThingType.PREDICTION_MODEL)) {
@@ -177,6 +264,12 @@ public class PredictionModelService {
         }
     }
 
+    /**
+     * Execute a {@link FooSHJsonPatch} for the mappings of an {@link AbstractPredictionModel}.
+     * 
+     * @param model the {@link AbstractPredictionModel}
+     * @param patch the {@link FooSHJsonPatch}
+     */
     @SuppressWarnings("unchecked")
     public static void patchMappingEntry(AbstractPredictionModel model, FooSHJsonPatch patch) {
         List<ParameterMapping> parameterMappings = new ArrayList<>();
@@ -204,6 +297,14 @@ public class PredictionModelService {
         }
     }
 
+    /**
+     * Execute a {@link FooSHJsonPatch} with an {@code ADD} operation.
+     * 
+     * @param model the {@link AbstractPredictionModel} to execute the patch on
+     * @param request the {@link PredicitonModelMappingPostRequest}
+     * 
+     * @exception PredictionModelPostMappingException If a mandatory field is missing
+     */
     private static void setMappings(AbstractPredictionModel model, PredictionModelMappingPostRequest request) {
         if (request.getVariableId() == null) {
             throw new PredictionModelPostMappingException(model.getId().toString(), "Please provide a field 'variableId' with a Variable ID!");
@@ -221,6 +322,14 @@ public class PredictionModelService {
         PersistentDataService.saveAll();
     }
 
+    /**
+     * Execute a {@link FooSHJsonPatch} with a {@code REPLACE} operation.
+     * 
+     * @param model the {@link AbstractPredictionModel} to execute the patch on
+     * @param request the {@link PredicitonModelMappingPostRequest}
+     * 
+     * @exception PredictionModelPostMappingException If a mandatory field is missing
+     */
     private static void replaceMappings(AbstractPredictionModel model, PredictionModelMappingPostRequest request) {
         request.validate(model.getId().toString(), ListService.getVariableList().getThing(request.getVariableId().toString()).getDeviceIds());
 
@@ -230,12 +339,27 @@ public class PredictionModelService {
         PersistentDataService.saveAll();
     }
 
+    /**
+     * Execute a {@link FooSHJsonPatch} with a {@code DELETE} operation.
+     * 
+     * @param model the {@link AbstractPredictionModel} to execute the patch on
+     * @param variableId the {@code id} of the {@link Variable} to delete the mapping(s) for
+     * 
+     * @exception PredictionModelPostMappingException If a mandatory field is missing
+     */
     public static void deleteMapping(AbstractPredictionModel model, UUID variableId) {
         model.deleteMapping(variableId);
 
         PersistentDataService.savePredictionModelList();
     }
-
+    
+    /**
+     * Delete all mappings for an {@link AbstractPredictionModel}.
+     * 
+     * @param id the {@link AbstractPredictionModel}'s {@code id} or {@code name}
+     * 
+     * @return {@link #respondWithMappings(String, HttpStatus)}
+     */
     public static ResponseEntity<Object> deleteMappings(String id) {
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
 
@@ -246,6 +370,14 @@ public class PredictionModelService {
         return respondWithMappings(id, HttpStatus.OK);
     }
 
+    /**
+     * Construct and return the list of an {@link AbstractPredictionModel}'s mappings with the necessary hypermedia links.
+     * 
+     * @param id the {@link AbstractPredictionModel}'s {@code id} or {@code name}
+     * @param status the {@link HttpStatus} of the response
+     * 
+     * @return the {@link List} with elements of type {@link VariableParameterMapping}, hypermedia links and status {@code status} as a {@link ResponseEntity}
+     */
     private static ResponseEntity<Object> respondWithMappings(String id, HttpStatus status) {
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(id);
 
