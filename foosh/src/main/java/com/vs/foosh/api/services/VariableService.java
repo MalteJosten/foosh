@@ -42,6 +42,9 @@ import com.vs.foosh.api.model.web.SmartHomePostResult;
 import com.vs.foosh.api.services.helpers.IdService;
 import com.vs.foosh.api.services.helpers.ListService;
 
+/**
+ * A {@link Service} that provides functionalities for accessing and modifying (elements of) the {@link VariableList}.
+ */
 @Service
 public class VariableService {
 
@@ -49,10 +52,22 @@ public class VariableService {
     /// Variable Collection
     ///
 
+    /**
+     * Return the contents of {@link VariableList}.
+     * 
+     * @return the contents of {@link VariableList} as a {@link ResponseEntity}
+     */
     public static ResponseEntity<Object> getVariables() {
         return respondWithVariables(HttpStatus.OK);
     }
 
+    /**
+     * Given a list of {@link VariablPostRequest}s, add one or multiple {@link Variable} to {@link VariableList}.
+     * 
+     * @param requests the {@link List} with elements of type {@link VariablePostRequest} containing {@link Variable}s to add
+     * 
+     * @return the response as a {@link ResponseEntity} with response code 201
+     */
     public static ResponseEntity<Object> addVariables(List<VariablePostRequest> requests) {
         if (requests == null || requests.isEmpty()) {
             throw new VariableCreationException("Cannot create variables! Please provide a collection of variable names.", HttpStatus.BAD_REQUEST);
