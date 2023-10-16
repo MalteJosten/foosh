@@ -1,4 +1,4 @@
-package com.vs.foosh.api.model.predictionModel;
+package com.vs.foosh.api.services;
 
 import java.util.List;
 import java.util.UUID;

@@ -18,6 +18,7 @@ import com.vs.foosh.api.model.variable.VariableModification;
 import com.vs.foosh.api.model.web.HttpAction;
 import com.vs.foosh.api.model.web.LinkEntry;
 import com.vs.foosh.api.model.web.SmartHomeInstruction;
+import com.vs.foosh.api.services.IPredictionMaker;
 import com.vs.foosh.api.services.PersistentDataService;
 import com.vs.foosh.api.services.helpers.LinkBuilderService;
 import com.vs.foosh.api.services.helpers.ListService;
