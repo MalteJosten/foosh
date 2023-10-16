@@ -48,14 +48,10 @@ import com.vs.foosh.api.services.helpers.ListService;
 @Service
 public class VariableService {
 
-    ///
-    /// Variable Collection
-    ///
-
     /**
      * Return the contents of {@link VariableList}.
      * 
-     * @return the contents of {@link VariableList} as a {@link ResponseEntity}
+     * @return {@link #respondWitVariables(HttpStatus.OK)}
      */
     public static ResponseEntity<Object> getVariables() {
         return respondWithVariables(HttpStatus.OK);
@@ -66,7 +62,7 @@ public class VariableService {
      * 
      * @param requests the {@link List} with elements of type {@link VariablePostRequest} containing {@link Variable}s to add
      * 
-     * @return the response as a {@link ResponseEntity} with response code 201
+     * @return {@link #respondWitVariables(HttpStatus.CREATED)}
      */
     public static ResponseEntity<Object> addVariables(List<VariablePostRequest> requests) {
         if (requests == null || requests.isEmpty()) {
@@ -87,6 +83,13 @@ public class VariableService {
 
     }
 
+    /**
+     * Add a {@link Variable} to {@link VariableList}.
+     * 
+     * @param request the {@link Variable}s to add
+     * 
+     * @return {@link #respondWitVariables(HttpStatus.CREATED)}
+     */
     public static ResponseEntity<Object> addVariable(VariablePostRequest request) {
         ListService.getVariableList().addThing(processPostRequest(request));
         ListService.getVariableList().updateLinks();
@@ -96,7 +99,13 @@ public class VariableService {
         return respondWithVariables(HttpStatus.CREATED);
     }
 
-
+    /**
+     * Process a {@link VariablePostRequest} to create a {@link Variable}.
+     * 
+     * @param request the {@link VariablePostRequest} containing the information needed for creating a {@link Variable}
+     * 
+     * @return the created {@link Variable}
+     */
     private static Variable processPostRequest(VariablePostRequest request) {
         // Name validation
         // Is there a field called 'name'?
@@ -124,6 +133,11 @@ public class VariableService {
         return new Variable(name, new ArrayList<>(), new ArrayList<>());
     }
 
+    /**
+     * Delete the contents of {@link VariableList}.
+     * 
+     * @return {@link #respondWitVariables(HttpStatus.OK)}
+     */
     public static ResponseEntity<Object> deleteVariables() {
         ListService.getVariableList().clearList();
 
@@ -132,6 +146,13 @@ public class VariableService {
         return respondWithVariables(HttpStatus.OK);
     }
 
+    /**
+     * Construct and return the {@link VariableDisplayRepresentation} for all variables of {@link VariableLIst} and the necessary hypermedia links.
+     * 
+     * @param status the {@link HttpStatus} of the response
+     * 
+     * @return the display representations and hypermedia links as a {@link ResponseEntity} with status {@code status}
+     */
     private static ResponseEntity<Object> respondWithVariables(HttpStatus status) {
         Map<String, Object> responseBody = new HashMap<>();
 
@@ -141,14 +162,25 @@ public class VariableService {
         return new ResponseEntity<>(responseBody, status);
     }
 
-    ///
-    /// Variable
-    ///
-
+    /**
+     * Given an identifier ({@code id} or {@code name}), return a {@link Variable}.
+     * 
+     * @param id the {@link Variable}'s {@code id} or {@code name}
+     * 
+     * @return {@link #respondWitVariable(id)}
+     */
     public static ResponseEntity<Object> getVariable(String id) {
         return respondWithVariable(id);
     }
 
+    /**
+     * Given an identifier and a prediction request, calculate, (execute,) and return results.
+     * 
+     * @param id the {@link Variable}'s {@code id} or {@code name} to generate the prediction for
+     * @param request the {@link VariablePredictionRequest} containing needed information to perform the prediction
+     * 
+     * @return the response as a {@link ResponseEntity} with response code 200
+     */
     public static ResponseEntity<Object> startVariablePrediction(String id, VariablePredictionRequest request) {
         Variable variable = ListService.getVariableList().getThing(id);
 
@@ -179,6 +211,14 @@ public class VariableService {
 
     }
 
+    /**
+     * Execute a {@link FooSHJsonPatch} on a {@link Variable}.
+     * 
+     * @param id the {@link Variable}'s {@code id} to change the {@code name} of
+     * @param patchMappings a JSON Patch document
+     * 
+     * @return {@link #respondWitVariable(id)}
+     */
     public static ResponseEntity<Object> patchVariable(String id, List<Map<String, Object>> patchMappings) {
         Variable variable = ListService.getVariableList().getThing(id);
 
@@ -207,6 +247,13 @@ public class VariableService {
         return respondWithVariable(id);
     }
 
+    /**
+     * Patch a {@link Variable}'s {@code name}.
+     * 
+     * @param id the {@link Variable}'s {@code id} to change the {@code name} of
+     * 
+     * @return {@code true} if patching was successful. Otherwise, return {@code false}.
+     */
     private static boolean patchVariableName(String id, String patchName) {
         UUID uuid = IdService.isUuid(id).get();
 
@@ -225,6 +272,13 @@ public class VariableService {
         return false;
     }
 
+    /**
+     * Remove a {@link Variable} form {@link VariableList}.
+     * 
+     * @param id the {@link Variable}'s {@code id} or {@code name}
+     * 
+     * @return {@link #respondWitVariables(HttpStatus.OK)}
+     */
     public static ResponseEntity<Object> deleteVariable(String id) {
         ListService.getVariableList().getThing(id).unregisterFromSubject();
         ListService.getVariableList().deleteThing(id);
@@ -234,6 +288,13 @@ public class VariableService {
         return respondWithVariables(HttpStatus.OK);
     }
 
+    /**
+     * Construct and return the {@link VariableDisplayRepresentation} of a {@link Variable} and the necessary hypermedia links.
+     * 
+     * @param id the {@link Variable}'s {@code id}
+     * 
+     * @return the display representation and hypermedia links as a {@link ResponseEntity} with status {@code HttpStatus.OK}
+     */
     private static ResponseEntity<Object> respondWithVariable(String id) {
         Variable variable = ListService.getVariableList().getThing(id);
 
@@ -244,10 +305,13 @@ public class VariableService {
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
-    ///
-    /// Devices
-    ///
-
+    /**
+     * Return a {@link Variable}'s linked {@link AbstractDevice}s.
+     * 
+     * @param id the {@link Variable}'s {@code id} or {@code name}
+     * 
+     * @return {@link #respondWithDevices()}
+     */
     public static ResponseEntity<Object> getVariableDevices(String id) {
         Variable variable = ListService.getVariableList().getThing(id);
         List<DeviceResponseObject> devices = new ArrayList<>();
@@ -259,6 +323,14 @@ public class VariableService {
         return respondWithDevices(variable);
     }
 
+    /**
+     * Add a list of {@link AbstractDevice}s to the list of linked devices ({@code deviceIds}) of a {@link Variable}.
+     * 
+     * @param id the {@link Variable}'s {@code id} or {@code name}
+     * @param request the {@link VariableDevicesPostRequest} which contains needed information
+     * 
+     * @return {@link #respondWithDevices()}
+     */
     public static ResponseEntity<Object> postVariableDevices(String id, VariableDevicesPostRequest request) {
         Variable variable = ListService.getVariableList().getThing(id);
 
@@ -302,6 +374,14 @@ public class VariableService {
         return respondWithDevices(variable);
     }
 
+    /**
+     * Edit the list of {@link AbstractDevice}s ({@code deviceIds}) of a {@link Variable}.
+     * 
+     * @param id the {@link Variable}'s {@code id} or {@code name}
+     * @param patchMappings a JSON Patch document
+     * 
+     * @return {@link #respondWithDevices()}
+     */
     public static ResponseEntity<Object> patchVariableDevices(String id, List<Map<String, Object>> patchMappings) {
         Variable variable = ListService.getVariableList().getThing(id);
 
@@ -330,13 +410,21 @@ public class VariableService {
         return respondWithDevices(variable);
     }
 
-    private static List<FooSHJsonPatch> convertDevicesPatchMappings(String variableId, List<Map<String, Object>> patchMappings) {
-        Variable variable = ListService.getVariableList().getThing(variableId);
+    /**
+     * Convert a JSON Patch document for editing the list of linked {@AbstractDevice}s to a list of {@link FooSHJsonPatch} requests.
+     * 
+     * @param id the {@link Variable}'s {@code id} or {@code name}
+     * @param patchMappings a JSON Patch document
+     * 
+     * @return a {@link List} with elements of type {@link FooSHJsonPatch}
+     */
+    private static List<FooSHJsonPatch> convertDevicesPatchMappings(String id, List<Map<String, Object>> patchMappings) {
+        Variable variable = ListService.getVariableList().getThing(id);
 
         List<FooSHJsonPatch> patches = new ArrayList<>();
         for (Map<String, Object> patchMapping: patchMappings) {
             FooSHJsonPatch patch = new FooSHJsonPatch(patchMapping);
-            patch.setParentId(variableId);
+            patch.setParentId(id);
 
             // To comply with RFC 6902, we need to make sure, that all instructions are valid.
             // Otherwise, we must not execute any patch instruction.
@@ -379,8 +467,13 @@ public class VariableService {
         }
 
         return patches;
-    }    
+    } 
 
+    /**
+     * Check whether a given {@link FooSHJsonPatch} concerning linked devices contains a correct path.
+     * 
+     * @param patch the {@link FooSHJsonPatch} to check the path of
+     */
     private static void checkForCorrectDevicesPatchPath(FooSHJsonPatch patch) {
         List<String> pathSegments;
         switch (patch.getOperation()) {
@@ -400,6 +493,12 @@ public class VariableService {
         }
     }
 
+    /**
+     * Execute a given {@link FooSHJsonPatch} on a {@link Variable}.
+     * 
+     * @param variable the {@link Variable} to execute the patch on
+     * @param patch the {@link FooSHJsonPatch} to execute
+     */
     private static void executeDevicesPatch(Variable variable, FooSHJsonPatch patch) {
         List<UUID> devices = variable.getDeviceIds();
 
@@ -435,6 +534,13 @@ public class VariableService {
 
     }
 
+    /**
+     * Clear the list of linked {@link AbstractDevice}'s (@code deviceIds) of a {@link Variable}.
+     * 
+     * @param id the {@link Variable}'s {@code id} or {@code name}
+     * 
+     * @return {@link #respondWithDevices()}
+     */
     public static ResponseEntity<Object> deleteVariableDevices(String id) {
         Variable variable = ListService.getVariableList().getThing(id);
 
@@ -446,6 +552,13 @@ public class VariableService {
         return respondWithDevices(variable);
     }
 
+    /**
+     * Construct and return the list of linked {@link AbstractDevice}s and the necessary hypermedia links.
+     * 
+     * @param variable the {@link Variable} to return the list of linked devices from
+     * 
+     * @return the display representations and hypermedia links as a {@link ResponseEntity} with status {@code HttpStatus.OK}
+     */
     private static ResponseEntity<Object> respondWithDevices(Variable variable) {
         List<LinkEntry> links = new ArrayList<>();
         links.addAll(variable.getSelfLinks());
@@ -463,16 +576,27 @@ public class VariableService {
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
-    ///
-    /// Models
-    ///
-    
+    /**
+     * Return a {@link Variable}'s linked {@link AbstractPredictionModel}s.
+     * 
+     * @param id the {@link Variable}'s {@code id} or {@code name}
+     * 
+     * @return {@link #respondWithModels()}
+     */
     public static ResponseEntity<Object> getVariableModels(String id) {
         Variable variable = ListService.getVariableList().getThing(id);
 
         return respondWithModels(variable);
     }
 
+    /**
+     * Add a {@link AbstractPredictionModel} to the list of linked prediction models ({@code modelIds}) of a {@link Variable}.
+     * 
+     * @param id the {@link Variable}'s {@code id} or {@code name}
+     * @param request the {@link VariableModelPostRequest} which contains needed information
+     * 
+     * @return {@link #respondWithModels()}
+     */
     public static ResponseEntity<Object> addVariableModel(String id, VariableModelPostRequest request) {
         Variable variable = ListService.getVariableList().getThing(id);
 
@@ -513,13 +637,21 @@ public class VariableService {
         return respondWithModels(variable);
     }
 
+    /**
+     * Edit the list of {@link AbstractPredictionModel}s ({@code modelIds}) of a {@link Variable}.
+     * 
+     * @param id the {@link Variable}'s {@code id} or {@code name}
+     * @param patchMappings a JSON Patch document
+     * 
+     * @return {@link #respondWithModels()}
+     */
     public static ResponseEntity<Object> patchVariableModels(String id, List<Map<String, Object>> patchMappings) {
         Variable variable = ListService.getVariableList().getThing(id);
 
         List<FooSHJsonPatch> patches = convertModelsPatchMappings(variable, patchMappings);
 
         for (FooSHJsonPatch patch: patches) {
-            checkForCorrectModelsPatchPath(variable, patch);
+            checkForCorrectModelsPatchPath(patch);
             checkForCorrectModelPresence(variable, patch);
         }
 
@@ -532,6 +664,14 @@ public class VariableService {
         return respondWithModels(variable);
     }
 
+    /**
+     * Convert a JSON Patch document for editing the list of linked {@link AbstractPredictionModel}s to a list of {@link FooSHJsonPatch} requests.
+     * 
+     * @param id the {@link Variable}'s {@code id} or {@code name}
+     * @param patchMappings a JSON Patch document
+     * 
+     * @return a {@link List} with elements of type {@link FooSHJsonPatch}
+     */
     private static List<FooSHJsonPatch> convertModelsPatchMappings(Variable variable, List<Map<String, Object>> patchMappings) {
         List<FooSHJsonPatch> patches = new ArrayList<>();
 
@@ -560,13 +700,24 @@ public class VariableService {
         return patches;
     }
 
-    private static void checkForCorrectModelsPatchPath(Variable variable, FooSHJsonPatch patch) {
+    /**
+     * Check whether a given {@link FooSHJsonPatch} concerning linked prediction models contains a correct path.
+     * 
+     * @param patch the {@link FooSHJsonPatch} to check the path of
+     */
+    private static void checkForCorrectModelsPatchPath(FooSHJsonPatch patch) {
         List<String> allowedPathSegments = List.of("uuid");
         if (!patch.isValidPath(allowedPathSegments, ThingType.VARIABLE)) {
             throw new FooSHJsonPatchIllegalPathException("You can only edit an individual mapping regarding one model at a time. Use '/{modelId}' as the path.");
         }
     }
 
+    /**
+     * Check whether the {@link AbstractPredictionModel} addressed by the patch is already linked to the {@link Variable}.
+     * 
+     * @param variable the {@link Variable} to check the list of linked {@link AbstractPredictionModel}s of 
+     * @param patch the {@link FooSHJsonPatch} to check the path of
+     */
     private static void checkForCorrectModelPresence(Variable variable, FooSHJsonPatch patch) {
         AbstractPredictionModel model = ListService.getPredictionModelList().getThing(patch.getDestination());
 
@@ -604,6 +755,12 @@ public class VariableService {
 
     }
     
+    /**
+     * Reformats a list of {@link FooSHJsonPatch}s concerning the patch of a linked {@link AbstractPredictionModel} in a way, so it can be forwarded to the prediction model and handled by itself.
+     * 
+     * @param variable the {@link Variable} to change the link of
+     * @param patches the list with elements of type {@link FooSHJsonPatch}
+     */
     private static void reformatAndForwardModelPatches(Variable variable, List<FooSHJsonPatch> patches) {
         for (FooSHJsonPatch patch: patches) {
             switch (patch.getOperation()) {
@@ -624,6 +781,12 @@ public class VariableService {
         PersistentDataService.saveAll();
     }
 
+    /**
+     * Reformat a single {@link FooSHJsonPatch} concerning the patch of a linked {@link AbstractPredictionModel} in a way, so it can be forwarded to the prediction model and handled by itself.
+     * 
+     * @param variable the {@link Variable} to change the link of
+     * @param patch the {@link FooSHJsonPatch}
+     */
     @SuppressWarnings("unchecked")
     private static void reformatAndForwardPatch(Variable variable, FooSHJsonPatch patch) {
         Map<String, Object> forwardHashMap = new HashMap<>();
@@ -642,6 +805,13 @@ public class VariableService {
         PredictionModelService.patchMappings(patch.getDestination().toString(), List.of(forwardHashMap));
     }
 
+    /**
+     * Clear the list of linked {@link AbstractPredictionModel}'s (@code modelIds) of a {@link Variable}.
+     * 
+     * @param id the {@link Variable}'s {@code id} or {@code name}
+     * 
+     * @return {@link #respondWithModels()}
+     */
     public static ResponseEntity<Object> deleteVariableModels(String id) {
         Variable variable = ListService.getVariableList().getThing(id);
 
@@ -652,6 +822,13 @@ public class VariableService {
         return respondWithModels(variable);
     }
 
+    /**
+     * Construct and return the list of linked {@link AbstractPredictionModel}s and the necessary hypermedia links.
+     * 
+     * @param variable the {@link Variable} to return the list of linked prediction models from
+     * 
+     * @return the display representations and hypermedia links as a {@link ResponseEntity} with status {@code HttpStatus.OK}
+     */
     private static ResponseEntity<Object> respondWithModels(Variable variable) {
         List<Thing> models = new ArrayList<>();
         for (UUID modelId: variable.getModelIds()) {
