@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatusCode;
 
 public class FooSHJsonPatchException extends RuntimeException {
     protected HttpStatusCode statusCode;
+    protected String name = "FooSHJsonPatchException";
 
     public FooSHJsonPatchException(HttpStatusCode statusCode, String message) {
         super(message);
@@ -12,6 +13,10 @@ public class FooSHJsonPatchException extends RuntimeException {
 
     public HttpStatusCode getStatusCode() {
         return this.statusCode;
+    }
+
+    public String getName() {
+        return this.name;
     }
     
 }

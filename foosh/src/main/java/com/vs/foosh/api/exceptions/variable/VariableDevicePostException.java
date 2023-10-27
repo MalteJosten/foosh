@@ -9,6 +9,7 @@ public class VariableDevicePostException extends FooSHApiException {
    
     public VariableDevicePostException(String variableId, String message, HttpStatus status) {
         super(message, status);
+        super.name = "VariableDevicePostException";
 
         this.links.addAll(ListService.getVariableList().getThing(variableId).getSelfLinks());
         this.links.addAll(ListService.getVariableList().getThing(variableId).getVarDeviceLinks());

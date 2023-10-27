@@ -7,6 +7,7 @@ public class SmartHomeInstructionExecutorIsNullException extends FooSHSmartHomeE
         super(
             "There is no registered SmartHomeInstructionExecutor. Please register one before fetching available devices.",
             HttpStatus.INTERNAL_SERVER_ERROR);
+        super.name = "SmartHomeInstructionExecutionIsNullException";
     }
     
 }

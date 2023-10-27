@@ -9,6 +9,7 @@ public class IdIsNoValidUUIDException extends FooSHApiException {
 
     public IdIsNoValidUUIDException(String id, ThingType type) {
         super("The provided id '" + id + "' is not a valid UUID!", HttpStatus.BAD_REQUEST);
+        super.name = "IdIsNoValidUUIDException";
     
         switch (type) {
             case DEVICE:

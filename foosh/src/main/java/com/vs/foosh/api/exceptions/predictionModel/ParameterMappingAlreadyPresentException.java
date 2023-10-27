@@ -9,6 +9,7 @@ public class ParameterMappingAlreadyPresentException extends FooSHApiException {
 
     public ParameterMappingAlreadyPresentException(String message) {
         super(message, HttpStatus.CONFLICT);
+        super.name = "ParameterMappingAlreadyPresentException";
         
         this.links.addAll(ListService.getPredictionModelList().getLinks("models"));
     }

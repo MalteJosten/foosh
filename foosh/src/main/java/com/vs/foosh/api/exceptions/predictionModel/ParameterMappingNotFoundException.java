@@ -9,6 +9,7 @@ public class ParameterMappingNotFoundException extends FooSHApiException {
 
     public ParameterMappingNotFoundException(String message) {
         super(message, HttpStatus.NOT_FOUND);
+        super.name = "ParameterMappingnotFoundException";
         
         this.links.addAll(ListService.getPredictionModelList().getLinks("models"));
     }

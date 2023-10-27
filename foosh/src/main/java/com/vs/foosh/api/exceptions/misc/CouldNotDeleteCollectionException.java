@@ -6,5 +6,6 @@ public class CouldNotDeleteCollectionException extends FooSHSaveFileException {
 
     public CouldNotDeleteCollectionException() {
         super("Could not delete collection!", HttpStatus.INTERNAL_SERVER_ERROR);
+        super.name = "CouldNotDeleteCollectionException";
     }  
 }

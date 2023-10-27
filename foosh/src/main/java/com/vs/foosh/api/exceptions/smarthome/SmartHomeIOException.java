@@ -8,6 +8,7 @@ public class SmartHomeIOException extends FooSHSmartHomeException {
         super(
             "A timeout occurred while tryping to retrieve device list from Smart Home API at '" + uri + "'!",
             HttpStatus.GATEWAY_TIMEOUT);
+        super.name = "SmartHomeIOException";
     }
     
 }

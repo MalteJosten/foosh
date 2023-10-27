@@ -9,6 +9,7 @@ public class PredictionModelNameMustNotBeAnUuidException extends FooSHApiExcepti
 
     public PredictionModelNameMustNotBeAnUuidException() {
         super("The name must not be an UUID!", HttpStatus.BAD_REQUEST);
+        super.name = "PredictionModelNameMustNotBeAnUuidException";
 
         this.links.addAll(ListService.getPredictionModelList().getLinks("models"));
     }

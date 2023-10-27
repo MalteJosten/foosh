@@ -10,6 +10,7 @@ public class PredictionModelPostMappingException extends FooSHApiException {
 
     public PredictionModelPostMappingException(String modelId, String message) {
         super(message, HttpStatus.BAD_REQUEST);
+        super.name = "PredictionmodelPostMappingException";
 
         this.links.addAll(ListService.getPredictionModelList().getThing(modelId).getSelfLinks());
     }

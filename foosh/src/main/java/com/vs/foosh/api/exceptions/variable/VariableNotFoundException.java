@@ -11,6 +11,7 @@ public class VariableNotFoundException extends FooSHApiException {
 
     public VariableNotFoundException(String id) {
         super(HttpStatus.NOT_FOUND);
+        super.name = "VariableNotFoundException";
 
         this.links.addAll(ListService.getVariableList().getLinks("variables"));
 

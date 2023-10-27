@@ -9,6 +9,7 @@ public class MalformedVariablePredictionRequest extends FooSHApiException {
 
     public MalformedVariablePredictionRequest(String id, String message) {
         super(message, HttpStatus.BAD_REQUEST);
+        super.name = "MalformedVariablePredictionRequest";
 
         this.links.addAll(LinkBuilderService.getVariableLinkBlock(id));
     }

@@ -6,5 +6,6 @@ public class SmartHomeAccessException extends FooSHSmartHomeException {
 
     public SmartHomeAccessException(String uri) {
         super("Could not access Smart Home API at '" + uri + "'!", HttpStatus.BAD_GATEWAY);
+        super.name = "SmartHomeAccessException";
     }
 }

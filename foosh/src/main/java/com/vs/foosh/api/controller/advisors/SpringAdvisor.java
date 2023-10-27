@@ -39,6 +39,7 @@ public class SpringAdvisor extends ResponseEntityExceptionHandler {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
             status,
             "This method does not allow the Content-Type: '" + ex.getContentType() + "'. Please refer to the documentation for the allowed Content-Type(s).");
+        problemDetail.setTitle("HttpMediaTypeNotSupportedException");
 
         return ResponseEntity.status(status).body(problemDetail);
     }
@@ -59,6 +60,7 @@ public class SpringAdvisor extends ResponseEntityExceptionHandler {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
             status,
             "Failed to read request. Please refer to the documentation for the valid type of request(s).");
+        problemDetail.setTitle("HttpMessageNotReadableException");
 
         return ResponseEntity.status(status).body(problemDetail);
     }
@@ -79,6 +81,7 @@ public class SpringAdvisor extends ResponseEntityExceptionHandler {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
             status,
             "The path argument '" + ex.getName() + "' should be of type " + ex.getRequiredType().getName());
+        problemDetail.setTitle("MethodArgumentTypeMismatchException");
 
         return ResponseEntity.status(status).body(problemDetail);
     }

@@ -41,6 +41,7 @@ public class FooSHJsonPatchAdvisor {
     public ResponseEntity<Object> handleFooSHJsonPatchExceptions(FooSHJsonPatchException exception,
             WebRequest request) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(exception.getStatusCode(), exception.getMessage());
+        problemDetail.setTitle(exception.getName());
 
         return ResponseEntity.status(exception.getStatusCode()).body(problemDetail);
     }
@@ -58,6 +59,7 @@ public class FooSHJsonPatchAdvisor {
     public ResponseEntity<Object> handleFooSHJsonPatchOperationException(FooSHJsonPatchOperationException exception,
                     WebRequest request) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(exception.getStatusCode(), exception.getMessage());
+        problemDetail.setTitle(exception.getName());
         problemDetail.setProperty("_links", exception.getLinks());
 
         return ResponseEntity.status(exception.getStatusCode()).body(problemDetail);

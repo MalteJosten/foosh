@@ -12,6 +12,7 @@ public class FooSHJsonPatchOperationException extends RuntimeException {
     private UUID thingId;
     private List<LinkEntry> links;
     private HttpStatus status;
+    private final String NAME = "FooSHJsonPatchOperationException";
 
     public FooSHJsonPatchOperationException(UUID thingId, List<LinkEntry> links, String message, HttpStatus status) {
         super(message);
@@ -33,4 +34,7 @@ public class FooSHJsonPatchOperationException extends RuntimeException {
         return this.status;
     };
     
+    public String getName() {
+        return this.NAME;
+    }
 }

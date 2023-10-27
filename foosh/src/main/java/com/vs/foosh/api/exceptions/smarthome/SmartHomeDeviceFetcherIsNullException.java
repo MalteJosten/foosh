@@ -7,5 +7,6 @@ public class SmartHomeDeviceFetcherIsNullException extends FooSHSmartHomeExcepti
         super(
             "There is no registered SmartHomeDeviceFetcher. Please register one before fetching available devices.",
             HttpStatus.INTERNAL_SERVER_ERROR);
+        super.name = "SmartHomeDEviceFetcherIsNullException";
     }
 }

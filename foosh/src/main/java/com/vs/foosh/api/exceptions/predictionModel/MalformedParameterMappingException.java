@@ -13,6 +13,7 @@ public class MalformedParameterMappingException extends FooSHApiException {
 
     public MalformedParameterMappingException(String id, String message) {
         super(message, HttpStatus.BAD_REQUEST);
+        super.name = "MalformedParameterMappingException";
 
         this.links.addAll(LinkBuilderService.getPredictionModelLinkBlock(id));
         this.links.add(new LinkEntry("devices", LinkBuilderService.getDeviceListLink(), HttpAction.GET, List.of()));

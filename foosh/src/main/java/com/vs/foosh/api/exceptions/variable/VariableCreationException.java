@@ -9,6 +9,7 @@ public class VariableCreationException extends FooSHApiException {
 
     public VariableCreationException(String message, HttpStatus status) {
         super(message, status);
+        super.name = "VariableCreationException";
 
         this.links.addAll(ListService.getVariableList().getLinks("self"));
     }

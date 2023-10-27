@@ -11,6 +11,7 @@ public class VariablePredictionException extends FooSHApiException {
 
     public VariablePredictionException(UUID uuid, String message) {
         super(message, HttpStatus.INTERNAL_SERVER_ERROR);
+        super.name = "VariablePredictionException";
         
         this.links.addAll(LinkBuilderService.getVariableLinkBlock(uuid.toString()));
     }

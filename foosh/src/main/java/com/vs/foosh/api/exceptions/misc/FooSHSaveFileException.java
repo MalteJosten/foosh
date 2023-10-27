@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 
 public class FooSHSaveFileException extends RuntimeException {
     private HttpStatus status;
+    protected String name = "FooSHSaveFileException";
 
     public FooSHSaveFileException(String message, HttpStatus status) {
         super(message);   
@@ -12,6 +13,10 @@ public class FooSHSaveFileException extends RuntimeException {
 
     public HttpStatus getStatus() {
         return this.status;
+    }
+
+    public String getName() {
+        return this.name;
     }
     
 }

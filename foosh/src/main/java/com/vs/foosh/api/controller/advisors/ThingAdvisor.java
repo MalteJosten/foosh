@@ -60,6 +60,7 @@ public class ThingAdvisor extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleDeviceException(FooSHApiException exception,
             WebRequest request) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(exception.getStatus(), exception.getMessage());
+        problemDetail.setTitle(exception.getName());
         problemDetail.setProperty("_links", exception.getLinks());
 
         return ResponseEntity.status(exception.getStatus()).body(problemDetail);
@@ -88,6 +89,7 @@ public class ThingAdvisor extends ResponseEntityExceptionHandler {
     })
     public ResponseEntity<Object> handlePredictionModelException(FooSHApiException exception, WebRequest request) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(exception.getStatus(), exception.getMessage());
+        problemDetail.setTitle(exception.getName());
         problemDetail.setProperty("_links", exception.getLinks());
 
         return ResponseEntity.status(exception.getStatus()).body(problemDetail);
@@ -115,6 +117,7 @@ public class ThingAdvisor extends ResponseEntityExceptionHandler {
     })
     public ResponseEntity<Object> handleVariableExceptions(FooSHApiException exception, WebRequest request) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(exception.getStatus(), exception.getMessage());
+        problemDetail.setTitle(exception.getName());
         problemDetail.setProperty("_links", exception.getLinks());
 
         return ResponseEntity.status(exception.getStatus()).body(problemDetail);

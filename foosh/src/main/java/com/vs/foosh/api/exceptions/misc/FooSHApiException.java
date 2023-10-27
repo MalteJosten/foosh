@@ -11,6 +11,7 @@ public class FooSHApiException extends RuntimeException {
     protected HttpStatus status;
     protected List<LinkEntry> links = new ArrayList<>();
     protected String message;
+    protected String name = "FooSHApiException";
 
     public FooSHApiException(HttpStatus status) {
         super();
@@ -34,6 +35,10 @@ public class FooSHApiException extends RuntimeException {
 
     public List<LinkEntry> getLinks() {
         return this.links;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     @Override

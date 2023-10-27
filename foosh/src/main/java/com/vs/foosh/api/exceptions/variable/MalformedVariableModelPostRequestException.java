@@ -10,6 +10,7 @@ public class MalformedVariableModelPostRequestException extends FooSHApiExceptio
 
     public MalformedVariableModelPostRequestException(String id, String message) {
         super(message, HttpStatus.BAD_REQUEST);
+        super.name = "MalformedVariableModelPostRequestException";
 
         this.links.addAll(LinkBuilderService.getVariableLinkBlock(id));
         this.links.addAll(ListService.getVariableList().getThing(id).getVarModelLinks());
@@ -17,6 +18,7 @@ public class MalformedVariableModelPostRequestException extends FooSHApiExceptio
 
     public MalformedVariableModelPostRequestException(String id, String message, HttpStatus status) {
         super(message, status);
+        super.name = "MalformedVariableModelPostRequestException";
 
         this.links.addAll(LinkBuilderService.getVariableLinkBlock(id));
         this.links.addAll(ListService.getVariableList().getThing(id).getVarModelLinks());

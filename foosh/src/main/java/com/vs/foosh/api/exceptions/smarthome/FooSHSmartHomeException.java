@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 
 public class FooSHSmartHomeException extends RuntimeException {
     private HttpStatus status;
+    protected String name = "FooSHSmartHomeException";
 
     public FooSHSmartHomeException(String message, HttpStatus status) {
         super(message);
@@ -13,5 +14,8 @@ public class FooSHSmartHomeException extends RuntimeException {
     public HttpStatus getStatus() {
         return this.status;
     }
-    
+
+    public String getName() {
+        return this.name;
+    }
 }

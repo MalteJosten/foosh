@@ -11,6 +11,7 @@ public class CouldNotMakePredictionException extends FooSHApiException {
 
     public CouldNotMakePredictionException(UUID variableUuid, String message) {
         super(message, HttpStatus.INTERNAL_SERVER_ERROR);
+        super.name = "CouldNotMakePredictionException";
 
         this.links.addAll(LinkBuilderService.getVariableLinkBlock(variableUuid.toString()));
     }

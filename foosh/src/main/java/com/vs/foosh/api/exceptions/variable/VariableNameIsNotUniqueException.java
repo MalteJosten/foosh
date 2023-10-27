@@ -12,6 +12,7 @@ public class VariableNameIsNotUniqueException extends FooSHApiException {
 
     public VariableNameIsNotUniqueException(UUID variableUuid, String name) {
         super("The name '" + name + "' is already used!", HttpStatus.CONFLICT);
+        super.name = "VariableNameIsNotUniqueException";
         
         if (variableUuid == null) {
             this.links.addAll(ListService.getVariableList().getLinks("variables"));

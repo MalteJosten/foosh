@@ -8,6 +8,7 @@ import com.vs.foosh.api.services.helpers.ListService;
 public class PredictionModelValueException extends FooSHApiException {
     public PredictionModelValueException(String message) {
         super(message, HttpStatus.BAD_REQUEST);
+        super.name = "PredictionModelValueException";
 
         this.links.addAll(ListService.getPredictionModelList().getLinks("models"));
     }

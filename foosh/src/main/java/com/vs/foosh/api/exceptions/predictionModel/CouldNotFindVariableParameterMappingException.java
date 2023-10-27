@@ -14,6 +14,7 @@ public class CouldNotFindVariableParameterMappingException extends FooSHApiExcep
     
     public CouldNotFindVariableParameterMappingException(UUID uuid, UUID variableUuid) {
         super("Could not find parameter mapping for variable " + variableUuid + "!", HttpStatus.BAD_REQUEST);
+        super.name = "CouldNotFindVariableParameterMappingException";
 
         this.links.addAll(LinkBuilderService.getPredictionModelLinkBlock(uuid.toString()));
         this.links.add(new LinkEntry("devices", LinkBuilderService.getDeviceListLink(), HttpAction.GET, List.of()));

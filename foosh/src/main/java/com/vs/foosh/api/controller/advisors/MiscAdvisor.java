@@ -32,6 +32,7 @@ public class MiscAdvisor {
             WebRequest request) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(exception.getStatus(), exception.getMessage());
         problemDetail.setProperty("_links", exception.getLinks());
+        problemDetail.setTitle(exception.getName());
 
         return ResponseEntity.status(exception.getStatus()).body(problemDetail);
     }
@@ -52,6 +53,7 @@ public class MiscAdvisor {
     })
     public ResponseEntity<Object> handleSaveFileExceptions(FooSHSaveFileException exception, WebRequest request) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(exception.getStatus(), exception.getMessage());
+        problemDetail.setTitle(exception.getName());
 
         return ResponseEntity.status(exception.getStatus()).body(problemDetail);
     }

@@ -11,6 +11,7 @@ public class DeviceNameIsNotUniqueException extends FooSHApiException {
 
     public DeviceNameIsNotUniqueException(UUID uuid, String name) {
         super("The name '" + name + "' is already used!", HttpStatus.CONFLICT);
+        super.name = "DeviceNameIsNotUniqueException";
 
         this.links.addAll(LinkBuilderService.getDeviceLinkWithDevices(uuid.toString()));
     }

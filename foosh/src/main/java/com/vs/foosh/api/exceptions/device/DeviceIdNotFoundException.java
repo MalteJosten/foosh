@@ -11,6 +11,7 @@ public class DeviceIdNotFoundException extends FooSHApiException {
 
     public DeviceIdNotFoundException(String id) {
         super(HttpStatus.NOT_FOUND);
+        super.name = "DeviceIdNotFoundException";
 
         this.links.addAll(ListService.getDeviceList().getLinks("devices"));
 

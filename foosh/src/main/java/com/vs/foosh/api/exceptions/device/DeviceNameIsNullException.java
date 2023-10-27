@@ -12,6 +12,7 @@ public class DeviceNameIsNullException extends FooSHApiException {
 
     public DeviceNameIsNullException(UUID uuid, Map<String, String> requestBody) {
         super("The provided request body " + requestBody.toString() + " does not contain a field named 'name'!", HttpStatus.BAD_REQUEST);
+        super.name = "DeviceNameIsNullException";
 
         this.links.addAll(LinkBuilderService.getDeviceLinkWithDevices(uuid.toString()));
     }
