@@ -24,7 +24,7 @@ public class MyPredictionModel extends AbstractPredictionModel {
         this.id   = UUID.fromString(FIXED_ID);
         this.name = "my-model";
 
-        float[] myBounds = {0, 100};
+        float[] myBounds = {0, 93};
         this.valueBounds = myBounds;
 
         setParameters(List.of("x1", "x2")); 
